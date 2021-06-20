@@ -44,39 +44,45 @@ int main() {
 
     DEBUG(s, s[s.length() - 1], 'a' < 'c', true);
 
-    ll quickAnswer = -1;
-    f0r(i, s.length()) {
-        if (s[i] > s[0]) {
-            quickAnswer = i;
-            break;
-        }    
-    }
- 
-    DEBUG(quickAnswer);
-    if (quickAnswer == -1) {
-        ll s_length = 1;
-        s += s; // Double the string length now so I can always compare left and right side without it going out of bounds on the right side with total string being 10 long, and string A being 6 long and B being 4 long. Now total string is 20 long, so it can go all the way to 10 and 10
-        while (true) {
-            DEBUG(s_length, s.substr(0, s_length), s.substr(s_length, s_length));
-            string leftSide = s.substr(0, s_length);
-            string rightSide = s.substr(s_length, s_length);
-            if (leftSide >= rightSide && s_length < s.length()/2) {
-                s_length++;
-            } else {
+    ll s_length = 1;
+    s += s; // Double the string length now so I can always compare left and right side without it going out of bounds on the right side with total string being 10 long, and string A being 6 long and B being 4 long. Now total string is 20 long, so it can go all the way to 10 and 10
+    while (true) {
+        DEBUG(s_length, s.substr(0, s_length), s.substr(s_length, s_length));
+
+        // Brute force method of doing the bottom part
+        // string leftSide = s.substr(0, s_length);
+        // string rightSide = s.substr(s_length, s_length);
+        // if (leftSide >= rightSide && s_length < s.length()/2) {
+        //     s_length++;
+        // } else {
+        //     break;
+        // }
+
+        // Better way of doing the top part without taking up so much string memory
+        bool condition = true;
+        f0r(i, s_length) {
+            if (s[i] > s[i + s_length]) {
                 break;
+            } else if (s[i] < s[i + s_length]) {
+                condition = false;
             }
-            //}
         }
-        s = s.substr(0, s_length);
-    } else {
-        DEBUG("in else");
-        s = s.substr(0, quickAnswer);
+
+        if (condition && s_length < s.length()/2) {
+            s_length++;
+        } else {
+            break;
+        }
     }
+    s = s.substr(0, s_length);
+   
 
     // Prune out the ending substrings that are exactly the same as the first part
 
-    f0r(i, k/s.length() + 1) {
-        s += s;
+    s_length = s.length();
+    string og_string = s;
+    f0r(i, k/s_length + 1) {
+        s += og_string;
     }
 
     s = s.substr(0, k); 
