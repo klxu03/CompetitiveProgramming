@@ -42,52 +42,43 @@ int main() {
     cin >> s;
 
     DEBUG(s, s[s.length() - 1], 'a' < 'c', true);
-    while (s.length() != k) {
 
-        vector<ll> firstLetter;
-        for (ll i = 0; (i = s.find(s[0], i)) != string::npos; i++) {
-            firstLetter.pb(i);
-        }
-
-        ll maxLengthBetween = 0;
-        f0r(i, firstLetter.size() - 1) {
-            if (firstLetter[i + 1] - firstLetter[i] > maxLengthBetween) {
-                maxLengthBetween = firstLetter[i + 1] - firstLetter[i];
-            }
-        }
-
-
-        if (firstLetter.size() == 1) {
-            while(s[s.length() - 1] > s[0]) {
-                s.pop_back();
-            }
-        } else {
-            vector<string> subStrings(firstLetter.size());
-            f0r(i, firstLetter.size()) {
-                subStrings[i] = s.substr(firstLetter[i], firstLetter[i + 1] - firstLetter[i]);
-            }
-            DEBUG(maxLengthBetween, firstLetter, subStrings, firstLetter.size());
-            //DEBUG(s.substr(firstLetter[1], firstLetter[2]), s.substr(4, 4));
-            bool condition = true;
-
-            while (condition) {
-                condition = false;
-            }
-
-            ll firstLengthBetween = firstLetter[1] - firstLetter[0];
-
-            f0r(i, firstLengthBetween) {
-                
-            }
-        }
-
-        ll s_length = s.length();
-        f0r(i, k/s_length + 1) {
-            s += s;
-        }
-
-        s = s.substr(0, k); 
+    ll quickAnswer = -1;
+    f0r(i, s.length()) {
+        if (s[i] > s[0]) {
+            quickAnswer = i;
+            break;
+        }    
     }
+ 
+    DEBUG(quickAnswer);
+    if (quickAnswer == -1) {
+        ll s_length = 1;
+        s += s; // Double the string length now so I can always compare left and right side without it going out of bounds on the right side with total string being 10 long, and string A being 6 long and B being 4 long. Now total string is 20 long, so it can go all the way to 10 and 10
+        while (true) {
+            DEBUG(s_length, s.substr(0, s_length), s.substr(s_length, s_length));
+            string leftSide = s.substr(0, s_length);
+            string rightSide = s.substr(s_length, s_length);
+            if (leftSide >= rightSide && s_length < s.length()/2) {
+                s_length++;
+            } else {
+                break;
+            }
+            //}
+        }
+        s = s.substr(0, s_length);
+    } else {
+        DEBUG("in else");
+        s = s.substr(0, quickAnswer);
+    }
+
+    // Prune out the ending substrings that are exactly the same as the first part
+
+    f0r(i, k/s.length() + 1) {
+        s += s;
+    }
+
+    s = s.substr(0, k); 
     
     cout << s;
 }

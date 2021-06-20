@@ -34,8 +34,16 @@ else if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr 
 
 ll n, q, Q, T, t, k, l, r, x, y, z, g;
 
+void solve(int tc = 0) {
+
+}
+
 int main() {
     io;
-    cin >> t;
+
+    int tc = 1;
+    cin >> tc;
+
+    for(ll colin_galen = 0; colin_galen < tc; colin_galen++) solve(colin_galen);
 
 }
