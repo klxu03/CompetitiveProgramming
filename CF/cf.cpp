@@ -1,4 +1,7 @@
-#include <bits/stdc++.h>
+// #include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <string>
 
 using namespace std;
 
@@ -37,48 +40,37 @@ ll n, q, Q, T, t, k, l, r, x, y, z, g;
 int main() {
     io;
     cin >> n >> k;
-    
-    string s;
-    cin >> s;
 
-    DEBUG(s, s[s.length() - 1], 'a' < 'c', true);
-
-    ll quickAnswer = -1;
-    f0r(i, s.length()) {
-        if (s[i] > s[0]) {
-            quickAnswer = i;
-            break;
-        }    
+    vector<ll> vec(n);
+    f0r(i, n) {
+        cin >> vec[i];
     }
- 
-    DEBUG(quickAnswer);
-    if (quickAnswer == -1) {
-        ll s_length = 1;
-        s += s; // Double the string length now so I can always compare left and right side without it going out of bounds on the right side with total string being 10 long, and string A being 6 long and B being 4 long. Now total string is 20 long, so it can go all the way to 10 and 10
-        while (true) {
-            DEBUG(s_length, s.substr(0, s_length), s.substr(s_length, s_length));
-            string leftSide = s.substr(0, s_length);
-            string rightSide = s.substr(s_length, s_length);
-            if (leftSide >= rightSide && s_length < s.length()/2) {
-                s_length++;
-            } else {
-                break;
-            }
-            //}
+
+    sort(vec.begin(), vec.end());
+    ll mid = n / 2;
+    // Find the smallest mid occurence
+    // while(vec[mid] == vec[mid - 1]) {
+    //     mid--;
+    // }
+
+    ll counter = 0;
+    f0r(i, k) {
+        // DEBUG(i, vec);
+        vec[mid]++;
+        while(vec[mid] >= vec[mid + counter + 1] && i + 1 < k && mid + counter + 1 < vec.size()) {
+            // DEBUG(i, counter, k);
+            vec[mid + counter + 1]++;
+            counter++;
+            i++;
+            // DEBUG(mid, vec[mid], mid + counter + 1, vec[mid + counter + 1]);
         }
-        s = s.substr(0, s_length);
-    } else {
-        DEBUG("in else");
-        s = s.substr(0, quickAnswer);
+
+        counter = 0;
     }
 
-    // Prune out the ending substrings that are exactly the same as the first part
+    sort(vec.begin(), vec.end());
+    DEBUG("ending", vec);
 
-    f0r(i, k/s.length() + 1) {
-        s += s;
-    }
-
-    s = s.substr(0, k); 
+    cout << vec[n / 2] << endl;
     
-    cout << s;
 }
