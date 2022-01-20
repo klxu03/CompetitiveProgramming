@@ -7,6 +7,10 @@
 #include <set>
 #include <utility>
 #include <algorithm>
+#include <unordered_map>
+#include <queue>
+#include <functional>
+#include <array>
 
 using namespace std;
 
@@ -23,8 +27,8 @@ using namespace std;
 #define s second
 using ll = long long;
 
-#define mp = make_pair
-#define t third
+#define mp make_pair
+#define pll pair<ll, ll>
 
 /* For Debugging Purposes */
 #ifdef LOCAL
@@ -49,69 +53,9 @@ void usaco(string filename) {
 
 ll n, q, Q, T, k, l, r, x, y, z, g;
 
-// Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=643
+// Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=813
 int main() {
-    usaco("diamond");
+    usaco("snowboots");
     // io;
 
-    cin >> n >> k;
-    vector<ll> diamonds(n);
-    f0r(i, n) {
-        cin >> diamonds[i];
-    }
-    sort(diamonds.begin(), diamonds.end());
-
-    vector<ll> amt(n, 0);
-    f0r(i, n) {
-        ll num = diamonds[i];
-
-        f1r(j, i + 1, n) {
-            if(diamonds[j] - num <= k) {
-                amt[i]++;
-            } else {
-                break;
-            }
-        }
-    }
-
-    DEBUG(diamonds);
-    DEBUG(amt);
-
-    // ll max1 = 0, max_total = 0, left = 0, right = 1, curr = 0;
-    // while(right < n) {
-    //     curr = 0;
-    //     if(amt[left] + left >= right) curr--;
-        
-    //     curr += amt[left] + amt[right];
-        
-    //     if(max1 <)
-
-
-    // }
-    pair<ll, ll> max1 = make_pair(-10, -1); //first is max1, second is index
-    f0r(i, n) {
-        if(amt[i] > max1.f) max1 = make_pair(amt[i], i);
-    }
-
-    if(n > 1) {
-        pair<ll, ll> max2 = make_pair(-10, -1);
-        f0r(i, n) {
-            if(amt[i] > max2.f && i != max1.s) {
-                // Do some math about diamond cannabilism
-                // If in the diamond range
-                if(i > max1.s && max1.s + max1.f >= i) {
-                    ll num_diamonds_cannabilized = i - max1.f;
-                    if(max1.f - num_diamonds_cannabilized + amt[i] > max2.f + max1.f) {
-                        max2 = make_pair(max1.f - num_diamonds_cannabilized + amt[i], i);
-                    }
-                } else {
-                    max2 = make_pair(amt[i], i);
-                }
-            }
-        }
-
-        cout << max1.f + max2.f + 2 << endl;
-    } else {
-        cout << 1 << endl;
-    }
 }   
