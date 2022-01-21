@@ -6,8 +6,12 @@
 #include <map>
 #include <set>
 #include <utility>
-#include <unordered_map>
 #include <algorithm>
+#include <unordered_map>
+#include <queue>
+#include <functional>
+#include <array>
+#include <deque>
 
 using namespace std;
 
@@ -24,7 +28,7 @@ using namespace std;
 #define s second
 using ll = long long;
 
-#define mp = make_pair
+#define mp make_pair
 #define t third
 
 /* For Debugging Purposes */

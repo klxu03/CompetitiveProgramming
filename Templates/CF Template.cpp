@@ -6,6 +6,12 @@
 #include <map>
 #include <set>
 #include <utility>
+#include <algorithm>
+#include <unordered_map>
+#include <queue>
+#include <functional>
+#include <array>
+#include <deque>
 
 using namespace std;
 
@@ -22,7 +28,7 @@ using namespace std;
 #define s second
 using ll = long long;
 
-#define mp = make_pair
+#define mp make_pair
 #define t third
 
 /* For Debugging Purposes */
@@ -43,17 +49,17 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 ll n, q, Q, T, k, l, r, x, y, z, g;
 
-void solve() {
-	cin >> n;
-}
+void solve(); 
 
 int main() {
 	io;
 	ll test_cases = 1;
 	
-	cin >> test_cases;
-	f0r(i, test_cases) {
+	f0r(test_case, test_cases) {
 		solve();
 	}
+}
 
+void solve() {
+	cout << "hi" << endl;
 }

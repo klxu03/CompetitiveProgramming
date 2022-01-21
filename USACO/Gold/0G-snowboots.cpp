@@ -1,5 +1,3 @@
-// https://cses.fi/problemset/task/1163
-
 #include <iostream>
 #include <vector>
 #include <string>
@@ -14,23 +12,23 @@
 #include <functional>
 #include <array>
 
-// #include <bits/stdc++.h>
-
 using namespace std;
+
+//Safe lowerbound for 1 second is 10^8 operations
 
 #define f0r(a, b) for (long long a = 0; a < b; a++)
 #define f1r(a, b, c) for (long long a = b; a < c; a++)
-#define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define isOdd & 1
+#define qpow2(exponent) 1 << exponent
+/* 2^exponent, because every time shifting bit to the leftBound you are essentially multiplying function by two */
 #define max3(a, b, c) max(a, max(b, c))
 #define pb push_back
 #define f first
 #define s second
-#define mp(a, b) make_pair(a, b)
-
 using ll = long long;
 
-/* Print a vector */
-template<typename A> ostream& operator<<(ostream &cout, vector<A> const &v) {cout << "[";for(int i = 0; i < v.size(); i++) {if (i) cout << ", "; cout << v[i];}return cout << "]";}
+#define mp make_pair
+#define pll pair<ll, ll>
 
 /* For Debugging Purposes */
 #ifdef LOCAL
@@ -47,48 +45,25 @@ template<typename T, typename... Args> void debug(string s, T x, Args... args) {
 if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-
-ll n, x;
-
-int main() {
+void usaco(string filename) {
     io;
-    cin >> x >> n;
-
-    set<pair<ll, ll> > s_x; //<x, y> x is its value, location, and y is the distance to next point
-    set<pair<ll, ll> > s_y; //Same thing as s_x, just swapped order of <x, y>
-
-    s_x.insert(mp(0, x)); s_x.insert(mp(x, 0));
-    s_y.insert(mp(x, 0)); s_y.insert(mp(0, x));
-
-    ll interest;
-    f0r(i, n) {
-        cin >> interest;
-        DEBUG(s_x, s_y, interest);
-        auto it = s_x.lower_bound(mp(interest, -1));
-        // DEBUG(*it);
-        // DEBUG((*it).f);
-        ll newY = (*it).f - interest;
-
-        ll first = (*(prev(it))).f;
-        ll second = (*(prev(it))).s; // For the 2nd one, I can change prev(it) to it--, but 
-        // only 2nd one since doing it for 1st one will change the value of it
-        DEBUG(first, second);
-
-        s_x.erase(mp(first, second));
-        s_y.erase(mp(second, first));
-
-        DEBUG(interest, second);
-        s_x.insert(mp(first, interest - first));
-        s_y.insert(mp(interest - first, first));
-
-        s_x.insert(mp(interest, newY));
-        s_y.insert(mp(newY, interest));
-
-        cout << (*prev(s_y.end())).f << " ";
-
-        // 0 8
-        // 0 3 8
-        // 0 3 6 8
-    }
-
+    freopen((filename + ".in").c_str(), "r", stdin);
+    freopen((filename + ".out").c_str(), "w", stdout);
 }
+
+ll n, q, Q, T, k, l, r, x, y, z, g;
+
+// Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=813
+int main() {
+    usaco("snowboots");
+    // io;
+
+    /* Create a sorted set of pair<ll, ll> where first is snow depth and second is position like 3rd tile.
+    then go ahead and take the current boots, find the max depth it can go down
+    partition the set to take the subsection of the set where the depth of snow is larger than max depth boots can go
+    and see if there is a contiguous plot of snow that the boots can't go through. Figure out the largest length of
+    such a plot and if the length is larger than the # of tiles the boot can skip, then output 0 since
+    the boots cannot skip over the contiguous plot. 
+    */
+
+}   

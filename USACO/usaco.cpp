@@ -58,4 +58,12 @@ int main() {
     usaco("snowboots");
     // io;
 
+    /* Create a sorted set of pair<ll, ll> where first is snow depth and second is position like 3rd tile.
+    then go ahead and take the current boots, find the max depth it can go down
+    partition the set to take the subsection of the set where the depth of snow is larger than max depth boots can go
+    and see if there is a contiguous plot of snow that the boots can't go through. Figure out the largest length of
+    such a plot and if the length is larger than the # of tiles the boot can skip, then output 0 since
+    the boots cannot skip over the contiguous plot. 
+    */
+
 }   
