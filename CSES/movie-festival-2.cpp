@@ -73,7 +73,7 @@ bool set_cmp(const ll& x, const ll& y) {
     return x < y;
 }
 
-set<ll, bool(*)(const ll&, const ll&)>::iterator greatest_number_smaller(set<ll, bool(*)(const ll&, const ll&)>& s, ll num) {
+multiset<ll, bool(*)(const ll&, const ll&)>::iterator greatest_number_smaller(multiset<ll, bool(*)(const ll&, const ll&)>& s, ll num) {
     DEBUG(num, *(s.begin()));
 
     if(num >= *(s.begin())) {
@@ -95,7 +95,7 @@ void solve() {
     sort(movies.begin(), movies.end(), cmp);
     DEBUG(movies);
 
-    set<ll, bool(*)(const ll&, const ll&)> s(set_cmp);
+    multiset<ll, bool(*)(const ll&, const ll&)> s(set_cmp);
     s.insert(movies[0].s);
     ll movies_watched = 1;
 
