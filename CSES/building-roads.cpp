@@ -62,5 +62,6 @@ int main() {
 }
 
 void solve() {
-	cin >> n;
+    cin >> n >> k; // n is # of cities, k is # of roads
+    
 }
