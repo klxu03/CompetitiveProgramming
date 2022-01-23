@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+#define f0r(a, b) for (long long a = 0; a < b; a++)
+#define f1r(a, b, c) for (long long a = b; a < c; a++)
+#define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define max3(a, b, c) max(a, max(b, c))
+#define pb push_back
+#define f first
+#define s second
+#define mp(a, b) make_pair(a, b)
+
+using ll = long long;
+
+/* Print a vector */
+template<typename A> ostream& operator<<(ostream &cout, vector<A> const &v) {cout << "[";for(int i = 0; i < v.size(); i++) {if (i) cout << ", "; cout << v[i];}return cout << "]";}
+
+/* For Debugging Purposes */
+#ifdef LOCAL
+#define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
+#else
+#define DEBUG(...) 6
+#endif
+
+template<typename T, typename S> ostream& operator << (ostream &os, const pair<T, S> &p) {return os << "(" << p.first << ", " << p.second << ")";}
+template<typename C, typename T = decay<decltype(*begin(declval<C>()))>, typename enable_if<!is_same<C, string>::value>::type* = nullptr>
+ostream& operator << (ostream &os, const C &c) {bool f = true; os << "["; for (const auto &x : c) {if (!f) os << ", "; f = false; os << x;} return os << "]";}
+template<typename T> void debug(string s, T x) {cerr << s << " = " << x << "\n";}
+template <typename T, typename... Args> void debug(string s, T x, Args... args) {for (int i=0, b=0; i<(int)s.size(); i++) if (s[i] == '(' || s[i] == '{') b++;
+else if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << s.substr(0, i) << " = " << x << " | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
+
+#define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+
+ll n, q, Q, T, t, k, l, r, x, y, z, g;
+
+void solve(int tc = 0) {
+    cin >> n;
+    ll sum = 0;
+    vector<ll> vec(n);
+    f0r(i, n - 1) {
+        ll num;
+        cin >> num;
+        vec[i] = num;
+        sum += num;
+    }
+    cin >> vec[n - 1];
+    ll mid = sum / 2;
+
+    ll new_sum = 0;
+    vector<ll> output(n);
+    f0r(i, n - 1) {
+        if (vec[i] > mid) {
+            output[i] = -1;
+            new_sum += -1 * vec[i];
+        } else {
+            output[i] = 1;
+            new_sum += vec[i];
+        }
+    }
+
+
+    f0r(i, n - 1) {
+        cout << output[i] * vec[n - 1] << " ";
+    }
+    cout << new_sum * -1 << endl; 
+
+}
+
+int main() {
+    io;
+
+    int tc = 1;
+    cin >> tc;
+
+    for(ll colin_galen = 0; colin_galen < tc; colin_galen++) solve(colin_galen);
+
+}
