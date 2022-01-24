@@ -49,73 +49,9 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 ll n, q, Q, T, k, l, r, x, y, z, g;
 
-class Graph {
-	public:
-	ll n; // # of nodes
-	ll e; // # of edges
-	bool undirected;
-	vector<vector<ll> > adj; // adjacency neighbor vector
-	vector<bool> visited; // visited nodes
-
-	Graph(ll nodes, ll edges, bool undirected) {
-		n = nodes;
-		e = edges;
-		this->undirected = undirected;
-		adj = vector<vector<ll> >(n);
-		visited = vector<bool>(n);
-
-		f0r(i, e) {
-			ll n1, n2; // n1 for node1
-			cin >> n1 >> n2;
-			adj[n1 - 1].pb(n2 - 1);
-			if(undirected) {
-				adj[n2 - 1].pb(n1 - 1);
-			}
-		}
-	}
-
-	void display() {
-		DEBUG("[");
-		f0r(i, n) {
-			DEBUG(i, adj[i]);
-		}
-		DEBUG("]");
-	}
-
-	void dfs(ll starting_node) {
-		deque<int> dq;
-		dq.push_front(starting_node);
-		visited[starting_node] = true;
-		DEBUG(visited, starting_node, adj[starting_node]);
-
-		while(!dq.empty()) {
-			ll current = dq.front();
-			visited[current] = true;
-			// DEBUG(current, dq, visited);
-
-			if(adj[current].size() == 0) {
-				dq.pop_front();
-			}
-
-			f0r(i, adj[current].size()) {
-				ll neighbor = adj[current][i];
-				// DEBUG(i, neighbor);
-				if(!visited[neighbor]) {
-					dq.push_front(neighbor);
-					break;
-				} 
-				/* If I've skipped through all and none of 
-				the neighbors haven't been visited */
-				if (i == adj[current].size() - 1) dq.pop_front();
-			}
-		}
-	}
-
-};
-
 void solve(); 
 
-// Problem: https://cses.fi/problemset/task/1666
+// Problem URL: https://cses.fi/problemset/task/1085
 int main() {
 	io;
 	ll test_cases = 1;
@@ -125,28 +61,78 @@ int main() {
 	}
 }
 
+ll lastTrue(ll lo, ll hi, ll k, function<int(int)> f) {
+    hi++;
+    while(lo < hi) {
+        ll mid = lo + (hi - lo + 1)/2;
+        DEBUG(lo, mid, hi);
+        if(f(mid) > k) {
+            lo = mid;
+        } else {
+            hi = mid - 1;
+        }
+    }
+
+    if(f(lo + 1) == k) {
+        return lo + 1;
+    } else {
+        return lo;
+    }
+}
+
+set<ll>::iterator greatest_number_smaller(set<ll>& s, ll num) {
+    DEBUG(num, *(--s.end()), *s.begin());
+
+    if(num <= *(--s.end()) && num >= *s.begin()) {
+        return --s.upper_bound(num);
+    } else {
+        return s.end();
+    }
+}
+
+
 void solve() {
-    cin >> n >> k; // n is # of cities, k is # of roads
+    cin >> n >> k;
+    vector<ll> inp(n);
+    set<ll> sums;
+    ll right = 0;
+    ll left = 0;
+    f0r(i, n) {
+        cin >> inp[i];
+        right += inp[i];
+        sums.insert(right);
+        if(inp[i] > left) {
+            left = inp[i];
+        }
+    }
     
-	Graph g1(n, k, true);
-	g1.display();
-	g1.dfs(0);
+    DEBUG(inp, sums);
+    DEBUG(left, right); // Bounds for the binary search
 
-	DEBUG(g1.visited);
-	ll counter = 0;
-	vector<pair<ll, ll> > ret;
-	f0r(i, g1.visited.size()) {
-		if(g1.visited[i] == false) { // this hasn't been visited to yet
-			ret.pb(mp(0, i));
-			counter++;
-			g1.dfs(i);
-		}
-	}
+    ll last_true = lastTrue(left, right, k, [&sums](ll mid) {
+        ll k_counter = 1;
+        ll counter = 0;
 
-	cout << ret.size() << endl;
-	f0r(i, ret.size()) {
-		cout << ret[i].f + 1 << " " << ret[i].s + 1 << endl;
-	}
+        auto it = greatest_number_smaller(sums, counter + mid);
+        while(it != sums.end() && *it < *(--sums.end())) {
+            k_counter++;
+            counter = *it;
+            it = greatest_number_smaller(sums, counter + mid);
 
+            if(k_counter > k) {
+                break;
+            }
+        }
 
+        DEBUG(mid, k_counter);
+        return k_counter;
+        // if (k_counter > k) {
+        //     return true;
+        // } else {
+        //     return false;
+        // }
+
+    });
+
+    cout << last_true << endl;
 }
