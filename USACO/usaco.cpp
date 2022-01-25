@@ -11,6 +11,8 @@
 #include <queue>
 #include <functional>
 #include <array>
+#include <deque>
+#include <climits>
 
 using namespace std;
 
@@ -28,7 +30,7 @@ using namespace std;
 using ll = long long;
 
 #define mp make_pair
-#define pll pair<ll, ll>
+#define t third
 
 /* For Debugging Purposes */
 #ifdef LOCAL
@@ -53,17 +55,144 @@ void usaco(string filename) {
 
 ll n, q, Q, T, k, l, r, x, y, z, g;
 
-// Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=813
+class Graph {
+	public:
+	ll n; // # of nodes
+	ll e; // # of edges
+	bool undirected;
+	vector<vector<ll> > adj; // adjacency neighbor vector
+	vector<ll> visited; // visited nodes
+
+	Graph(ll nodes, ll edges, bool undirected) {
+		n = nodes;
+		e = edges;
+		this->undirected = undirected;
+		adj = vector<vector<ll> >(n);
+		visited = vector<ll>(n, 0);
+	}
+
+    void init(ll edges) {
+		f0r(i, e) {
+			ll n1, n2; // n1 for node1
+			cin >> n1 >> n2;
+			adj[n1 - 1].pb(n2 - 1);
+			if(undirected) {
+				adj[n2 - 1].pb(n1 - 1);
+			}
+		}
+    }
+
+    void add_adj(vector<vector<ll> > &adj) {
+        this->adj = adj;
+    }
+
+	void display() {
+		DEBUG("[");
+		f0r(i, n) {
+			DEBUG(i, adj[i]);
+		}
+		DEBUG("]");
+	}
+
+	void dfs(ll starting_node, ll& group) {
+		deque<int> dq;
+		dq.push_front(starting_node);
+        // fill(visited.begin(), visited.end(), false);
+		visited[starting_node] = group;
+		DEBUG(visited, starting_node, adj[starting_node]);
+
+		while(!dq.empty()) {
+			ll current = dq.front();
+			visited[current] = group;
+			DEBUG(current, dq, visited);
+
+			if(adj[current].size() == 0) {
+				dq.pop_front();
+			}
+
+			f0r(i, adj[current].size()) {
+				ll neighbor = adj[current][i];
+				// DEBUG(i, neighbor);
+				if(visited[neighbor] == 0) {
+					dq.push_front(neighbor);
+					break;
+				} 
+				/* If I've skipped through all and none of 
+				the neighbors haven't been visited */
+				if (i == adj[current].size() - 1) dq.pop_front();
+			}
+		}
+
+		group++;
+	}
+
+};
+
+//Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=944
 int main() {
-    usaco("snowboots");
+    usaco("fenceplan");
     // io;
 
-    /* Create a sorted set of pair<ll, ll> where first is snow depth and second is position like 3rd tile.
-    then go ahead and take the current boots, find the max depth it can go down
-    partition the set to take the subsection of the set where the depth of snow is larger than max depth boots can go
-    and see if there is a contiguous plot of snow that the boots can't go through. Figure out the largest length of
-    such a plot and if the length is larger than the # of tiles the boot can skip, then output 0 since
-    the boots cannot skip over the contiguous plot. 
-    */
+    cin >> n >> k;
+    vector<pair<ll, ll> > inp(n); // x, y, p for power of walkie talkie
 
-}   
+    f0r(i, n) {
+        ll x, y;
+        cin >> x >> y;
+		inp[i] = mp(x, y);
+    }
+    DEBUG(inp);
+	Graph g1(n, k, true);
+	
+	g1.init(k);
+    DEBUG(g1.adj);
+    
+	ll bool_counter = 0;
+	ll group_counter = 1;
+	while(bool_counter < n) {
+		if(g1.visited[bool_counter] == 0) {
+			g1.dfs(bool_counter, group_counter);
+		} else {
+			bool_counter++;
+		}
+	}
+	group_counter--;
+
+	DEBUG(g1.visited);
+	vector<vector<pair<ll, ll> > > groups(group_counter); 
+	f0r(i, n) {
+		groups[g1.visited[i] - 1].pb(inp[i]);
+	}
+	DEBUG(groups);
+
+	vector<ll> coords(4); // top, right, bottom, left
+	ll min_perimeter = LLONG_MAX;
+	f0r(i, group_counter) {
+		// stub
+		coords = {-1, -1, LLONG_MAX, LLONG_MAX};
+		f0r(j, groups[i].size()) {
+			pair<ll, ll> curr = groups[i][j];
+			if(curr.f > coords[0]) {
+				coords[0] = curr.f;
+			} 
+			if (curr.f < coords[2]) {
+				coords[2] = curr.f;
+			}
+
+			if (curr.s > coords[1]) {
+				coords[1] = curr.s;
+			}
+
+			if (curr.s < coords[3]) {
+				coords[3] = curr.s;
+			}
+		}
+
+		ll perimeter = coords[1] - coords[3] + coords[0] - coords[2];
+		perimeter *= 2;
+
+		if (perimeter < min_perimeter) min_perimeter = perimeter;
+	}
+
+	cout << min_perimeter << endl;
+}

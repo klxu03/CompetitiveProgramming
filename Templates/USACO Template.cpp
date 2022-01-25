@@ -12,6 +12,7 @@
 #include <functional>
 #include <array>
 #include <deque>
+#include <climits>
 
 using namespace std;
 
@@ -57,5 +58,86 @@ ll n, q, Q, T, k, l, r, x, y, z, g;
 //Problem URL: 
 int main() {
     usaco("testCases");
+    io;
 
 }
+class Graph {
+	public:
+	ll n; // # of nodes
+	ll e; // # of edges
+	bool undirected;
+	vector<vector<ll> > adj; // adjacency neighbor vector
+	vector<bool> visited; // visited nodes
+
+	Graph(ll nodes, ll edges, bool undirected) {
+		n = nodes;
+		e = edges;
+		this->undirected = undirected;
+		adj = vector<vector<ll> >(n);
+		visited = vector<bool>(n);
+	}
+
+    void init_adj(ll edges) {
+		f0r(i, e) {
+			ll n1, n2; // n1 for node1
+			cin >> n1 >> n2;
+			adj[n1 - 1].pb(n2 - 1);
+			if(undirected) {
+				adj[n2 - 1].pb(n1 - 1);
+			}
+		}
+    }
+
+    void add_adj(vector<vector<ll> > &adj) {
+        this->adj = adj;
+    }
+
+	void init_adj() {
+		f0r(i, e) {
+			ll n1, n2; // n1 for node1
+			cin >> n1 >> n2;
+			adj[n1 - 1].pb(n2 - 1);
+			if(undirected) {
+				adj[n2 - 1].pb(n1 - 1);
+			}
+		}
+	}
+
+	void display() {
+		DEBUG("[");
+		f0r(i, n) {
+			DEBUG(i, adj[i]);
+		}
+		DEBUG("]");
+	}
+
+	void dfs(ll starting_node) {
+		deque<int> dq;
+		dq.push_front(starting_node);
+		visited[starting_node] = true;
+		DEBUG(visited, starting_node, adj[starting_node]);
+
+		while(!dq.empty()) {
+			ll current = dq.front();
+			visited[current] = true;
+			// DEBUG(current, dq, visited);
+
+			if(adj[current].size() == 0) {
+				dq.pop_front();
+			}
+
+			f0r(i, adj[current].size()) {
+				ll neighbor = adj[current][i];
+				// DEBUG(i, neighbor);
+				if(!visited[neighbor]) {
+					dq.push_front(neighbor);
+					break;
+				} 
+				/* If I've skipped through all and none of 
+				the neighbors haven't been visited */
+				if (i == adj[current].size() - 1) dq.pop_front();
+			}
+		}
+	}
+
+};

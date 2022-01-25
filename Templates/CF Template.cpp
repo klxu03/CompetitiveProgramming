@@ -12,6 +12,7 @@
 #include <functional>
 #include <array>
 #include <deque>
+#include <climits>
 
 using namespace std;
 
