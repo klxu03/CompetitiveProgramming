@@ -50,7 +50,7 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 ll n, q, Q, T, k, l, r, x, y, z, g;
 
-void solve(); 
+ll solve(); 
 
 class Graph {
 	public:
@@ -152,72 +152,91 @@ int main() {
 	}
 }
 
-void solve() {
+void dfs(ll starting_node, vector<vector<ll> > &adj, vector<bool> &visited) {
+	deque<int> dq;
+	dq.push_front(starting_node);
+	fill(visited.begin(), visited.end(), false);
+	visited[starting_node] = true;
+
+	while(!dq.empty()) {
+		ll current = dq.front();
+		visited[current] = true;
+
+		if(adj[current].size() == 0) {
+			dq.pop_front();
+		}
+
+		f0r(i, adj[current].size()) {
+			ll neighbor = adj[current][i];
+			// DEBUG(i, neighbor);
+			if(!visited[neighbor]) {
+				dq.push_front(neighbor);
+				break;
+			} 
+			/* If I've skipped through all and none of 
+			the neighbors haven't been visited */
+			if (i == adj[current].size() - 1) {
+				dq.pop_front();
+			}
+		}
+	}
+}
+
+
+ll solve() {
 	cin >> n >> k;
+	ll connected = -1, unconnected = -1;
 
-    Graph g1(n, k, false);
-    g1.init_adj();
+	vector<vector<ll> > adj(n);
+	vector<vector<ll> > rev_adj(n);
+	vector<bool> visited(n, false);
+	vector<bool> possible(n, false);
 
-    DEBUG(g1.adj);
-    vector<ll> lasts;
-    lasts = g1.dfs(0);
+	f0r(i, k) {
+		ll from, to;
+		cin >> from >> to;
+		from--; to--;
+		adj[from].pb(to);
+		rev_adj[to].pb(from);
+	}
 
-    ll connected = -1;
-    ll unconnected = -1;
-    DEBUG(g1.visited);
+	DEBUG(adj, rev_adj);
 
-    f0r(i, n) {
-        if(g1.visited[i] == false) {
-            connected = 1;
-            unconnected = i + 1;
-            break;
-        }
-    }
-    // fill(g1.visited.begin(), g1.visited.end(), false);
-    DEBUG("filled", g1.visited);
-    DEBUG(lasts);
+	dfs(0, adj, visited);
+	DEBUG(visited);
+	f0r(i, visited.size()) {
+		if(visited[i] == false) {
+			connected = 1;
+			unconnected = i + 1;
+			break;
+		}
+	}
 
-    set<ll> prev_lasts;
-
-    // Do it once
-
-    // vector<ll> last_last;
-    // last_last = g1.dfs(lasts[0]);
-    // f0r(i, last_last.size()) {
-    //     prev_lasts.insert(last_last[i]);
-    // }
-    // DEBUG(g1.visited);
-    // f0r(i, n) {
-    //     if(g1.visited[i] == false) {
-    //         connected = lasts[0] + 1;
-    //         unconnected = i + 1;
-    //         break;
-    //     }
-    // }
-
-    f0r(j, lasts.size()) {
-        vector<ll> last_last;
-        last_last = g1.dfs(lasts[j]);
-        // f0r(i, last_last.size()) {
-        //     prev_lasts.insert(last_last[i]);
-        // }
-        DEBUG(g1.visited);
-        f0r(i, n) {
-            if(g1.visited[i] == false) {
-                connected = lasts[j] + 1;
-                unconnected = i + 1;
-                break;
-            }
-        }
-        if (connected != -1) break;
-    }
-
-
-    if(connected != -1) {
+	if (connected != -1) {
         cout << "NO" << endl;
         cout << connected << " " << unconnected << endl;
-    } else {
-        cout << "YES" << endl;
-    }
+		return 0;
+    } 
 
+	possible[0] = true;
+	fill(visited.begin(), visited.end(), false);
+	dfs(0, rev_adj, visited);
+	DEBUG(visited);
+
+	f0r(i, visited.size()) {
+		if(visited[i] == false) {
+			connected = i + 1;
+			unconnected = 1;
+			break;
+		}
+	}
+
+	if (connected != -1) {
+        cout << "NO" << endl;
+        cout << connected << " " << unconnected << endl;
+		return 0;
+    } 
+
+	cout << "YES" << endl;
+	return -1;
 }
