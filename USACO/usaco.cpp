@@ -61,17 +61,17 @@ class Graph {
 	ll e; // # of edges
 	bool undirected;
 	vector<vector<ll> > adj; // adjacency neighbor vector
-	vector<ll> visited; // visited nodes
+	vector<bool> visited; // visited nodes
 
 	Graph(ll nodes, ll edges, bool undirected) {
 		n = nodes;
 		e = edges;
 		this->undirected = undirected;
 		adj = vector<vector<ll> >(n);
-		visited = vector<ll>(n, 0);
+		visited = vector<bool>(n);
 	}
 
-    void init(ll edges) {
+    void init_adj(ll edges) {
 		f0r(i, e) {
 			ll n1, n2; // n1 for node1
 			cin >> n1 >> n2;
@@ -86,6 +86,17 @@ class Graph {
         this->adj = adj;
     }
 
+	void init_adj() {
+		f0r(i, e) {
+			ll n1, n2; // n1 for node1
+			cin >> n1 >> n2;
+			adj[n1 - 1].pb(n2 - 1);
+			if(undirected) {
+				adj[n2 - 1].pb(n1 - 1);
+			}
+		}
+	}
+
 	void display() {
 		DEBUG("[");
 		f0r(i, n) {
@@ -94,17 +105,16 @@ class Graph {
 		DEBUG("]");
 	}
 
-	void dfs(ll starting_node, ll& group) {
+	void dfs(ll starting_node) {
 		deque<int> dq;
 		dq.push_front(starting_node);
-        // fill(visited.begin(), visited.end(), false);
-		visited[starting_node] = group;
+		visited[starting_node] = true;
 		DEBUG(visited, starting_node, adj[starting_node]);
 
 		while(!dq.empty()) {
 			ll current = dq.front();
-			visited[current] = group;
-			DEBUG(current, dq, visited);
+			visited[current] = true;
+			// DEBUG(current, dq, visited);
 
 			if(adj[current].size() == 0) {
 				dq.pop_front();
@@ -113,7 +123,7 @@ class Graph {
 			f0r(i, adj[current].size()) {
 				ll neighbor = adj[current][i];
 				// DEBUG(i, neighbor);
-				if(visited[neighbor] == 0) {
+				if(!visited[neighbor]) {
 					dq.push_front(neighbor);
 					break;
 				} 
@@ -122,77 +132,58 @@ class Graph {
 				if (i == adj[current].size() - 1) dq.pop_front();
 			}
 		}
-
-		group++;
 	}
 
 };
 
-//Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=944
+bool cmp(array<ll, 3>& x, array<ll, 3>&y) {
+	return x[2] > y[2];
+}
+
+//Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=992 
 int main() {
-    usaco("fenceplan");
-    // io;
+    // usaco("wormsort");
+    io;
 
-    cin >> n >> k;
-    vector<pair<ll, ll> > inp(n); // x, y, p for power of walkie talkie
-
-    f0r(i, n) {
-        ll x, y;
-        cin >> x >> y;
-		inp[i] = mp(x, y);
-    }
-    DEBUG(inp);
-	Graph g1(n, k, true);
-	
-	g1.init(k);
-    DEBUG(g1.adj);
-    
-	ll bool_counter = 0;
-	ll group_counter = 1;
-	while(bool_counter < n) {
-		if(g1.visited[bool_counter] == 0) {
-			g1.dfs(bool_counter, group_counter);
-		} else {
-			bool_counter++;
-		}
-	}
-	group_counter--;
-
-	DEBUG(g1.visited);
-	vector<vector<pair<ll, ll> > > groups(group_counter); 
+	cin >> n >> k;
+	vector<ll> cows(n);
 	f0r(i, n) {
-		groups[g1.visited[i] - 1].pb(inp[i]);
+		ll inp;
+		cin >> inp;
+		inp--; // 0 indexing
+		cows[i] = inp;
 	}
-	DEBUG(groups);
 
-	vector<ll> coords(4); // top, right, bottom, left
-	ll min_perimeter = LLONG_MAX;
-	f0r(i, group_counter) {
-		// stub
-		coords = {-1, -1, LLONG_MAX, LLONG_MAX};
-		f0r(j, groups[i].size()) {
-			pair<ll, ll> curr = groups[i][j];
-			if(curr.f > coords[0]) {
-				coords[0] = curr.f;
-			} 
-			if (curr.f < coords[2]) {
-				coords[2] = curr.f;
-			}
+	vector<array<ll, 3> > portals(k);
+	f0r(i, k) {
+		ll x, y, w;
+		cin >> x >> y >> w;
+		x--; y--; // 0 indexing
+		portals[i] = {x, y, w};
+	}
 
-			if (curr.s > coords[1]) {
-				coords[1] = curr.s;
-			}
+	sort(portals.begin(), portals.end(), cmp);
+	DEBUG(cows, portals);
 
-			if (curr.s < coords[3]) {
-				coords[3] = curr.s;
+	set<pair<ll, ll> > changes;
+	f0r(i, n) {
+		if(cows[i] != i) {
+			pair<ll, ll> p = mp(i, cows[i]);
+			// This prevents the same entry, (1, 3) and (3, 1) being needed are both
+			// the same, we need a connection between 1 and 3
+			if (i > cows[i]) { 
+				p.f = cows[i];
+				p.s = i;
 			}
+			changes.insert(p);
 		}
-
-		ll perimeter = coords[1] - coords[3] + coords[0] - coords[2];
-		perimeter *= 2;
-
-		if (perimeter < min_perimeter) min_perimeter = perimeter;
+	}
+	DEBUG(changes);
+	if(changes.size() == 0) {
+		cout << -1 << endl;
+		return 0;
 	}
 
-	cout << min_perimeter << endl;
+	
+
 }
