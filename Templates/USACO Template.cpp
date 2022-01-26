@@ -77,17 +77,6 @@ class Graph {
 		visited = vector<bool>(n);
 	}
 
-    void init_adj(ll edges) {
-		f0r(i, e) {
-			ll n1, n2; // n1 for node1
-			cin >> n1 >> n2;
-			adj[n1 - 1].pb(n2 - 1);
-			if(undirected) {
-				adj[n2 - 1].pb(n1 - 1);
-			}
-		}
-    }
-
     void add_adj(vector<vector<ll> > &adj) {
         this->adj = adj;
     }
@@ -129,7 +118,7 @@ class Graph {
 			f0r(i, adj[current].size()) {
 				ll neighbor = adj[current][i];
 				// DEBUG(i, neighbor);
-				if(!visited[neighbor]) {
+				if(visited[neighbor] == false) {
 					dq.push_front(neighbor);
 					break;
 				} 

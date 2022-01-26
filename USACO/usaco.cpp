@@ -61,26 +61,15 @@ class Graph {
 	ll e; // # of edges
 	bool undirected;
 	vector<vector<ll> > adj; // adjacency neighbor vector
-	vector<bool> visited; // visited nodes
+	vector<ll> visited; // visited nodes
 
 	Graph(ll nodes, ll edges, bool undirected) {
 		n = nodes;
 		e = edges;
 		this->undirected = undirected;
 		adj = vector<vector<ll> >(n);
-		visited = vector<bool>(n);
+		visited = vector<ll>(n, -1);
 	}
-
-    void init_adj(ll edges) {
-		f0r(i, e) {
-			ll n1, n2; // n1 for node1
-			cin >> n1 >> n2;
-			adj[n1 - 1].pb(n2 - 1);
-			if(undirected) {
-				adj[n2 - 1].pb(n1 - 1);
-			}
-		}
-    }
 
     void add_adj(vector<vector<ll> > &adj) {
         this->adj = adj;
@@ -105,15 +94,15 @@ class Graph {
 		DEBUG("]");
 	}
 
-	void dfs(ll starting_node) {
+	void dfs(ll starting_node, ll group) {
 		deque<int> dq;
 		dq.push_front(starting_node);
-		visited[starting_node] = true;
+		visited[starting_node] = group;
 		DEBUG(visited, starting_node, adj[starting_node]);
 
 		while(!dq.empty()) {
 			ll current = dq.front();
-			visited[current] = true;
+			visited[current] = group;
 			// DEBUG(current, dq, visited);
 
 			if(adj[current].size() == 0) {
@@ -123,7 +112,7 @@ class Graph {
 			f0r(i, adj[current].size()) {
 				ll neighbor = adj[current][i];
 				// DEBUG(i, neighbor);
-				if(!visited[neighbor]) {
+				if(visited[neighbor] == -1) {
 					dq.push_front(neighbor);
 					break;
 				} 
@@ -134,6 +123,43 @@ class Graph {
 		}
 	}
 
+
+	bool group_dfs(ll starting_node, ll group) {
+		deque<int> dq;
+		dq.push_front(starting_node);
+		// DEBUG(visited, starting_node, adj[starting_node]);
+		ll depth = 0;
+
+		while(!dq.empty()) {
+			ll current = dq.front();
+			// DEBUG(current, dq, visited);
+
+			if(adj[current].size() == 0) {
+				dq.pop_front();
+			}
+
+			f0r(i, adj[current].size()) {
+				ll neighbor = adj[current][i];
+				// DEBUG(i, neighbor);
+				if(visited[neighbor] == -1) {
+					dq.push_front(neighbor);
+					visited[neighbor] = group;
+					depth++;
+					break;
+				} 
+				/* If I've skipped through all and none of 
+				the neighbors haven't been visited */
+				if (i == adj[current].size() - 1) dq.pop_front();
+			}
+		}
+
+		if(depth != 0) {
+			visited[starting_node] = group;
+			return true; // Actually made a group of size > -1
+		}
+		return false;
+	}
+
 };
 
 bool cmp(array<ll, 3>& x, array<ll, 3>&y) {
@@ -142,8 +168,8 @@ bool cmp(array<ll, 3>& x, array<ll, 3>&y) {
 
 //Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=992 
 int main() {
-    // usaco("wormsort");
-    io;
+    usaco("wormsort");
+    // io;
 
 	cin >> n >> k;
 	vector<ll> cows(n);
@@ -184,6 +210,81 @@ int main() {
 		return 0;
 	}
 
+	// Make the changes into a DFS group
+	Graph c(n, changes.size(), true);
+	vector<vector<ll> > changes_adj(n);
+	for(auto p : changes) {
+		changes_adj[p.f].pb(p.s);
+		changes_adj[p.s].pb(p.f);
+	}
+	c.add_adj(changes_adj);
 	
+	ll group_counter = 0;
+	f0r(i, n) {
+		if(c.visited[i] == -1) {
+			if(c.group_dfs(i, group_counter)) {
+				group_counter++;
+			}
+		}
+	}
+	vector<vector<ll> > groups(group_counter);
+	f0r(i, n) {
+		if(c.visited[i] != -1) {
+			groups[c.visited[i]].pb(i);
+		}
+	}
+	DEBUG(groups);
+
+	// We now have groups of which nodes must be with each other in order for
+	// the wormhole sort to work
+
+	ll lo = 0;
+	ll hi = k;
+
+	while(lo < hi) {
+		ll mid = (lo + hi + 1)/2;
+		Graph g(n, mid, true);
+		vector<vector<ll> > wormholes(n);
+		f0r(i, mid) {
+			wormholes[portals[i][0]].pb(portals[i][1]);
+			wormholes[portals[i][1]].pb(portals[i][0]);
+		}
+		g.add_adj(wormholes);
+
+		bool works = true;
+		f0r(i, group_counter) {
+			ll group_val = g.visited[groups[i][0]];
+			if(group_val == -1) {
+				ll first_in_group = groups[i][0];
+				g.dfs(first_in_group, i);	
+			}
+			group_val = g.visited[groups[i][0]];
+
+			// Now make sure every member in this group is in the same visited group
+			f0r(j, groups[i].size()) {
+				if(g.visited[groups[i][j]] != group_val) {
+					works = false;
+					break;
+				}
+			}
+
+			if (works == false) break;
+		}
+
+		// Binary search part
+		DEBUG(lo, hi, mid, works);
+		if(works) {
+			if(hi == mid) {
+				hi--;
+			} else {
+				hi = mid;
+			}
+		} else {
+			lo = mid;
+		}
+
+	}
+
+	cout << portals[lo][2] << endl;
 
 }
