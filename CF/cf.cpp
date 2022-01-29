@@ -6,10 +6,13 @@
 #include <map>
 #include <set>
 #include <utility>
-#include <unordered_map>
 #include <algorithm>
-
-// #include <bits/stdc++.h>
+#include <unordered_map>
+#include <queue>
+#include <functional>
+#include <array>
+#include <deque>
+#include <climits>
 
 using namespace std;
 
@@ -26,8 +29,9 @@ using namespace std;
 #define s second
 using ll = long long;
 
-#define mp = make_pair
+#define mp make_pair
 #define t third
+#define pll pair<ll, ll>
 
 /* For Debugging Purposes */
 #ifdef LOCAL
@@ -49,66 +53,45 @@ ll n, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
+// Problem: https://cses.fi/problemset/task/1666
 int main() {
 	io;
 	ll test_cases = 1;
 	
-	// cin >> test_cases;
-	f0r(i, test_cases) {
+	f0r(test_case, test_cases) {
 		solve();
 	}
 }
 
 void solve() {
-	cin >> n >> k;
-    vector<ll> inp(n);
+	pll orig;
+    pll dest;
+    cin >> orig.f >> orig.s;
+    cin >> dest.f >> dest.s;
+
+    cin >> n;
+    string s;
+    cin >> s;
+    vector<pll > winds(n);
+    
     f0r(i, n) {
-        cin >> inp[i];
-    }
-    vector<ll> orig(n);
-    orig = inp;
+        pll prev = mp(0, 0);
+        if (i != 0) prev = winds[i - 1];
 
-    sort(inp.begin(), inp.end());
-    bool not_found = true;
-
-    f0r(i, n) {
-        ll num = inp[i];
-
-        ll left = 0;
-        if(i == 0 && n > 1) left = 1;
-        ll right = n - 1;
-        if(i == n - 1 && n > 1) right = n - 2;
-
-        while(left != right && not_found) {
-            ll sum = inp[left] + inp[right];
-            if(sum != k - num) {
-                if(sum > k - num) right--;
-                if(right == i) right--;
-
-                if(sum < k - num) left++;
-                if(left == i) left++;
-            } else {
-                not_found = false;
-                DEBUG("Found something");
-
-                f0r(j, n) {
-                    if(orig[j] == inp[i]) cout << j + 1 << " ";
-                }
-
-                f0r(j, n) {
-                    if(orig[j] == inp[left]) cout << j + 1 << " ";
-                }
-
-                f0r(j, n) {
-                    if(orig[j] == inp[right]) cout << j + 1 << endl;
-                }
-            }
-
-            DEBUG(left, right);
+        if(s[i] == 'U') {
+            prev.s++;
+        } else if (s[i] == 'D') {
+            prev.s--;
+        } else if (s[i] == 'L') {
+            prev.f--;
+        } else if (s[i] == 'R') {
+            prev.f++;
         }
+        winds[i] = prev;
     }
+    DEBUG(winds);
 
-    if(not_found) {
-        cout << "IMPOSSIBLE" << endl;
-    }
+    ll diff_x = dest.f - orig.f;
+    ll diff_y = dest.s - orig.s;
+    DEBUG(diff_x, diff_y);
 }

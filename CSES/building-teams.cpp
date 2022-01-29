@@ -31,7 +31,6 @@ using ll = long long;
 
 #define mp make_pair
 #define t third
-#define pll pair<ll, ll>
 
 /* For Debugging Purposes */
 #ifdef LOCAL
@@ -53,7 +52,101 @@ ll n, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
-// Problem: https://cses.fi/problemset/task/1666
+class Graph {
+	public:
+	ll n; // # of nodes
+	ll e; // # of edges
+	bool undirected;
+	vector<vector<ll> > adj; // adjacency neighbor vector
+	vector<bool> visited; // visited nodes
+
+	Graph(ll nodes, ll edges, bool undirected) {
+		n = nodes;
+		e = edges;
+		this->undirected = undirected;
+		adj = vector<vector<ll> >(n);
+		visited = vector<bool>(n);
+	}
+
+    void add_adj(vector<vector<ll> > &adj) {
+        this->adj = adj;
+    }
+
+	void init_adj() {
+		f0r(i, e) {
+			ll n1, n2; // n1 for node1
+			cin >> n1 >> n2;
+			adj[n1 - 1].pb(n2 - 1);
+			if(undirected) {
+				adj[n2 - 1].pb(n1 - 1);
+			}
+		}
+	}
+
+	void display() {
+		DEBUG("[");
+		f0r(i, n) {
+			DEBUG(i, adj[i]);
+		}
+		DEBUG("]");
+	}
+
+	void dfs(ll starting_node) {
+		deque<int> dq;
+		dq.push_front(starting_node);
+		visited[starting_node] = true;
+		DEBUG(visited, starting_node, adj[starting_node]);
+
+		while(!dq.empty()) {
+			ll current = dq.front();
+			visited[current] = true;
+			// DEBUG(current, dq, visited);
+
+			if(adj[current].size() == 0) {
+				dq.pop_front();
+			}
+
+			f0r(i, adj[current].size()) {
+				ll neighbor = adj[current][i];
+				// DEBUG(i, neighbor);
+				if(visited[neighbor] == false) {
+					dq.push_front(neighbor);
+					break;
+				} 
+				/* If I've skipped through all and none of 
+				the neighbors haven't been visited */
+				if (i == adj[current].size() - 1) dq.pop_front();
+			}
+		}
+	}
+
+    void bfs(ll starting_node) {
+		deque<int> dq;
+		dq.push_front(starting_node);
+		visited[starting_node] = true;
+		DEBUG(visited, starting_node, adj[starting_node]);
+
+    }
+
+};
+
+ll binary_search(ll lo, ll hi, bool works) {
+	ll mid = (lo + hi + 1)/2;
+
+	// Binary search part
+	DEBUG(lo, hi, mid, works);
+	if(works) {
+		if(hi == mid) {
+			hi--;
+		} else {
+			hi = mid;
+		}
+	} else {
+		lo = mid;
+	}
+}
+
+// Problem: https://cses.fi/problemset/task/1668
 int main() {
 	io;
 	ll test_cases = 1;
@@ -64,5 +157,9 @@ int main() {
 }
 
 void solve() {
-	cin >> n;
+	cin >> n >> k;
+    Graph g1(n, k, true);
+    g1.init_adj();
+
+
 }

@@ -31,6 +31,7 @@ using ll = long long;
 
 #define mp make_pair
 #define t third
+#define pll pair<ll, ll>
 
 /* For Debugging Purposes */
 #ifdef LOCAL
@@ -130,3 +131,19 @@ class Graph {
 	}
 
 };
+
+ll binary_search(ll lo, ll hi, bool works) {
+	ll mid = (lo + hi + 1)/2;
+
+	// Binary search part
+	DEBUG(lo, hi, mid, works);
+	if(works) {
+		if(hi == mid) {
+			hi--;
+		} else {
+			hi = mid;
+		}
+	} else {
+		lo = mid;
+	}
+}
