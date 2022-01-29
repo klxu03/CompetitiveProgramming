@@ -67,40 +67,41 @@ int main() {
 		cin >> first >> second;
 
 		if(first <= second) {
-			ll new_num = floor(second/first);
-			DEBUG(new_num);
-			if(new_num > 1) {
-				new_num /= 2;
-				new_num *= 2;
-				ll diff = second - first * new_num;
-				ll even_diff = diff/new_num;
-				ll odd_diff = diff - even_diff*new_num;
-				DEBUG(new_num, diff, even_diff, odd_diff);
-				cout << new_num/2 + even_diff + odd_diff << endl;
-			} else {
-				ll counter = 0;
-				if(first != second && first % 2 == 1) {
-					first++;
-					counter++;
-				}
-
-				ll diff = second - first;
-				
-				DEBUG(second, first, diff, counter);
-				ll div_counter = 0;
-				ll new_diff = diff;
-				ll odd_count = 0;
-				while(new_diff/2 > 2) {
-					first /= 2;
-					if(new_diff % 2 == 1) odd_count++;
-					new_diff /= 2;
-					div_counter++;
-					DEBUG(first, new_diff);
-				}
-				DEBUG(second, first, new_diff, div_counter, counter);
-
-				cout << new_diff + div_counter * 2 + counter + odd_count << endl;
+			ll counter = 0;
+			if(first != second && first % 2 == 1) {
+				first++;
+				counter++;
 			}
+
+			ll diff;
+			ll multiply_2 = 0;
+			if (second/first > 1) {
+				while(first * 2 < second) {
+					first *= 2;
+					multiply_2++;
+				}
+				diff = second - first;
+				// calculate diff
+			} else {
+				diff = second - first;
+			}
+			
+			DEBUG(second, first, diff, counter);
+			ll div_counter = 0;
+			ll new_diff = diff;
+			ll odd_count = 0;
+			DEBUG(ceil((double) new_diff/2));
+			while(ceil((double) new_diff/2) >= 2) {
+				DEBUG("in while");
+				first /= 2;
+				if(new_diff % 2 == 1) odd_count++;
+				new_diff /= 2;
+				div_counter++;
+				DEBUG(first, new_diff);
+			}
+			DEBUG(second, first, new_diff, div_counter, counter, odd_count, multiply_2);
+
+			cout << new_diff + div_counter * 2 + counter + odd_count - multiply_2 << endl;
 		} else {
 			ll counter = 0;
 			while(first > second) {

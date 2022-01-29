@@ -14,8 +14,6 @@
 #include <deque>
 #include <climits>
 
-#include <math.h>
-
 using namespace std;
 
 //Safe lowerbound for 1 second is 10^8 operations
@@ -62,81 +60,6 @@ ll n, q, Q, T, k, l, r, x, y, z, g;
 int main() {
     io;
 	cin >> n;
-	f0r(i, n) {
-		ll first, second;
-		cin >> first >> second;
-
-		if(first <= second) {
-			ll new_num = floor(second/first);
-			DEBUG(new_num);
-			if(new_num > 1) {
-				new_num /= 2;
-				new_num *= 2;
-				ll diff = second - first * new_num;
-				ll even_diff = diff/new_num;
-				ll odd_diff = diff - even_diff*new_num;
-				DEBUG(new_num, diff, even_diff, odd_diff);
-				cout << new_num/2 + even_diff + odd_diff << endl;
-			} else {
-				ll counter = 0;
-				if(first != second && first % 2 == 1) {
-					first++;
-					counter++;
-				}
-
-				ll diff = second - first;
-				
-				DEBUG(second, first, diff, counter);
-				ll div_counter = 0;
-				ll new_diff = diff;
-				ll odd_count = 0;
-				while(new_diff/2 > 2) {
-					first /= 2;
-					if(new_diff % 2 == 1) odd_count++;
-					new_diff /= 2;
-					div_counter++;
-					DEBUG(first, new_diff);
-				}
-				DEBUG(second, first, new_diff, div_counter, counter);
-
-				cout << new_diff + div_counter * 2 + counter + odd_count << endl;
-			}
-		} else {
-			ll counter = 0;
-			while(first > second) {
-				DEBUG("first/2", first, second, counter);
-				if(first % 2 == 1) {
-					first++;
-					counter++;
-				}
-				first /= 2;
-				counter++;
-			} // now we have first < second
-			
-			if(first != second && first % 2 == 1) {
-				first++;
-				counter++;
-			}
-
-			ll diff = second - first;
-			
-			DEBUG(second, first, diff, counter);
-			ll div_counter = 0;
-			ll new_diff = diff;
-			ll odd_count = 0;
-			while(new_diff/2 > 2) {
-				first /= 2;
-				if(new_diff % 2 == 1) odd_count++;
-				new_diff /= 2;
-				div_counter++;
-				DEBUG(first, new_diff);
-			}
-			DEBUG(second, first, new_diff, div_counter, counter);
-
-			cout << new_diff + div_counter * 2 + counter + odd_count << endl;
-		}
-
-	}
 
 }
 class Graph {
