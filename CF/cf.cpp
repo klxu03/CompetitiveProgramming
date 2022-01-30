@@ -11,8 +11,6 @@
 #include <queue>
 #include <functional>
 #include <array>
-#include <deque>
-#include <climits>
 
 using namespace std;
 
@@ -29,9 +27,8 @@ using namespace std;
 #define s second
 using ll = long long;
 
-#define mp make_pair
+#define mp = make_pair
 #define t third
-#define pll pair<ll, ll>
 
 /* For Debugging Purposes */
 #ifdef LOCAL
@@ -51,47 +48,82 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 ll n, q, Q, T, k, l, r, x, y, z, g;
 
-void solve(); 
+ll solve(); 
 
-// Problem: https://cses.fi/problemset/task/1666
 int main() {
 	io;
 	ll test_cases = 1;
+    cin >> test_cases;
 	
-	f0r(test_case, test_cases) {
+	f0r(i, test_cases) {
 		solve();
 	}
 }
 
-void solve() {
-	pll orig;
-    pll dest;
-    cin >> orig.f >> orig.s;
-    cin >> dest.f >> dest.s;
+template <typename T>
+T expt(T p, unsigned q)
+{
+    T r(1);
 
-    cin >> n;
-    string s;
-    cin >> s;
-    vector<pll > winds(n);
-    
-    f0r(i, n) {
-        pll prev = mp(0, 0);
-        if (i != 0) prev = winds[i - 1];
-
-        if(s[i] == 'U') {
-            prev.s++;
-        } else if (s[i] == 'D') {
-            prev.s--;
-        } else if (s[i] == 'L') {
-            prev.f--;
-        } else if (s[i] == 'R') {
-            prev.f++;
+    while (q != 0) {
+        if (q % 2 == 1) {    // q is odd
+            r *= p;
+            q--;
         }
-        winds[i] = prev;
+        p *= p;
+        q /= 2;
     }
-    DEBUG(winds);
 
-    ll diff_x = dest.f - orig.f;
-    ll diff_y = dest.s - orig.s;
-    DEBUG(diff_x, diff_y);
+    return r;
+}
+
+ll solve() {
+    cin >> x >> y;
+
+    ll snd_largest_2 = 0;
+    ll temp = y;
+    while(temp > 1) {
+        temp /= 2;
+        snd_largest_2++;
+    }
+    snd_largest_2 = expt(2, snd_largest_2);
+    DEBUG(snd_largest_2);
+
+    ll temp_y = y;
+    ll temp_x = x;
+    while(snd_largest_2 > 1 && (temp_y - snd_largest_2 >= 0 || temp_x - snd_largest_2 < 0)) {
+        temp_y %= snd_largest_2;
+        temp_x %= snd_largest_2;
+        snd_largest_2 /= 2;
+        DEBUG(snd_largest_2, temp_y, temp_y - snd_largest_2, temp_x, temp_x - snd_largest_2);
+    }
+    snd_largest_2 *= 2;
+    DEBUG(snd_largest_2);
+
+    ll new_x = x % snd_largest_2;
+    ll new_y = y % snd_largest_2;
+    DEBUG(x, new_x, y, new_y);
+
+    if(new_x == 0) {
+        cout << 1 << endl;
+        return 0;
+    }
+
+    ll first_up = 0;
+    ll second_up;
+    second_up = abs(new_x - new_y) + 1;
+    DEBUG(y, snd_largest_2 * 2);
+    DEBUG((y % (snd_largest_2 * 2)) - snd_largest_2);
+    if(((y % (snd_largest_2 * 2)) - snd_largest_2) >= 0) {
+        ll first_up = abs(snd_largest_2 - new_x + new_y) + 1;
+        if (snd_largest_2 * 2 >= y) {
+            first_up--;
+        }
+        DEBUG(first_up, second_up);
+        cout << min(first_up, second_up) << endl;
+    } else {
+        cout << second_up << endl;
+    }
+
+    return -1;
 }

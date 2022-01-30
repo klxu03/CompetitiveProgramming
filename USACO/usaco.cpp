@@ -66,76 +66,74 @@ int main() {
 		ll first, second;
 		cin >> first >> second;
 
-		if(first <= second) {
-			ll new_num = floor(second/first);
-			DEBUG(new_num);
-			if(new_num > 1) {
-				new_num /= 2;
-				new_num *= 2;
-				ll diff = second - first * new_num;
-				ll even_diff = diff/new_num;
-				ll odd_diff = diff - even_diff*new_num;
-				DEBUG(new_num, diff, even_diff, odd_diff);
-				cout << new_num/2 + even_diff + odd_diff << endl;
-			} else {
-				ll counter = 0;
-				if(first != second && first % 2 == 1) {
-					first++;
-					counter++;
-				}
-
-				ll diff = second - first;
-				
-				DEBUG(second, first, diff, counter);
-				ll div_counter = 0;
-				ll new_diff = diff;
-				ll odd_count = 0;
-				while(new_diff/2 > 2) {
-					first /= 2;
-					if(new_diff % 2 == 1) odd_count++;
-					new_diff /= 2;
-					div_counter++;
-					DEBUG(first, new_diff);
-				}
-				DEBUG(second, first, new_diff, div_counter, counter);
-
-				cout << new_diff + div_counter * 2 + counter + odd_count << endl;
-			}
-		} else {
-			ll counter = 0;
-			while(first > second) {
-				DEBUG("first/2", first, second, counter);
-				if(first % 2 == 1) {
-					first++;
-					counter++;
-				}
-				first /= 2;
-				counter++;
-			} // now we have first < second
-			
-			if(first != second && first % 2 == 1) {
-				first++;
-				counter++;
-			}
-
-			ll diff = second - first;
-			
-			DEBUG(second, first, diff, counter);
-			ll div_counter = 0;
-			ll new_diff = diff;
-			ll odd_count = 0;
-			while(new_diff/2 > 2) {
-				first /= 2;
-				if(new_diff % 2 == 1) odd_count++;
-				new_diff /= 2;
-				div_counter++;
-				DEBUG(first, new_diff);
-			}
-			DEBUG(second, first, new_diff, div_counter, counter);
-
-			cout << new_diff + div_counter * 2 + counter + odd_count << endl;
+		ll double_counter = 0;
+		while(first * 2 <= second) {
+			first *= 2;
+			double_counter++;
+		}
+		if(first == second) {
+			cout << double_counter << endl;
+			continue;
 		}
 
+		ll div_2_counter = 0;
+		while(first > second) {
+			if (first % 2 == 1) {
+				first++;
+				div_2_counter++;
+			}
+			first /= 2;
+			div_2_counter++;
+		} 
+		if(first % 2 == 1 && first != second) {
+			first++;
+			div_2_counter++;
+		}
+
+		// now we have first < second
+		DEBUG(first, second);
+		vector<pair<ll, ll> > combos;
+		ll diff = second - first;
+
+		combos.pb(mp(diff, 0));
+		ll num_divisions = 0;
+
+		while(diff >= 2) {
+			ll new_counter = combos[num_divisions].s;
+
+			// Add 1 to prep for division
+			if(first % 2 == 1) {
+				first++;
+				new_counter++;
+			}
+
+			// Do the division
+			first /= 2;
+			new_counter += 2;
+			num_divisions++;
+
+			// Account for a future + 1 somewhere beyond just the base smallest + 1
+			if(diff % 2 == 1) {
+				new_counter++;
+			}
+			diff /= 2;
+
+			combos.pb(mp(diff, new_counter));
+			DEBUG(second, first, diff, new_counter);
+		}
+			
+		DEBUG(combos);
+
+		ll min = combos[double_counter].f + combos[double_counter].s + div_2_counter;
+		f1r(i, double_counter, num_divisions) {
+			ll new_min = combos[i].f + combos[i].s + div_2_counter;
+			if (new_min < min) {
+				min = new_min;
+			}
+		}
+		DEBUG(div_2_counter, min, double_counter);
+
+		cout << min - double_counter << endl;
 	}
 
 }

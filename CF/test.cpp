@@ -65,4 +65,19 @@ int main() {
 
 void solve() {
 	cin >> n;
+
+    vector<ll> inp(n);
+    f0r(i, n) {
+        cin >> inp[i];
+    }
+
+    ll max = 0;
+    f0r(i, n - 1) {
+        ll xorr = inp[i] ^ inp[i + 1];
+        if (xorr > max) {
+            max = xorr;
+        }
+    }
+
+    cout << max << endl;
 }
