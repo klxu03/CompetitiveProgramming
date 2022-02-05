@@ -58,14 +58,14 @@ class Graph {
 	ll e; // # of edges
 	bool undirected;
 	vector<vector<ll> > adj; // adjacency neighbor vector
-	vector<bool> visited; // visited nodes
+	vector<ll> visited; // visited nodes
 
 	Graph(ll nodes, ll edges, bool undirected) {
 		n = nodes;
 		e = edges;
 		this->undirected = undirected;
 		adj = vector<vector<ll> >(n);
-		visited = vector<bool>(n);
+		visited = vector<ll>(n, -1);
 	}
 
     void add_adj(vector<vector<ll> > &adj) {
@@ -120,12 +120,33 @@ class Graph {
 		}
 	}
 
-    void bfs(ll starting_node) {
+    bool bfs(ll starting_node, ll group) {
 		deque<int> dq;
-		dq.push_front(starting_node);
-		visited[starting_node] = true;
-		DEBUG(visited, starting_node, adj[starting_node]);
+		dq.push_back(starting_node);
+		visited[starting_node] = group;
 
+		bool valid = true;
+		while(!dq.empty() && valid) {
+			ll current = dq.front();
+			group = (visited[current] + 1) % 2; // swapping the group
+
+			dq.pop_front();
+
+			DEBUG(current, adj[current]);
+			DEBUG(group, visited);
+			f0r(i, adj[current].size()) {
+				ll neighbor = adj[current][i];
+				if(visited[neighbor] == -1) {
+					visited[neighbor] = group;
+					dq.push_back(neighbor);
+				} else if (visited[neighbor] != group) {
+					valid = false;
+					break;
+				}
+			}
+		}
+
+		return valid;
     }
 
 };
@@ -160,6 +181,22 @@ void solve() {
 	cin >> n >> k;
     Graph g1(n, k, true);
     g1.init_adj();
+	
+	bool works = true;
+	f0r(i, n) {
+		if(g1.visited[i] == -1) {
+			works = works && g1.bfs(i, 0);
+		}
+	}
 
-
+	DEBUG(works, g1.visited);
+	if(works) {
+		f0r(i, n) {
+			cout << g1.visited[i] + 1 << " ";
+		}
+	} else {
+		cout << "IMPOSSIBLE";
+	}
+	cout << endl;
+	
 }

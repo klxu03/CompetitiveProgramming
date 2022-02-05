@@ -130,6 +130,26 @@ class Graph {
 		}
 	}
 
+    void bfs(ll starting_node) {
+		deque<int> dq;
+		dq.push_back(starting_node);
+		visited[starting_node] = true;
+
+		bool valid = true;
+		while(!dq.empty() && valid) {
+			ll current = dq.front();
+			dq.pop_front();
+
+			f0r(i, adj[current].size()) {
+				ll neighbor = adj[current][i];
+				if(visited[neighbor] == false) {
+					visited[neighbor] = true;
+					dq.push_back(neighbor);
+				} 
+			}
+		}
+    }
+
 };
 
 ll binary_search(ll lo, ll hi, bool works) {
