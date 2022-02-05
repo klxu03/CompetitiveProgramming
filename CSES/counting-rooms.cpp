@@ -64,5 +64,12 @@ int main() {
 }
 
 void solve() {
-	cin >> n;
+	cin >> n >> m;
+
+	vector<string> maze(n);
+	f0r(i, n) {
+		cin >> maze[i];
+	}
+
+	DEBUG(maze);
 }

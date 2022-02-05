@@ -54,7 +54,7 @@ void usaco(string filename) {
     freopen((filename + ".out").c_str(), "w", stdout);
 }
 
-ll n, q, Q, T, k, l, r, x, y, z, g;
+ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 //Problem URL: 
 int main() {
