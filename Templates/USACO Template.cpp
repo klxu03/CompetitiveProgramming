@@ -68,14 +68,14 @@ class Graph {
 	ll e; // # of edges
 	bool undirected;
 	vector<vector<ll> > adj; // adjacency neighbor vector
-	vector<bool> visited; // visited nodes
+	vector<ll> visited; // visited nodes
 
 	Graph(ll nodes, ll edges, bool undirected) {
 		n = nodes;
 		e = edges;
 		this->undirected = undirected;
 		adj = vector<vector<ll> >(n);
-		visited = vector<bool>(n);
+		visited = vector<ll>(n, false);
 	}
 
     void add_adj(vector<vector<ll> > &adj) {
@@ -104,13 +104,11 @@ class Graph {
 	void dfs(ll starting_node) {
 		deque<int> dq;
 		dq.push_front(starting_node);
-		visited[starting_node] = true;
 		DEBUG(visited, starting_node, adj[starting_node]);
 
 		while(!dq.empty()) {
 			ll current = dq.front();
 			visited[current] = true;
-			// DEBUG(current, dq, visited);
 
 			if(adj[current].size() == 0) {
 				dq.pop_front();
@@ -118,7 +116,6 @@ class Graph {
 
 			f0r(i, adj[current].size()) {
 				ll neighbor = adj[current][i];
-				// DEBUG(i, neighbor);
 				if(visited[neighbor] == false) {
 					dq.push_front(neighbor);
 					break;
