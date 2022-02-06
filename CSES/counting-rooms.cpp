@@ -53,7 +53,7 @@ ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
-// Problem: https://cses.fi/problemset/task/1666
+// Problem: https://cses.fi/problemset/task/1192
 int main() {
 	io;
 	ll test_cases = 1;
@@ -63,13 +63,60 @@ int main() {
 	}
 }
 
+vector<string> maze;
+vector<vector<bool> > visited;
+
+void floodfill(pll start) {
+	deque<pll > dq;
+	dq.push_back(start);
+
+	while(!dq.empty()) {
+		pll current = dq.front();
+		DEBUG(current, dq);
+		visited[current.f][current.s] = true;
+
+		if (current.f - 1 >= 0 && visited[current.f - 1][current.s] == false && maze[current.f - 1][current.s] == '.') {
+			// Top
+			dq.push_front(mp(current.f - 1, current.s));
+		} else if (current.s + 1 <= m - 1 && visited[current.f][current.s + 1] == false && maze[current.f][current.s + 1] == '.') {
+			// Right
+			dq.push_front(mp(current.f, current.s + 1));
+		} else if (current.f + 1 <= n - 1 && visited[current.f + 1][current.s] == false && maze[current.f + 1][current.s] == '.') {
+			// Bottom
+			dq.push_front(mp(current.f + 1, current.s));
+		} else if (current.s - 1 >= 0 && visited[current.f][current.s - 1] == false && maze[current.f][current.s - 1] == '.') {
+			// Left
+				dq.push_front(mp(current.f, current.s - 1));
+		} else {
+			dq.pop_front();
+		}
+	}
+}
+
 void solve() {
 	cin >> n >> m;
 
-	vector<string> maze(n);
+	maze = vector<string>(n);
+	visited = vector<vector<bool> >(n, vector<bool>(m, false));
 	f0r(i, n) {
 		cin >> maze[i];
 	}
 
 	DEBUG(maze);
+	DEBUG(visited);
+
+	ll counter = 0;
+	f0r(i, n) {
+		f0r(j, m) {
+			if(visited[i][j] == false) {
+				if (maze[i][j] == '.') {
+					floodfill(mp(i, j));
+					counter++;
+				}
+			}
+		}
+	}
+
+	DEBUG(visited);
+	cout << counter << endl;
 }

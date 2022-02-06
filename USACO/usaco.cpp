@@ -34,11 +34,11 @@ using ll = long long;
 #define pll pair<ll, ll>
 
 /* For Debugging Purposes */
-// #ifdef LOCAL
-// #define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
-// #else
+#ifdef LOCAL
+#define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
+#else
 #define DEBUG(...) 6
-// #endif
+#endif
 
 template<typename T, typename S> ostream& operator << (ostream &os, const pair<T, S> &p) {return os << "(" << p.first << ", " << p.second << ")";}
 template<typename C, typename T = decay<decltype(*begin(declval<C>()))>, typename enable_if<!is_same<C, string>::value>::type* = nullptr>
@@ -54,187 +54,9 @@ void usaco(string filename) {
     freopen((filename + ".out").c_str(), "w", stdout);
 }
 
-class Graph {
-	public:
-	ll n; // # of nodes
-	ll e; // # of edges
-	bool undirected;
-	vector<vector<ll> > adj; // adjacency neighbor vector
-	vector<ll> visited; // visited nodes
+ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
-	Graph(ll nodes, ll edges, bool undirected) {
-		n = nodes;
-		e = edges;
-		this->undirected = undirected;
-		adj = vector<vector<ll> >(n);
-		visited = vector<ll>(n, -1);
-	}
-
-    void add_adj(vector<vector<ll> > &adj) {
-        this->adj = adj;
-    }
-
-	void init_adj() {
-		f0r(i, e) {
-			ll n1, n2; // n1 for node1
-			cin >> n1 >> n2;
-			adj[n1 - 1].pb(n2 - 1);
-			if(undirected) {
-				adj[n2 - 1].pb(n1 - 1);
-			}
-		}
-	}
-
-	void display() {
-		DEBUG("[");
-		f0r(i, n) {
-			DEBUG(i, adj[i]);
-		}
-		DEBUG("]");
-	}
-
-	void dfs(ll starting_node, ll group_counter) {
-		deque<int> dq;
-		dq.push_front(starting_node);
-		DEBUG(visited, starting_node, adj[starting_node]);
-
-		while(!dq.empty()) {
-			ll current = dq.front();
-			visited[current] = group_counter;
-
-			if(adj[current].size() == 0) {
-				dq.pop_front();
-			}
-
-			f0r(i, adj[current].size()) {
-				ll neighbor = adj[current][i];
-				if(visited[neighbor] == -1) {
-					dq.push_front(neighbor);
-					break;
-				} 
-				/* If I've skipped through all and none of 
-				the neighbors haven't been visited */
-				if (i == adj[current].size() - 1) dq.pop_front();
-			}
-		}
-	}
-
-    bool bfs(ll starting_node) {
-		deque<int> dq;
-		dq.push_back(starting_node);
-
-		ll group = 0;
-		bool possible = true;
-		visited[starting_node] = group;
-
-		bool valid = true;
-		while(!dq.empty() && valid) {
-			DEBUG(visited);
-			ll current = dq.front();
-			dq.pop_front();
-			group = (visited[current] + 1) % 2;
-
-			f0r(i, adj[current].size()) {
-				ll neighbor = adj[current][i];
-				if(visited[neighbor] == -1) {
-					visited[neighbor] = group;
-					dq.push_back(neighbor);
-				} else if (visited[neighbor] != group) {
-					DEBUG("not possible", group, current, neighbor);
-					possible = false;
-					break;
-				}
-			}
-		}
-
-		return possible;
-    }
-
-};
-
-ll n, q, Q, T, k, l, r, x, y, z, g;
-
-//Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=920 
-int main() {
-    usaco("revegetate");
-    // io;
-
-	cin >> n >> k;
-	vector<pll > same;
-	vector<pll > diff;
-
-	f0r(i, k) {
-		string s; ll t1, t2;
-		cin >> s >> t1 >> t2;
-		t1--; t2--;
-
-		if (s == "S") {
-			same.pb(mp(min(t1, t2), max(t1, t2)));
-		} else {
-			diff.pb(mp(min(t1, t2), max(t1, t2)));
-		}
-	}
-	DEBUG(same, diff);
-
-	Graph g_same(n, same.size(), true);
-	vector<vector<ll> > adj_same(n);
-	f0r(i, same.size()) {
-		adj_same[same[i].f].pb(same[i].s);
-		adj_same[same[i].s].pb(same[i].f);
-	}
-	DEBUG(adj_same);
-
-	g_same.add_adj(adj_same);
-
-	ll group_counter = 0;
-	f0r(i, n) {
-		if(g_same.visited[i] == -1) {
-			g_same.dfs(i, group_counter);
-			group_counter++;
-		}
-	}
-	DEBUG(g_same.visited, group_counter);
-
-	/* If node 2 and 3 are in the same group,they are effectively 
-	one big node if they have the same g_same.visited[i] value */
-
-	Graph g_diff(group_counter, diff.size(), true);
-	vector<vector<ll> > adj_diff(group_counter);
-	f0r(i, diff.size()) {
-		ll prev = diff[i].f;
-		ll aft = diff[i].s;
-		adj_diff[g_same.visited[diff[i].f]].pb(g_same.visited[diff[i].s]);
-		adj_diff[g_same.visited[diff[i].s]].pb(g_same.visited[diff[i].f]);
-	}
-	DEBUG(adj_diff);
-	g_diff.add_adj(adj_diff);
-
-	ll counter = 0;
-	bool possible = true;
-	f0r(i, group_counter) {
-		if (g_diff.visited[i] == -1) {
-			DEBUG(g_diff.visited);
-			possible = g_diff.bfs(i) && possible;
-			counter++;
-		}
-	}
-	DEBUG(g_diff.visited);
-	DEBUG(counter, possible);
-	
-	if(possible) {
-		cout << 1;
-		f0r(i, counter) {
-			cout << 0;
-		}
-	} else {
-		cout << 0;
-	}
-	cout << endl;
-
-	// cout << counter << endl;
-}
-
-ll binary_search(ll lo, ll hi, bool works) {
+ll binary_search(ll &lo, ll &hi, bool works) {
 	ll mid = (lo + hi + 1)/2;
 
 	// Binary search part
@@ -246,6 +68,130 @@ ll binary_search(ll lo, ll hi, bool works) {
 			hi = mid;
 		}
 	} else {
-		lo = mid;
+		lo = mid + 1;
 	}
+}
+
+vector<vector<bool> > visited;
+vector<vector<ll> > inp;
+
+void reset_visited() {
+	f0r(i, n) {
+		f0r(j, m) {
+			visited[i][j] = false;
+		}
+	}
+}
+
+void floodfill(pll start, ll amt) {
+	/* Create these two global variables */
+
+	deque<pll > dq;
+	dq.push_back(start);
+
+	while(!dq.empty()) {
+		pll current = dq.front();
+		// if (amt == 15) {
+		// 	cout << "------" << endl;
+		// 	f0r(i, n) {
+		// 		f0r(j, m) {
+		// 			cout << visited[i][j] << " ";
+		// 		}
+		// 		cout << endl;
+		// 	}
+		// }
+		visited[current.f][current.s] = true;
+		ll current_amt = inp[current.f][current.s];
+
+		if (current.f - 1 >= 0 && visited[current.f - 1][current.s] == false && abs(inp[current.f - 1][current.s] - current_amt) <= amt) {
+			// Top
+			dq.push_front(mp(current.f - 1, current.s));
+		} else if (current.s + 1 <= m - 1 && visited[current.f][current.s + 1] == false && abs(inp[current.f][current.s + 1] - current_amt) <= amt) {
+			// Right
+			dq.push_front(mp(current.f, current.s + 1));
+		} else if (current.f + 1 <= n - 1 && visited[current.f + 1][current.s] == false && abs(inp[current.f + 1][current.s] - current_amt) <= amt) {
+			// Bottom
+			dq.push_front(mp(current.f + 1, current.s));
+		} else if (current.s - 1 >= 0 && visited[current.f][current.s - 1] == false && abs(inp[current.f][current.s - 1] - current_amt) <= amt) {
+			// Left
+			dq.push_front(mp(current.f, current.s - 1));
+		} else {
+			dq.pop_front();
+		}
+	}
+}
+
+//Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=380
+int main() {
+    usaco("ccski");
+    // io;
+
+	cin >> n >> m;
+	inp = vector<vector<ll> > (n, vector<ll> (m));
+	visited = vector<vector<bool> > (n, vector<bool> (m));
+
+	f0r(i, n) {
+		f0r(j, m) {
+			cin >> inp[i][j];
+		}
+	}
+	vector<pll > waypoints;
+	f0r(i, n) {
+		f0r(j, m) {
+			ll num;
+			cin >> num;
+			if (num == 1) {
+				waypoints.pb(mp(i, j));
+			}
+		}
+	}
+	DEBUG(inp);
+	DEBUG(waypoints);
+
+	ll lo = 0;
+	ll hi = 1000000001;
+	while(lo < hi) {
+		reset_visited();
+		ll mid = (lo + hi + 1)/2;
+		floodfill(waypoints[0], mid);
+
+		bool works = true;
+		f0r(i, waypoints.size()) {
+			if(visited[waypoints[i].f][waypoints[i].s] == false) works = false;
+		}
+
+		// cout << "Mid: " << mid << " visited:" << endl;
+		// f0r(i, n) {
+		// 	f0r(j, m) {
+		// 		cout << visited[i][j] << " ";
+		// 	}
+		// 	cout << endl;
+		// }
+		DEBUG(lo, hi, mid, works);
+
+		if(works) {
+			if(hi == mid) {
+				hi--;
+			} else {
+				hi = mid;
+			}
+		} else {
+			lo = mid + 1;
+		}
+	}
+	DEBUG(lo, hi);
+
+	// Check to make sure lo works
+	reset_visited();
+	floodfill(waypoints[0], lo);
+
+	bool works = true;
+	f0r(i, waypoints.size()) {
+		if(visited[waypoints[i].f][waypoints[i].s] == false) works = false;
+	}
+	if (!works) lo++;
+
+	DEBUG(lo, hi);
+	cout << lo << endl;
+
 }

@@ -150,17 +150,55 @@ class Graph {
 };
 
 ll binary_search(ll lo, ll hi, bool works) {
-	ll mid = (lo + hi + 1)/2;
+	while(lo < hi) {
+		ll mid = (lo + hi + 1)/2;
 
-	// Binary search part
-	DEBUG(lo, hi, mid, works);
-	if(works) {
-		if(hi == mid) {
-			hi--;
+		// Binary search part
+		// DEBUG(lo, hi, mid, works);
+		if(works) {
+			if(hi == mid) {
+				hi--;
+			} else {
+				hi = mid;
+			}
 		} else {
-			hi = mid;
+			lo = mid + 1;
 		}
-	} else {
-		lo = mid;
+	}
+	
+	// check to see if it works on lo
+	if (works == false) {
+		lo++;
+	}
+	return lo;
+}
+
+void floodfill(pll start) {
+	/* Create these two global variables */
+	vector<vector<bool> > visited;
+	vector<string> maze;
+
+	deque<pll > dq;
+	dq.push_back(start);
+
+	while(!dq.empty()) {
+		pll current = dq.front();
+		visited[current.f][current.s] = true;
+
+		if (current.f - 1 >= 0 && visited[current.f - 1][current.s] == false && maze[current.f - 1][current.s] == '.') {
+			// Top
+			dq.push_front(mp(current.f - 1, current.s));
+		} else if (current.s + 1 <= m - 1 && visited[current.f][current.s + 1] == false && maze[current.f][current.s + 1] == '.') {
+			// Right
+			dq.push_front(mp(current.f, current.s + 1));
+		} else if (current.f + 1 <= n - 1 && visited[current.f + 1][current.s] == false && maze[current.f + 1][current.s] == '.') {
+			// Bottom
+			dq.push_front(mp(current.f + 1, current.s));
+		} else if (current.s - 1 >= 0 && visited[current.f][current.s - 1] == false && maze[current.f][current.s - 1] == '.') {
+			// Left
+			dq.push_front(mp(current.f, current.s - 1));
+		} else {
+			dq.pop_front();
+		}
 	}
 }
