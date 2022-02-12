@@ -121,77 +121,45 @@ void floodfill(pll start, ll amt) {
 	}
 }
 
-//Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=380
+//Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=740
 int main() {
-    usaco("ccski");
-    // io;
+	/*
+	Brute force go through each cell, and then go expand right as much as possible
+	if expansion is possible, mark it as visited in the 2D array
+	Then expand right, all the way
+	Then expand down, all the way
+	Mark +1 in counter
 
-	cin >> n >> m;
-	inp = vector<vector<ll> > (n, vector<ll> (m));
-	visited = vector<vector<bool> > (n, vector<bool> (m));
+	And then keep going through the for loop until you can find a non-visited cell
+	Then go ahead and expand left as much as possible
+	And then right from the leftmost
+	Then down
+	Then mark +1 in counter
 
+	And repeat
+	*/
+    // usaco("where");
+    io;
+	cin >> n;
+	vector<string> inp(n);
 	f0r(i, n) {
-		f0r(j, m) {
-			cin >> inp[i][j];
-		}
+		cin >> inp[i];
 	}
-	vector<pll > waypoints;
+
+	vector<vector<bool> > visited(n, vector<bool>(n, false));
+	ll counter = 0;
 	f0r(i, n) {
-		f0r(j, m) {
-			ll num;
-			cin >> num;
-			if (num == 1) {
-				waypoints.pb(mp(i, j));
+		f0r(j, n) {
+			if (visited[i][j] == false) {
+				visited[i][j] = true;
+				char c1 = inp[i][j];
+				// keep going left until it hits edge and the color changes
+
+				// then go right if it uses the same two colors
+				// now go up
+				// now go down
 			}
 		}
 	}
-	DEBUG(inp);
-	DEBUG(waypoints);
-
-	ll lo = 0;
-	ll hi = 1000000001;
-	while(lo < hi) {
-		reset_visited();
-		ll mid = (lo + hi + 1)/2;
-		floodfill(waypoints[0], mid);
-
-		bool works = true;
-		f0r(i, waypoints.size()) {
-			if(visited[waypoints[i].f][waypoints[i].s] == false) works = false;
-		}
-
-		// cout << "Mid: " << mid << " visited:" << endl;
-		// f0r(i, n) {
-		// 	f0r(j, m) {
-		// 		cout << visited[i][j] << " ";
-		// 	}
-		// 	cout << endl;
-		// }
-		DEBUG(lo, hi, mid, works);
-
-		if(works) {
-			if(hi == mid) {
-				hi--;
-			} else {
-				hi = mid;
-			}
-		} else {
-			lo = mid + 1;
-		}
-	}
-	DEBUG(lo, hi);
-
-	// Check to make sure lo works
-	reset_visited();
-	floodfill(waypoints[0], lo);
-
-	bool works = true;
-	f0r(i, waypoints.size()) {
-		if(visited[waypoints[i].f][waypoints[i].s] == false) works = false;
-	}
-	if (!works) lo++;
-
-	DEBUG(lo, hi);
-	cout << lo << endl;
 
 }
