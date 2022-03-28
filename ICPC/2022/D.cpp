@@ -1,18 +1,21 @@
-#include <iostream>
 #include <vector>
-#include <string>
-#include <sstream>
-#include <iterator>
-#include <map>
 #include <set>
-#include <utility>
-#include <algorithm>
-#include <unordered_map>
+#include <map>
 #include <queue>
-#include <functional>
-#include <array>
+#include <list>
+#include <unordered_map>
+#include <unordered_set>
+#include <sstream>
+#include <fstream>
+#include <algorithm>
+#include <cctype>
+#include <cmath>
+#include <string>
+#include <iostream>
+#include <cstdlib>
+#include <iterator>
+#include <utility>
 #include <deque>
-#include <climits>
 
 using namespace std;
 
@@ -64,5 +67,62 @@ int main() {
 }
 
 void solve() {
-	cin >> n;
+	cin >> n >> m;
+    vector<vector<ll>> inp(n, vector<ll>(m));
+    array<ll, 3> counts;
+    fill(counts.begin(), counts.end(), 0);
+
+    f0r(i, n) {
+        f0r(j, m) {
+            ll num;
+            cin >> num;
+            inp[i][j] = num;
+            counts[num]++;
+        }
+    }
+
+    DEBUG(counts);
+    DEBUG(n, m);
+    f0r(i, n) {
+        DEBUG(inp[i]);
+    }
+
+    if (counts[0] >= 2) {
+        cout << 0 << endl;
+    } else if (counts[0] == 1) {
+        // do a floodfill with the 0
+        if (n == 1) {
+            if (inp[0][0] == 1) {
+                cout << 1 << endl;
+            } else if (inp[0][m - 1] == 1) {
+                cout << 1 << endl;
+            } else {
+                cout << 2 << endl;
+            }
+        } else if (m == 1) {
+            if (inp[0][0] == 1) {
+                cout << 1 << endl;
+            } else if (inp[n - 1][0] == 1) {
+                cout << 1 << endl;
+            } else {
+                cout << 2 << endl;
+            }
+        } else if (counts[1] >= 1) {
+            cout << 1 << endl;
+        } else {
+            cout << 2 << endl;
+        }
+    } else {
+        ll num_2 = counts[2];
+        if (num_2 % 2 == 0) {
+            cout << 0 << endl;
+        } else if (num_2 == 1) {
+            cout << 1 << endl;
+        } else {
+            ll ret = (ll) pow(2L, num_2/2L);
+            DEBUG(ret);
+            cout << ret << endl;
+        }
+    }
+
 }

@@ -48,21 +48,52 @@ template<typename T, typename... Args> void debug(string s, T x, Args... args) {
 if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+void usaco(string filename) {
+    io;
+    // freopen((filename + ".in").c_str(), "r", stdin);
+    freopen((filename + ".out").c_str(), "w", stdout);
+}
 
 ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
-void solve(); 
+vector<ll> primes;
 
-// Problem: 
-int main() {
-	io;
-	ll test_cases = 1;
-	
-	f0r(test_case, test_cases) {
-		solve();
-	}
+bool isPrime(ll num) {
+    f0r(i, primes.size()) {
+        if (num % primes[i] == 0) {
+            return false;
+        }
+    }
+    
+    return true;
 }
 
-void solve() {
-	cin >> n;
+//Problem URL: 
+int main() {
+    usaco("prime_50");
+    
+    ll counter = 3;
+    ll number = 5;
+
+    primes.pb(2);
+    primes.pb(3);
+    primes.pb(5);
+
+    while(counter < 1000) {
+        number++;
+        
+        if(isPrime(number)) {
+            counter++;
+            primes.pb(number);
+        }
+
+    }
+
+    f0r(i, 1000) {
+        cout << primes[i] << ", " ;
+    }
+
+    // DEBUG(primes);
+
+
 }

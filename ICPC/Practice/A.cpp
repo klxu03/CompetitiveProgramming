@@ -65,4 +65,28 @@ int main() {
 
 void solve() {
 	cin >> n;
+    vector<pll > inp(n); 
+    f0r(i, n) {
+        ll new_inp;
+        cin >> new_inp;
+
+        inp[i] = mp(new_inp, i);
+    }
+    sort(inp.begin(), inp.end());
+    DEBUG(inp);
+
+    ll counter = 1;
+    ll prev = -1;
+    f0r(i, n) {
+        if (inp[i].s > prev) {
+            prev = inp[i].s;
+        } else {
+            DEBUG(i);
+            prev = inp[i].s;
+            counter++;
+        }
+    }
+
+    cout << counter << endl;
+
 }

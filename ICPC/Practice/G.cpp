@@ -48,21 +48,88 @@ template<typename T, typename... Args> void debug(string s, T x, Args... args) {
 if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+void usaco(string filename) {
+    io;
+    freopen((filename + ".in").c_str(), "r", stdin);
+    freopen((filename + ".out").c_str(), "w", stdout);
+}
 
 ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
-void solve(); 
+class Graph {
+	public:
+	ll n; // # of nodes
+	ll e; // # of edges
+	bool undirected;
+	vector<vector<ll> > adj; // adjacency neighbor vector
+	vector<ll> visited; // visited nodes
 
-// Problem: 
-int main() {
-	io;
-	ll test_cases = 1;
-	
-	f0r(test_case, test_cases) {
-		solve();
+	Graph(ll nodes, ll edges, bool undirected) {
+		n = nodes;
+		e = edges;
+		this->undirected = undirected;
+		adj = vector<vector<ll> >(n);
+		visited = vector<ll>(n, false);
 	}
-}
 
-void solve() {
-	cin >> n;
+    void add_adj(vector<vector<ll> > &adj) {
+        this->adj = adj;
+    }
+
+	void init_adj() {
+		f0r(i, e) {
+			ll n1, n2; // n1 for node1
+			cin >> n1 >> n2;
+			adj[n1 - 1].pb(n2 - 1);
+			if(undirected) {
+				adj[n2 - 1].pb(n1 - 1);
+			}
+		}
+	}
+
+	void display() {
+		DEBUG("[");
+		f0r(i, n) {
+			DEBUG(i, adj[i]);
+		}
+		DEBUG("]");
+	}
+
+    int bfs(ll starting_node) {
+            deque<int> dq;
+            dq.push_back(starting_node);
+            visited[starting_node] = true;
+
+            bool valid = true;
+            while(!dq.empty() && valid) {
+                ll current = dq.front();
+                dq.pop_front();
+
+                f0r(i, adj[current].size()) {
+                    ll neighbor = adj[current][i];
+                    if(visited[neighbor] == false) {
+                        visited[neighbor] = visited[current] + 1;
+                        if (neighbor == n - 1) return -2;
+                        dq.push_back(neighbor);
+                    } 
+                }
+            }
+
+            return -1;
+        }
+
+    };
+
+//Problem URL: 
+int main() {
+    io;
+
+    cin >> n >> k;
+    Graph g1(n, k, true);
+    g1.init_adj();
+    g1.display();
+    g1.bfs(0);
+
+    cout << g1.visited[n - 1] - 2 << endl;
+
 }
