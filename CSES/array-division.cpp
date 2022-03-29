@@ -61,35 +61,32 @@ int main() {
 	}
 }
 
-ll lastTrue(ll lo, ll hi, ll k, function<int(int)> f) {
-    hi++;
-    while(lo < hi) {
-        ll mid = lo + (hi - lo + 1)/2;
-        DEBUG(lo, mid, hi);
-        if(f(mid) > k) {
-            lo = mid;
-        } else {
-            hi = mid - 1;
-        }
-    }
-
-    if(f(lo + 1) == k) {
-        return lo + 1;
-    } else {
-        return lo;
-    }
-}
-
 set<ll>::iterator greatest_number_smaller(set<ll>& s, ll num) {
-    DEBUG(num, *(--s.end()), *s.begin());
-
+    // DEBUG(num, *(--s.end()), *s.begin());
+ 
     if(num <= *(--s.end()) && num >= *s.begin()) {
         return --s.upper_bound(num);
     } else {
-        return s.end();
+        set<ll>::iterator ending = s.end();
+        ending--;
+        return ending;
     }
 }
 
+bool iteration(set<ll>& sums, ll num, ll num_groups) {
+    ll counter = 0;
+    set<ll>::iterator curr;
+    set<ll>::iterator ending = sums.end();
+    ending--;
+    f0r(i, num_groups) {
+        curr = greatest_number_smaller(sums, counter + num);
+        counter = *curr;
+        DEBUG(i, counter);
+    }
+
+    DEBUG(num, num_groups, counter, *ending);
+    return (counter == *ending);
+}
 
 void solve() {
     cin >> n >> k;
@@ -107,32 +104,36 @@ void solve() {
     }
     
     DEBUG(inp, sums);
+    set<ll>::iterator ending = sums.end();
+
+    // ending--;
+    // DEBUG(*(sums.begin()), *ending);
+
     DEBUG(left, right); // Bounds for the binary search
 
-    ll last_true = lastTrue(left, right, k, [&sums](ll mid) {
-        ll k_counter = 1;
-        ll counter = 0;
+    // DEBUG(iteration(sums, 14, k), true);
+    while(left < right) {
+        ll mid = (left + right + 1)/2;
+        // do an iteration to see if it works
+        bool works = iteration(sums, mid, k);
+        DEBUG(mid, works);
 
-        auto it = greatest_number_smaller(sums, counter + mid);
-        while(it != sums.end() && *it < *(--sums.end())) {
-            k_counter++;
-            counter = *it;
-            it = greatest_number_smaller(sums, counter + mid);
+		// Binary search part
+		// DEBUG(lo, hi, mid, works);
+		if(works) {
+			if(right == mid) {
+				right--;
+			} else {
+				right = mid;
+			}
+		} else {
+			left = mid + 1;
+		}
+    }
 
-            if(k_counter > k) {
-                break;
-            }
-        }
+    if (false == iteration(sums, left, k)) {
+        left++;
+    }
 
-        DEBUG(mid, k_counter);
-        return k_counter;
-        // if (k_counter > k) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
-
-    });
-
-    cout << last_true << endl;
+    cout << left << endl;
 }

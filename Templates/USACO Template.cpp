@@ -173,6 +173,19 @@ ll binary_search(ll lo, ll hi, bool works) {
 	return lo;
 }
 
+// Do something similar to upper_bound except greatest number smaller
+set<ll>::iterator greatest_number_smaller(set<ll>& s, ll num) {
+    DEBUG(num, *(--s.end()), *s.begin());
+ 
+    if(num <= *(--s.end()) && num >= *s.begin()) {
+        return --s.upper_bound(num);
+    } else {
+        set<ll>::iterator ending = s.end();
+        ending--;
+        return ending;
+    }
+}
+
 void floodfill(pll start) {
 	/* Create these two global variables */
 	vector<vector<bool> > visited;
