@@ -53,7 +53,6 @@ ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
-// Problem: https://cses.fi/problemset/task/1666
 int main() {
 	io;
 	ll test_cases = 1;
@@ -64,20 +63,36 @@ int main() {
 }
 
 void solve() {
-	cin >> n >> k;
+	cin >> n;
 	vector<ll> inp(n);
 	f0r(i, n) {
 		cin >> inp[i];
 	}
 
-	sort(inp.begin(), inp.end());
-	// DEBUG(inp);
+    vector<ll> peaks;
+    f1r(i, 1, n - 1) {
+        if (inp[i] > inp[i - 1] && inp[i] > inp[i + 1]) {
+            peaks.pb(i);
+        }
+    }
+    DEBUG(peaks);
+    ll ret = -1;
 
-	f0r(i, n) {
-		ll left = inp[i]; // first number
-		f0r(j, n - i) {
+    f0r(i, peaks.size()) {
+        ll counter = 1;
+        ll peak = peaks[i];
+        while(inp[peak - counter] == inp[peak + counter]) {
+            counter++;
 
-		}
-	}
+            if (peak - counter < 0 || peak + counter > n - 1) {
+                break;
+            }
+        }
+        if (counter != 1) {
+            ret = max(ret, counter);
+        }
+    }
+
+    cout << ret * 2 - 1 << endl;
 
 }
