@@ -13,7 +13,6 @@
 #include <array>
 #include <deque>
 #include <climits>
-#include <numeric>
 
 using namespace std;
 
@@ -49,21 +48,47 @@ template<typename T, typename... Args> void debug(string s, T x, Args... args) {
 if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-
 ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
-void solve(); 
+void solve();
 
-// Problem: 
+//Problem URL: https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a4621b 
 int main() {
-	io;
-	ll test_cases = 1;
-	
+    io;
+    ll test_cases = 1;
+    cin >> test_cases;
+
 	f0r(test_case, test_cases) {
+        cout << "Case #" << test_case + 1 << ":" << endl;
 		solve();
 	}
 }
 
 void solve() {
-	cin >> n;
+    ll r, c;
+	cin >> r >> c;
+    string topRow = ".";
+    f0r(i, c) {
+        topRow += "-+";
+    }
+    topRow[1] = '.';
+
+    string secondRow = ".";
+    f0r(i, c) {
+        secondRow += ".|";
+    }
+
+    cout << topRow << endl << secondRow << endl;
+    topRow[0] = '+';
+    topRow[1] = '-';
+    secondRow[0] = '|';
+    f0r(i, r - 1) {
+        cout << topRow << endl << secondRow << endl;
+    }
+    cout << topRow << endl;
+    
+    // DEBUG(r, c);
+    // DEBUG(topRow);
+    // DEBUG(secondRow);
+
 }

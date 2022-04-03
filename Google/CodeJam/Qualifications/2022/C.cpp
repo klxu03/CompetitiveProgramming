@@ -13,7 +13,6 @@
 #include <array>
 #include <deque>
 #include <climits>
-#include <numeric>
 
 using namespace std;
 
@@ -54,16 +53,35 @@ ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
-// Problem: 
+// Problem: https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a46471 
 int main() {
 	io;
 	ll test_cases = 1;
+    cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
+        cout << "Case #" << test_case + 1 << ": ";
 		solve();
 	}
 }
 
 void solve() {
 	cin >> n;
+    vector<ll> inp(n);
+
+    f0r(i, n) {
+        cin >> inp[i];
+    }
+
+    sort(inp.begin(), inp.end(), less<ll>());
+    DEBUG(inp);
+
+    ll counter = 1;
+    f0r(i, inp.size()) {
+        if (inp[i] >= counter) {
+            counter++;
+        }
+    }
+    cout << --counter << endl;
+
 }

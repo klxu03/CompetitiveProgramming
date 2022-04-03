@@ -13,6 +13,7 @@
 #include <array>
 #include <deque>
 #include <climits>
+#include <numeric>
 
 using namespace std;
 
@@ -62,6 +63,9 @@ int main() {
     io;
 
 }
+
+// Sorting a vector descendingly
+// sort(vec.begin(), vec.end(), greater<ll>());
 class Graph {
 	public:
 	ll n; // # of nodes
@@ -215,3 +219,69 @@ void floodfill(pll start) {
 		}
 	}
 }
+class Tree {
+    public:
+    vector<vector<ll> > edges; // children is just all edges - the parent
+    vector<ll> parentArr; // parentArr[1] gives the parent for Node 1
+    vector<ll> depth; // depth[1] gives the depth of the current node of Node 1
+    vector<ll> size_arr; // Size of subtree including this node as root
+
+    vector<ll> fun;
+    vector<ll> special_nodes; // Nodes that have multiple children
+    
+    Tree(ll nodes) {
+        edges = vector<vector<ll> >(nodes);
+        parentArr = vector<ll>(nodes);
+        depth = vector<ll>(nodes, 0); // Root has depth 0
+        size_arr = vector<ll>(nodes);
+
+        fun = vector<ll>(nodes, 0);
+    }
+
+    // Basically does a DFS, pre-processing
+    ll traverse(ll vertex, ll parentNode = -1) {
+        ll size = 1;
+
+        parentArr[vertex] = parentNode;
+        DEBUG(vertex, parentNode);
+        for (ll child: edges[vertex]) {
+            // We only want to go to childrens and not back up to parent
+            if (child != parentNode) { 
+                depth[child] = depth[vertex] + 1;
+                // This vertex is now the parent, recursively go down
+                size += traverse(child, vertex);
+            }
+        }
+
+        size_arr[vertex] = size;
+        return size;
+    }
+
+    // Preprocessing similar to BFS
+    void preprocess(ll root) {
+		deque<ll> dq;
+        dq.pb(root);
+
+        while(!dq.empty()) {
+            ll current = dq.front();
+            dq.pop_front();
+
+            f0r(i, edges[current].size()) {
+				ll child = edges[current][i];
+                dq.pb(child);
+                DEBUG(current, child);
+            }
+        }
+    }
+
+    void sort_by_depth(vector<ll>& arr) {
+        // [this] is C++ capturing so it captures the scope of the variable inside [] so this making it use the instance variables inside this (or this current tree)
+        sort(arr.begin(), arr.end(), [this](ll n1, ll n2) {
+            return depth_less_than(n1, n2);
+        });
+    }
+
+    bool depth_less_than(ll n1, ll n2) {
+        return depth[n1] < depth[n2];
+    }
+};

@@ -13,7 +13,6 @@
 #include <array>
 #include <deque>
 #include <climits>
-#include <numeric>
 
 using namespace std;
 
@@ -24,7 +23,7 @@ using namespace std;
 #define isOdd & 1
 #define qpow2(exponent) 1 << exponent
 /* 2^exponent, because every time shifting bit to the leftBound you are essentially multiplying function by two */
-#define max3(a, b, c) max(a, max(b, c))
+#define max3(a, b, c) max({a, b, c}) 
 #define pb push_back
 #define f first
 #define s second
@@ -54,16 +53,59 @@ ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
-// Problem: 
+// Problem: https://codingcompetitions.withgoogle.com/codejam/round/0000000000876ff1/0000000000a4672b 
 int main() {
 	io;
 	ll test_cases = 1;
+    cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
+        cout << "Case #" << test_case + 1 << ": ";
 		solve();
 	}
 }
 
 void solve() {
-	cin >> n;
+    vector<array<ll, 4> > inp = vector<array<ll, 4> > (3);
+    f0r(i, 3) {
+        f0r(j, 4) {
+            cin >> inp[i][j];
+        }
+    }
+
+    // f0r(i, 3) {
+    //     DEBUG(inp[i]);
+    // }
+    vector<ll> ret(4);
+    f0r(i, 4) {
+        ret[i] = min({inp[0][i], inp[1][i], inp[2][i]});
+    }
+    DEBUG(ret);
+
+    ll sum = 0;
+    f0r(i, 4) {
+        sum += ret[i];
+    }
+
+    // 1000000
+    if (sum < 1000000) {
+        cout << "IMPOSSIBLE" << endl;
+    } else {
+        // Subtract from the back
+
+        ll diff = sum - 1000000;
+
+        ll index_counter = 3;
+        while (diff > 0) {
+            ll subtracted_amount = min(diff, ret[index_counter]);
+            ret[index_counter] -= subtracted_amount;
+            diff -= subtracted_amount;
+            index_counter--;
+        }
+        f0r(i, 4) {
+            cout << ret[i] << " ";
+        }
+        cout << endl;
+    }
+
 }
