@@ -105,17 +105,18 @@ int solve() {
 		nums.insert(beginning + i);
 	}
 
-	// cout << inp.size() << " " << inp << endl;
-	DEBUG(inp.size(), inp);
-	f0r (i, 100) {
-		cout << inp[i] << " ";
-	}
-
 	ll initial;
 	cin >> initial;
 	if (initial == -1) {
 		return -1;
 	}
+
+	// cout << inp.size() << " " << inp << endl;
+	DEBUG(inp.size(), inp);
+	f0r (i, 100) {
+		cout << inp[i] << " ";
+	}
+	cout << endl;
 
 	f0r(i, 100) {
 		ll num;
@@ -155,6 +156,10 @@ int solve() {
 		cout << out[i] << " ";
 	}
 	cout << endl;
+	// f0r(i, 100) {
+	// 	cout << 1 << " ";
+	// }
+	// cout << endl;
 
 	return 0;
 }

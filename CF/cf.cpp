@@ -13,6 +13,7 @@
 #include <array>
 #include <deque>
 #include <climits>
+#include <numeric>
 #include <cmath>
 #include <iomanip>
 
@@ -51,104 +52,79 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-ll n, q, Q, T, k, l, r, x, y, z, g;
+ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
+// Problem: PACMEN 
 int main() {
 	io;
 	ll test_cases = 1;
-    cout << setprecision(15) << fixed;
 	
 	f0r(test_case, test_cases) {
 		solve();
 	}
 }
 
-double binary_search(double lo, double hi, bool works) {
-	while(lo < hi) {
-		ll mid = (lo + hi + 1)/2;
-
-		// Binary search part
-		// DEBUG(lo, hi, mid, works);
-		if(works) {
-			if(hi == mid) {
-				hi--;
-			} else {
-				hi = mid;
-			}
-		} else {
-			lo = mid + 1;
-		}
-	}
-	
-	// check to see if it works on lo
-	if (works == false) {
-		lo++;
-	}
-	return lo;
-}
-
-bool works(vector<pll >& inp, double& time, ll maxDistance) {
-    double upper = maxDistance;
-    double lower = 0;
-
-    f0r(i, inp.size()) {
-        // Still to the left of meeting point
-        if (inp[i].f < upper) {
-            upper = min(upper, (inp[i].f + (inp[i].s * time)));
-        } else {
-            lower = max(lower, (inp[i].f - (inp[i].s * time)));
-        }
-        DEBUG(i, lower, upper);
-    }
-    DEBUG(lower, upper);
-
-    return (upper - lower <= 0.000000000000000000001);
-}
-
 void solve() {
 	cin >> n;
-    vector<pll > inp(n);
-
-    double hi;
-    ll maxDistance;
-    f0r(i, n) {
-        ll location;
-        cin >> location;
-        if (location > hi) {
-            maxDistance = location;
-            hi = location;
-        }
-        inp[i].f = location;
-    }
+    string input;
+    cin >> input;
+    bool goLeft = false;
+    vector<ll> pacmen;
+    ll firstAsterisk = -1;
 
     f0r(i, n) {
-        cin >> inp[i].s;
+        if (firstAsterisk == -1 && input[i] == '*') firstAsterisk = i;
+
+        if (input[i] == 'P') {
+            pacmen.pb(i);
+        }
+    }
+    if (firstAsterisk < pacmen[0]) {
+        goLeft = true;
     }
 
-    sort(inp.begin(), inp.end(), [](pll& x, pll& y) {
-        if (x.f == x.s) {
-            return x.s < x.f;
-        } else {
-            return x.f < y.f;
-        }
-    });
-    DEBUG(inp);
-
-    double oldTime = hi;
-
-    double lo = 0;
-    while (abs(hi - lo) > 0.0000001) {
-        double mid = (lo + hi)/2;
-
-        if (works(inp, mid, maxDistance)) {
-            lo = mid;
-        } else {
-            hi = mid;
+    vector<ll> pacmen_cluster; // Start index of cluster, like .PP* will have 1 since index 1 has start in PP cluster
+    f0r(i, pacmen.size() - 1) {
+        if (pacmen[i + 1] - pacmen[i] == 1) {
+            pacmen_cluster.pb(i);
         }
     }
 
-    DEBUG(lo);
-    cout << lo << endl;
+    ll maxDistance = -1;
+    f0r(i, pacmen.size()) {
+        DEBUG(i, true, goLeft);
+        if (goLeft) {
+            // go left case
+            ll counter = 1;
+            ll star_counter = 0;
+            while (pacmen[i] - counter >= 0 && input[pacmen[i] - counter] != 'P') {
+                if (input[pacmen[i] - counter] == '*') {
+                    star_counter = counter;
+                }
+                counter++;
+            }
+            maxDistance = max(maxDistance, star_counter);
+        } else {
+            ll counter = 1;
+            ll star_counter = 0;
+            while (pacmen[i] + counter < n && input[pacmen[i] + counter] != 'P') {
+                if (input[pacmen[i] + counter] == '*') {
+                    star_counter = counter;
+                }
+                counter++;
+            }
+            maxDistance = max(maxDistance, star_counter);
+        }
+
+        if (pacmen[i + 1] - pacmen[i] == 1) {
+            goLeft = !goLeft;
+        }
+        DEBUG(i, maxDistance);
+    }
+
+    DEBUG(maxDistance);
+    cout << maxDistance << endl;
+
 }
