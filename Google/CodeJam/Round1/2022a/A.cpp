@@ -14,8 +14,6 @@
 #include <deque>
 #include <climits>
 #include <numeric>
-#include <cmath>
-#include <iomanip>
 
 using namespace std;
 
@@ -60,12 +58,63 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
+    cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
+        cout << "Case #" << test_case + 1 << ": ";
 		solve();
 	}
 }
 
 void solve() {
-	cin >> n;
+    string input;
+    cin >> input;
+    string output;
+
+    char first = input[0];
+    bool no_keep_going = true;
+    f0r(i, input.size()) {
+        no_keep_going &= input[i] == first;
+    }
+    DEBUG(no_keep_going);
+
+    if (no_keep_going) {
+        cout << input << endl;
+
+    } else {
+
+        f0r(i, input.size() - 1) {
+            output += input[i];
+            bool keep_going = true;
+
+            bool letter_switched = false;
+            char new_letter;
+            bool letter_switched_twice = false;
+            f1r(j, i, input.size()) {
+                if (!letter_switched && input[j] != input[i]) {
+                    letter_switched = true;
+                    new_letter = input[j];
+                }
+
+                if (letter_switched && !letter_switched_twice) {
+                    if (!letter_switched_twice && input[j] != new_letter) {
+                        letter_switched_twice = true;
+                    } else {
+                        keep_going &= (input[i] <= input[j]);
+                    }
+                }
+                DEBUG(keep_going, letter_switched, input[i], input[j], input[i] <= input[j]);
+            }
+
+            DEBUG(keep_going, input[i]);
+            if (letter_switched && keep_going && input[i] <= input[i + 1]) {
+                output += input[i];
+            }
+            DEBUG(output);
+        }
+        output += input[input.size() - 1];
+
+        cout << output << endl;
+
+    }
 }

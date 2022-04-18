@@ -11,6 +11,10 @@
 #include <queue>
 #include <functional>
 #include <array>
+#include <deque>
+#include <climits>
+#include <cmath>
+#include <iomanip>
 
 using namespace std;
 
@@ -27,8 +31,9 @@ using namespace std;
 #define s second
 using ll = long long;
 
-#define mp = make_pair
+#define mp make_pair
 #define t third
+#define pll pair<ll, ll>
 
 /* For Debugging Purposes */
 #ifdef LOCAL
@@ -48,82 +53,102 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 ll n, q, Q, T, k, l, r, x, y, z, g;
 
-ll solve(); 
+void solve(); 
 
 int main() {
 	io;
 	ll test_cases = 1;
-    cin >> test_cases;
+    cout << setprecision(15) << fixed;
 	
-	f0r(i, test_cases) {
+	f0r(test_case, test_cases) {
 		solve();
 	}
 }
 
-template <typename T>
-T expt(T p, unsigned q)
-{
-    T r(1);
+double binary_search(double lo, double hi, bool works) {
+	while(lo < hi) {
+		ll mid = (lo + hi + 1)/2;
 
-    while (q != 0) {
-        if (q % 2 == 1) {    // q is odd
-            r *= p;
-            q--;
-        }
-        p *= p;
-        q /= 2;
-    }
-
-    return r;
+		// Binary search part
+		// DEBUG(lo, hi, mid, works);
+		if(works) {
+			if(hi == mid) {
+				hi--;
+			} else {
+				hi = mid;
+			}
+		} else {
+			lo = mid + 1;
+		}
+	}
+	
+	// check to see if it works on lo
+	if (works == false) {
+		lo++;
+	}
+	return lo;
 }
 
-ll solve() {
-    cin >> x >> y;
+bool works(vector<pll >& inp, double& time, ll maxDistance) {
+    double upper = maxDistance;
+    double lower = 0;
 
-    ll snd_largest_2 = 0;
-    ll temp = y;
-    while(temp > 1) {
-        temp /= 2;
-        snd_largest_2++;
-    }
-    snd_largest_2 = expt(2, snd_largest_2);
-    DEBUG(snd_largest_2);
-
-    ll temp_y = y;
-    ll temp_x = x;
-    while(snd_largest_2 > 1 && (temp_y - snd_largest_2 >= 0 || temp_x - snd_largest_2 < 0)) {
-        temp_y %= snd_largest_2;
-        temp_x %= snd_largest_2;
-        snd_largest_2 /= 2;
-        DEBUG(snd_largest_2, temp_y, temp_y - snd_largest_2, temp_x, temp_x - snd_largest_2);
-    }
-    snd_largest_2 *= 2;
-    DEBUG(snd_largest_2);
-
-    ll new_x = x % snd_largest_2;
-    ll new_y = y % snd_largest_2;
-    DEBUG(x, new_x, y, new_y);
-
-    if(new_x == 0) {
-        cout << 1 << endl;
-        return 0;
-    }
-
-    ll first_up = 0;
-    ll second_up;
-    second_up = abs(new_x - new_y) + 1;
-    DEBUG(y, snd_largest_2 * 2);
-    DEBUG((y % (snd_largest_2 * 2)) - snd_largest_2);
-    if(((y % (snd_largest_2 * 2)) - snd_largest_2) >= 0) {
-        ll first_up = abs(snd_largest_2 - new_x + new_y) + 1;
-        if (snd_largest_2 * 2 >= y) {
-            first_up--;
+    f0r(i, inp.size()) {
+        // Still to the left of meeting point
+        if (inp[i].f < upper) {
+            upper = min(upper, (inp[i].f + (inp[i].s * time)));
+        } else {
+            lower = max(lower, (inp[i].f - (inp[i].s * time)));
         }
-        DEBUG(first_up, second_up);
-        cout << min(first_up, second_up) << endl;
-    } else {
-        cout << second_up << endl;
+        DEBUG(i, lower, upper);
+    }
+    DEBUG(lower, upper);
+
+    return (upper - lower <= 0.000000000000000000001);
+}
+
+void solve() {
+	cin >> n;
+    vector<pll > inp(n);
+
+    double hi;
+    ll maxDistance;
+    f0r(i, n) {
+        ll location;
+        cin >> location;
+        if (location > hi) {
+            maxDistance = location;
+            hi = location;
+        }
+        inp[i].f = location;
     }
 
-    return -1;
+    f0r(i, n) {
+        cin >> inp[i].s;
+    }
+
+    sort(inp.begin(), inp.end(), [](pll& x, pll& y) {
+        if (x.f == x.s) {
+            return x.s < x.f;
+        } else {
+            return x.f < y.f;
+        }
+    });
+    DEBUG(inp);
+
+    double oldTime = hi;
+
+    double lo = 0;
+    while (abs(hi - lo) > 0.0000001) {
+        double mid = (lo + hi)/2;
+
+        if (works(inp, mid, maxDistance)) {
+            lo = mid;
+        } else {
+            hi = mid;
+        }
+    }
+
+    DEBUG(lo);
+    cout << lo << endl;
 }

@@ -14,6 +14,8 @@
 #include <deque>
 #include <climits>
 #include <numeric>
+#include <cmath>
+#include <iomanip>
 
 using namespace std;
 
@@ -66,6 +68,11 @@ int main() {
 
 // Sorting a vector descendingly
 // sort(vec.begin(), vec.end(), greater<ll>());
+
+// Sorting a vector of pairs ascendingly based on second
+// sort(inp.begin(), inp.end(), [](pll& x, pll& y) {
+//     return x.s < y.s;
+// });
 class Graph {
 	public:
 	ll n; // # of nodes

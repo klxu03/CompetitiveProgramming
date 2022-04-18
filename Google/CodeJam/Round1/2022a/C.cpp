@@ -14,8 +14,6 @@
 #include <deque>
 #include <climits>
 #include <numeric>
-#include <cmath>
-#include <iomanip>
 
 using namespace std;
 
@@ -60,8 +58,10 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
+	cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
+        cout << "Case #" << test_case + 1 << ":";
 		solve();
 	}
 }

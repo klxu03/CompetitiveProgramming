@@ -14,8 +14,6 @@
 #include <deque>
 #include <climits>
 #include <numeric>
-#include <cmath>
-#include <iomanip>
 
 using namespace std;
 
@@ -60,6 +58,7 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
+    cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
 		solve();
@@ -68,4 +67,30 @@ int main() {
 
 void solve() {
 	cin >> n;
+    vector<vector<ll> > vec(n);
+
+    f0r(i, n) {
+        ll num;
+        cin >> num;
+        vector<ll> inp;
+        while(num > 0) {
+            ll back = num % 10;
+            inp.pb(back);
+            num /= 10;
+        }
+        reverse(inp.begin(), inp.end());
+        vec[i] = inp;
+    }
+
+    DEBUG(vec);
+
+    ll num_operations = 0;
+    f1r(i, 1, n) {
+        // 19 < 111, size difference
+        if(vec[i].size() > vec[i - 1].size()) {
+            continue;
+        } else {
+            // same size, or even less size
+        }
+    }
 }
