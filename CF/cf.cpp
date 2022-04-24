@@ -56,10 +56,11 @@ ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
-// Problem: PACMEN 
+// Problem: 
 int main() {
 	io;
 	ll test_cases = 1;
+    cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
 		solve();
@@ -68,63 +69,4 @@ int main() {
 
 void solve() {
 	cin >> n;
-    string input;
-    cin >> input;
-    bool goLeft = false;
-    vector<ll> pacmen;
-    ll firstAsterisk = -1;
-
-    f0r(i, n) {
-        if (firstAsterisk == -1 && input[i] == '*') firstAsterisk = i;
-
-        if (input[i] == 'P') {
-            pacmen.pb(i);
-        }
-    }
-    if (firstAsterisk < pacmen[0]) {
-        goLeft = true;
-    }
-
-    vector<ll> pacmen_cluster; // Start index of cluster, like .PP* will have 1 since index 1 has start in PP cluster
-    f0r(i, pacmen.size() - 1) {
-        if (pacmen[i + 1] - pacmen[i] == 1) {
-            pacmen_cluster.pb(i);
-        }
-    }
-
-    ll maxDistance = -1;
-    f0r(i, pacmen.size()) {
-        DEBUG(i, true, goLeft);
-        if (goLeft) {
-            // go left case
-            ll counter = 1;
-            ll star_counter = 0;
-            while (pacmen[i] - counter >= 0 && input[pacmen[i] - counter] != 'P') {
-                if (input[pacmen[i] - counter] == '*') {
-                    star_counter = counter;
-                }
-                counter++;
-            }
-            maxDistance = max(maxDistance, star_counter);
-        } else {
-            ll counter = 1;
-            ll star_counter = 0;
-            while (pacmen[i] + counter < n && input[pacmen[i] + counter] != 'P') {
-                if (input[pacmen[i] + counter] == '*') {
-                    star_counter = counter;
-                }
-                counter++;
-            }
-            maxDistance = max(maxDistance, star_counter);
-        }
-
-        if (pacmen[i + 1] - pacmen[i] == 1) {
-            goLeft = !goLeft;
-        }
-        DEBUG(i, maxDistance);
-    }
-
-    DEBUG(maxDistance);
-    cout << maxDistance << endl;
-
 }
