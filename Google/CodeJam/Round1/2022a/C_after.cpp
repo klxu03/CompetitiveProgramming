@@ -60,12 +60,227 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
+    cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
+        cout << "Case #" << test_case + 1 << ": ";
 		solve();
 	}
 }
 
+ll factorial(ll num) {
+    ll ret = 1;
+    f1r(i, 1, num + 1) {
+        ret *= i;
+    }
+    return ret;
+}
+
+ // Computes base^exp
+ll mpow(ll base, ll exp) {
+    ll res = 1;
+    while (exp) {
+    if (exp % 2 == 1){
+        res = (res * base);
+    }
+    exp >>= 1;
+    base = (base * base);
+    }
+    return res;
+}
+
+class Graph {
+	public:
+	ll n; // # of nodes
+	ll e; // # of edges
+	bool undirected;
+	vector<vector<ll> > adj; // adjacency neighbor vector
+	vector<ll> visited; // visited nodes
+    vector<ll> dist; // distance
+
+	Graph(ll nodes, ll edges, bool undirected) {
+		n = nodes;
+		e = edges;
+		this->undirected = undirected;
+		adj = vector<vector<ll> >(n);
+		visited = vector<ll>(n, false);
+        dist = vector<ll>(n, 0);
+	}
+
+    void add_adj(vector<vector<ll> > &adj) {
+        this->adj = adj;
+    }
+
+	void init_adj() {
+		f0r(i, e) {
+			ll n1, n2; // n1 for node1
+			cin >> n1 >> n2;
+			adj[n1 - 1].pb(n2 - 1);
+			if(undirected) {
+				adj[n2 - 1].pb(n1 - 1);
+			}
+		}
+	}
+
+    void insert_edge(ll from, ll to) {
+        adj[from].pb(to);
+        if (undirected) {
+            adj[to].pb(from);
+        }
+        e++;
+    }
+
+	void display() {
+		DEBUG("[");
+		f0r(i, n) {
+			DEBUG(i, adj[i]);
+		}
+		DEBUG("]");
+	}
+
+	void dfs(ll starting_node) {
+		deque<int> dq;
+		dq.push_front(starting_node);
+		DEBUG(visited, starting_node, adj[starting_node]);
+
+		while(!dq.empty()) {
+			ll current = dq.front();
+			visited[current] = true;
+
+			if(adj[current].size() == 0) {
+				dq.pop_front();
+			}
+
+			f0r(i, adj[current].size()) {
+				ll neighbor = adj[current][i];
+				if(visited[neighbor] == false) {
+					dq.push_front(neighbor);
+					break;
+				} 
+				/* If I've skipped through all and none of 
+				the neighbors haven't been visited */
+				if (i == adj[current].size() - 1) dq.pop_front();
+			}
+		}
+	}
+
+    void bfs(ll starting_node) {
+		deque<int> dq;
+		dq.push_back(starting_node);
+		visited[starting_node] = true;
+
+		bool valid = true;
+		while(!dq.empty() && valid) {
+			ll current = dq.front();
+			dq.pop_front();
+
+			f0r(i, adj[current].size()) {
+				ll neighbor = adj[current][i];
+				if(visited[neighbor] == false) {
+					visited[neighbor] = true;
+					dq.push_back(neighbor);
+				} 
+			}
+		}
+    }
+
+
+    void shortest_distance(ll starting_node) {
+		deque<int> dq;
+		dq.push_back(starting_node);
+		visited[starting_node] = true;
+
+        dist = vector<ll>(n, 0);
+
+		bool valid = true;
+		while(!dq.empty() && valid) {
+			ll current = dq.front();
+			dq.pop_front();
+
+			f0r(i, adj[current].size()) {
+				ll neighbor = adj[current][i];
+				if(visited[neighbor] == false) {
+					visited[neighbor] = true;
+					dq.push_back(neighbor);
+                    dist[neighbor] = dist[current] + 1;
+				} 
+			}
+		}
+    }
+};
+
+// Should I add the weight 1 to vertex "11122", answer is no
+bool should_add(ll vertex, ll weight) {
+    ll weight_count = 0;
+    while(vertex > 0 && weight_count < 3) {
+        if (vertex % 10 == weight) {
+            weight_count++;
+        }
+
+        vertex /= 10;
+    }
+
+    return weight_count < 3;
+}
+
 void solve() {
-	cin >> n;
+    ll e, w; // # of exercises, # of weight types
+    cin >> e >> w;
+
+    // ll size = factorial(w * 3)/mpow((factorial(3)), w);
+    // size += 1;
+    ll size = 5248;
+    
+    vector<vector<ll> > dp(e, vector<ll> (m, -1));
+    
+    // Map for index 4 -> node 12
+    map<ll, ll> node_map;
+    
+    // Map for node 12 -> index 4
+    map<ll, ll> index_map;
+
+    Graph g(size, 0, true);
+
+    ll counter = 1;
+    vector<ll> prev;
+    f1r(i, 1, w + 1) {
+        prev.pb(i); // builds {1, 2, 3} in prev
+
+        g.insert_edge(0, counter);
+        node_map.insert(mp(counter, i));
+        index_map.insert(mp(i, counter++));
+    }
+
+    // Build out the next 8 digits after already having one
+    f0r(i, 3*w - 1) {
+        vector<ll> next_prev;
+        // Add a 1, 2, or 3 to the end and make it a new node and check if should add 1, 2, or 3
+
+        f0r(j, prev.size()) {
+            ll prev_node = prev[j]; // Takes "11122"
+            f1r(k, 1, w + 1) {
+                // checks if should add (and if so, add) 1, 2, or 3
+                DEBUG(prev_node, k, should_add(prev_node, k));
+                if (should_add(prev_node, k)) {
+                    ll new_node = prev_node * 10 + k;
+                    next_prev.pb(new_node);
+
+                    g.insert_edge(index_map[prev_node], counter);
+                    index_map.insert(mp(new_node, counter));
+                    node_map.insert(mp(counter++, new_node));
+                }
+            }
+
+        }
+
+        prev = next_prev;
+    }
+
+    f0r(i, size) {
+        DEBUG(i, node_map[i]);
+    }
+
+    g.display();
+    DEBUG(node_map[3567], node_map[5247]);
+
 }
