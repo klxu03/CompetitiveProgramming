@@ -81,34 +81,36 @@ void solve() {
     vector<bool> all_same(n, true);
     // First make sure each letter in each word is contiguous
     f0r(i, n) {
-        vector<char> letters(26, '!');
         char first_char = inp[i][0];
         f0r(j, inp[i].size()) {
             char curr = inp[i][j];
-            if (letters[curr - 'A'] != '!' && j - letters[curr - 'A'] > 1) {
-                possible = false;
-            }
-            letters[curr - 'A'] = j;
+            // if (letters[curr - 'A'] != '!' && j - letters[curr - 'A'] > 1) {
+            //     possible = false;
+            // }
+            // letters[curr - 'A'] = j;
             if (curr != first_char) {
                 all_same[i] = false;
             }
         }
-        DEBUG(i, possible);
     }
     DEBUG(all_same);
 
     char beginning_letter = '!';
+    set<ll> possible_used; // index of words already checked
 
-    // Check if beginnings and endings make sense
-    set<ll> possible_used;
-    // set<char> letters_used;
+    // This is to find the beginning letter
     if (possible) {
         bool stop = true;
         ll counter = 0;
-        while(!stop || counter == 0) {
+        while (!stop || counter == 0) {
             stop = true;
+            counter++;
+
             f0r(i, n) {
-                if (all_same[i]) continue;
+                if(all_same[i]) {
+                    possible_used.insert(i);
+                    continue;
+                } 
 
                 char beginning = inp[i][0];
                 char ending = inp[i][inp[i].size() - 1];
@@ -116,92 +118,121 @@ void solve() {
                 if (beginning_letter == '!') {
                     beginning_letter = beginning;
                     // possible_used.insert(i);
-                    // f1r(j, 0, inp[i].size()) {
-                    //     letters_used.insert(inp[i][j]);
-                    // }
                     stop = false;
                 }
-                // DEBUG(letters_used); 
-                
+
                 if (beginning_letter == ending && possible_used.count(i) == 0) {
                     beginning_letter = beginning;
                     stop = false;
                     possible_used.insert(i);
-
-                    // if (inp[i].size() > 1) {
-                    //     ll j = 1;
-                    //     DEBUG(true, inp[i][j], letters_used.count(inp[i][j]), inp[i][j] != inp[i][j - 1] );
-                    //     if (letters_used.count(inp[i][j]) > 0 && inp[i][j] != inp[i][j - 1]) {
-                    //         possible = false;
-                    //     }
-                    //     DEBUG(possible);
-                    //     letters_used.insert(inp[i][j]);
-                    // }
-
-                    // f1r(j, 1, inp[i].size()) {
-                    //     DEBUG(true, inp[i][j], letters_used.count(inp[i][j]), inp[i][j] != inp[i][j - 1] );
-                    //     if (letters_used.count(inp[i][j]) > 0 && inp[i][j] != inp[i][j - 1]) {
-                    //         possible = false;
-                    //     }
-                    //     letters_used.insert(inp[i][j]);
-                    // }
                 }
-
-                f0r(j, n) {
-                    if (i == j || all_same[j]) continue;
-                    if (inp[j][0] == beginning) {
-                        possible = false;
-                    }
-
-                    if (inp[j][inp[j].size() - 1] == ending) {
-                        possible = false;
-                    }
-                }
-                DEBUG(i, possible, beginning_letter);
             }
-
-            counter++;
         }
+
+        ll num_looked = 0;
+        f0r(i, n) {
+            DEBUG(i, possible_used.count(i));
+            // Didn't look through each possible word
+            if (possible_used.count(i) == 0) {
+                num_looked++;
+            }
+        }
+        // if (num_looked > 1) {
+        //     possible = false;
+        // }
     }
+    DEBUG(possible, beginning_letter);
 
     if (possible) {
-        // let's build out the string
         string ret;
         set<ll> used;
 
         char curr = beginning_letter;
         string word = "?";
         string prev_word = "!";
-        ll counter = 0;
-        while(word != prev_word) {
+
+        ll words_counter = 0;
+        /*
+3
+9
+A AA BB A BB AZ ZZY BA WB
+4
+OY AAA BB YO
+7
+HAS CODE CCCC SSSSSSSYYYYZ LLLL EEEE LKKKJJJJ
+        */
+
+       /*
+        REDO where you first add HAS, then SSSYZ, then CCC CODE, then EEEE, then LLL, LKKJJJJ
+        Add each component one at a time
+       */
+        while (prev_word != word) {
             prev_word = word;
+
             // Add repeats
             f0r(i, n) {
                 if (all_same[i] && inp[i][0] == curr && used.count(i) == 0) {
                     used.insert(i);
                     ret += inp[i];
+                    words_counter++;
                 }
             }
-            DEBUG(ret, prev_word, word, curr);
 
             // Add the normal one
             f0r(i, n) {
                 if (!all_same[i] && inp[i][0] == curr && used.count(i) == 0) {
                     used.insert(i);
                     ret += inp[i];
+                    
+                    // Set curr, or new_beginning check to be current ending
                     curr = inp[i][inp[i].size() - 1];
 
                     word = inp[i];
+                    words_counter++;
+                    break;
                 }
             }
-            DEBUG(ret, word);
-            counter++;
+            DEBUG(ret);
+        }
+        DEBUG(used);
+
+        // HAS CODE CCCCCCC
+        f0r(i, n) {
+            if (all_same[i]) continue;
+            if (used.count(i) > 0) continue;
+
+            DEBUG("HASCODECC", i);
+
+            char this_beginning = inp[i][0];
+            f0r(j, n) {
+                DEBUG(this_beginning, inp[j][0]);
+                if (all_same[j] && inp[j][0] == this_beginning && used.count(j) == 0) {
+                    ret += inp[j];
+                    used.insert(j);
+                    words_counter++;
+                }
+            }
+            ret += inp[i];
+            used.insert(i);
+            words_counter++;
         }
 
-        // Add in all the full same ones at the end
+        // look at last letter add in all_used
+        char last_letter = ret[ret.size() - 1];
         f0r(i, n) {
-            if (all_same[i] && used.count(i) == 0) {
+            if(all_same[i] && inp[i][0] == last_letter && used.count(i) == 0) {
                 ret += inp[i];
+                used.insert(i);
+            }
+        }
+        DEBUG("last letter", ret);
+
+        // Add in all the unused ones at the end
+        f0r(i, n) {
+            DEBUG("Last", used.count(i));
+            if (used.count(i) == 0) {
+                ret += inp[i];
+                words_counter++;
             }
         }
 
@@ -212,10 +243,12 @@ void solve() {
             }
             final_letters_used.insert(ret[i]);
         }
+        DEBUG(final_letters_used, words_counter);
 
         if (possible) {
             cout << ret << endl;
         } else {
+            DEBUG(ret);
             cout << "IMPOSSIBLE" << endl;
         }
 
