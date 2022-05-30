@@ -60,7 +60,6 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
-    cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
 		solve();
@@ -68,5 +67,33 @@ int main() {
 }
 
 void solve() {
-	cin >> n;
+	ll t;
+	cin >> n >> t;
+
+	vector<ll> vec(n);
+	f0r(i, n) {
+		cin >> vec[i];
+	}
+
+	ll left = 0, right = 0, currSum = 0, maxDiff = 0;
+
+	while(right < n) {
+		if (currSum + vec[right] <= t) {
+			currSum += vec[right++];
+			ll newDiff = right - left;
+			maxDiff = newDiff > maxDiff ? newDiff : maxDiff;
+		} else {
+			if (left == right) {
+				currSum = 0;
+				left++;
+				right++;
+			} else {
+				currSum -= vec[left++];
+			}
+		}
+	}
+
+	cout << maxDiff << endl;
+
+	DEBUG(vec);
 }
