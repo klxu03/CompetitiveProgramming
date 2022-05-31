@@ -56,7 +56,7 @@ ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
-// Problem: https://cses.fi/problemset/task/1660
+// Problem: https://cses.fi/problemset/task/1643 
 int main() {
 	io;
 	ll test_cases = 1;
@@ -67,36 +67,20 @@ int main() {
 }
 
 void solve() {
-	cin >> n >> x;
+	cin >> n;
+    vector<ll> inp(n + 1);
+    vector<ll> prefix(n + 1);
 
-	vector<ll> vec(n);
-	f0r(i, n) {
-		cin >> vec[i];
-	}
+    inp[0] = 0;
+    prefix[0] = 0;
+    ll running_sum = 0;
+    f1r(i, 1, n + 1) {
+        cin >> inp[i];
+        running_sum += inp[i];
+        prefix[i] = running_sum;
+    }
 
-	ll left = 0;
-	ll right = 0;
-	ll currSum = 0;
+    DEBUG(inp, prefix);
 
-	ll ret = 0;
 
-	while(right < n) {
-		if (currSum + vec[right] <= x) {
-			currSum += vec[right++];
-		} else {
-			if (left == right) {
-				currSum = 0;
-				left++;
-				right++;
-			} else {
-				currSum -= vec[left++];
-			}
-		}
-
-		if (currSum == x) {
-			ret++;
-		}
-	}
-
-	cout << ret << endl;
 }
