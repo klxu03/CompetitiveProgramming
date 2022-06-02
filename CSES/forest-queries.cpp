@@ -1,21 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <sstream>
-#include <iterator>
-#include <map>
-#include <set>
-#include <utility>
-#include <algorithm>
-#include <unordered_map>
-#include <queue>
-#include <functional>
-#include <array>
-#include <deque>
-#include <climits>
-#include <numeric>
-#include <cmath>
-#include <iomanip>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -56,7 +39,7 @@ ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
-// Problem: https://cses.fi/problemset/task/1643 
+// Problem: 
 int main() {
 	io;
 	ll test_cases = 1;
@@ -67,33 +50,13 @@ int main() {
 }
 
 void solve() {
-	cin >> n;
-    vector<ll> inp(n + 1);
-    vector<ll> prefix(n + 1);
+	cin >> n >> q;
 
-    inp[0] = 0;
-    prefix[0] = 0;
-    ll running_sum = 0;
-    f1r(i, 1, n + 1) {
-        cin >> inp[i];
-        running_sum += inp[i];
-        prefix[i] = running_sum;
-    }
+	// vector<vector<ll> > vec(n, vector<ll> (n, 0));
+	vector<string> vec(n);
+	f0r(i, n) {
+		cin >> vec[i];
+	}
 
-    DEBUG(inp, prefix);
-
-    ll min = 0;
-    ll max = LLONG_MIN;
-    f1r(i, 1, n + 1) {
-        if (prefix[i] - min > max) {
-            max = prefix[i] - min;
-        }
-
-        if (prefix[i] < min) {
-            min = prefix[i];
-        }
-
-    }
-
-    cout << max << endl;
+	DEBUG(vec);	
 }

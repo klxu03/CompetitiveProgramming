@@ -1,21 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <sstream>
-#include <iterator>
-#include <map>
-#include <set>
-#include <utility>
-#include <algorithm>
-#include <unordered_map>
-#include <queue>
-#include <functional>
-#include <array>
-#include <deque>
-#include <climits>
-#include <numeric>
-#include <cmath>
-#include <iomanip>
+#include <bits/stdc++.h>
 
 using namespace std;
 
