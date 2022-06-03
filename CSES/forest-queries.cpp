@@ -39,7 +39,7 @@ ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
-// Problem: 
+// Problem: https://cses.fi/problemset/task/1652/ 
 int main() {
 	io;
 	ll test_cases = 1;
@@ -52,11 +52,92 @@ int main() {
 void solve() {
 	cin >> n >> q;
 
-	// vector<vector<ll> > vec(n, vector<ll> (n, 0));
 	vector<string> vec(n);
 	f0r(i, n) {
 		cin >> vec[i];
 	}
+	vector<vector<ll> > sums(n, vector<ll> (n, 0));
 
-	DEBUG(vec);	
+	f0r(i, n) {
+		DEBUG(vec[i]);
+	}
+
+	if (vec[0][0] == '*') {
+		sums[0][0] = 1;
+	}
+
+	// Do the first row
+	f1r(i, 1, n) {
+		if (vec[0][i] == '*') {
+			sums[0][i] = sums[0][i - 1] + 1;
+		} else {
+			sums[0][i] = sums[0][i - 1];
+		}
+	}
+
+	// Do the first column
+	f1r(i, 1, n) {
+		if (vec[i][0] == '*') {
+			sums[i][0] = sums[i - 1][0] + 1;
+		} else {
+			sums[i][0] = sums[i - 1][0];
+		}
+	}
+
+	// Do the rest normally
+	f1r(i, 1, n) {
+		f1r(j, 1, n) {
+			sums[i][j] = sums[i - 1][j] + sums[i][j - 1] - sums[i - 1][j - 1]; 
+			if (vec[i][j] == '*') {
+				sums[i][j]++;
+			}
+		}
+	}
+
+	f0r(i, n) {
+		DEBUG(sums[i]);
+	}
+
+	DEBUG(sums[1][2]);
+	f0r(i, q) {
+		/* Sample
+		4 1
+		.*..
+		*.**
+		**..
+		****
+
+		3 2 4 3
+		*/
+
+		array<ll, 4> query;
+		cin >> query[0] >> query[1] >> query[2] >> query[3];
+		// y1 x1 y2 x2
+
+		query[0]--; query[1]--; query[2]--; query[3]--;
+		DEBUG(query);
+		ll right_bottom_corner = sums[query[2]][query[3]]; // (3, 2)
+		DEBUG(query[2], query[3]);
+
+		ll left_bottom_corner = 0;
+		if (query[2] >= 0 && query[1] - 1 >= 0) {
+			left_bottom_corner = sums[query[2]][query[1] - 1]; // (3, 0)
+			DEBUG(query[2], query[1] - 1);
+		}
+
+		ll right_top_corner = 0;
+		if (query[0] - 1 >= 0 && query[3] >= 0) {
+			right_top_corner = sums[query[0] - 1][query[3]]; // (1, 3)
+			DEBUG(query[0] - 1, query[3]);
+		}
+
+		ll left_top_corner = 0;
+		if (query[0] - 1 >= 0 && query[1] - 1 >= 0) {
+			left_top_corner = sums[query[0] - 1][query[1] - 1]; // (1, 0)
+			DEBUG(query[0] - 1, query[1] - 1); 
+		}
+
+		DEBUG(right_bottom_corner, left_bottom_corner, right_top_corner, left_top_corner);
+		cout << right_bottom_corner - left_bottom_corner - right_top_corner + left_top_corner << endl;
+	}
 }
