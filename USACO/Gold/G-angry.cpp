@@ -42,10 +42,75 @@ void usaco(string filename) {
 
 ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
+// Checking if mid has enough initial detonation to detonate all the crates
+bool works(vector<ll>& bales, ll mid, bool addHalf) {
+    ll bales_exploded = 0;
+    bool incrementing = true; // is counter going up or down as we go right
+    ll counter = 0; // going up by how much right now
+
+    while (bales_exploded < bales.size()) {
+        // DEBUG(bales_exploded, counter, incrementing);
+        // If we are still incrementing counter or not
+        if (incrementing) {
+            // Need to explode one or more bales in this one explosion
+            if (bales[bales_exploded + 1] - bales[bales_exploded] <= counter) {
+                ll og = bales[bales_exploded];
+                while (bales_exploded + 1 <= bales.size() && bales[bales_exploded + 1] - og <= counter) {
+                    bales_exploded++;
+                }
+                counter++;
+            } else {
+                // we need to increase the counter, right now it's not sufficient to reach the next bale
+                counter = bales[bales_exploded + 1] - bales[bales_exploded];
+                bales_exploded++;
+            }
+
+            // Case when current counter exceeds mid
+            if (counter >= mid) {
+                // no longer incrementing, going down
+                incrementing = false;
+                // and make sure counter isn't double mid, if it's double mid then cannot cover incrementing X and decrementing X 
+                // as well as starting the explosion in the middle of the two bales case, so false not possible mid is too low
+                if (addHalf == false) {
+                    if (mid * 2 < counter) {
+                        return false;
+                    }
+                } else {
+                    // in bottom case where we add 0.5, then when going up then down, double 0.5 so + 1 
+                    if (mid * 2 + 1 < counter) {
+                        return false;
+                    }
+                }
+            } 
+        } else {
+            ll og = bales[bales_exploded];
+
+            // Cannot reach the next bale with current explosion size, and since decrementing it's false
+            if (bales[bales_exploded + 1] - og > counter) {
+                DEBUG("false 1");
+                return false;
+            }
+
+            while (bales_exploded + 1 <= bales.size() && bales[bales_exploded + 1] - og <= counter) {
+                bales_exploded++;
+            }
+            counter--;
+
+            // We cannot reach the end as counter just hit negative, not enough explosion to make it
+            if (counter < -1) {
+                DEBUG("false 2");
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 //Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=597 
 int main() {
-    // usaco("angry");
-    io;
+    usaco("angry");
+    // io;
 
     cin >> n;
     vector<ll> bales(n);
@@ -57,5 +122,28 @@ int main() {
     sort(bales.begin(), bales.end());
     DEBUG(bales);
 
-    
+    // Binary Search minimum "working" solution
+    ll lo = 1, hi = 1e9;
+    while (lo < hi) {
+        ll mid = (lo + hi)/2;
+
+        DEBUG(mid, works(bales, mid, false), lo, hi);
+
+        if (!works(bales, mid, false)) {
+            lo = mid + 1;
+        } else {
+            hi = mid;
+        }
+    }
+
+    if (!works(bales, lo, false)) {
+        lo++;
+    }   
+
+    DEBUG(works(bales, (lo - 1), true));
+    if (works(bales, (lo - 1), true)) {
+        cout << (lo - 1) << ".5" << endl;
+    } else {
+        cout << lo << ".0" << endl;
+    }
 }
