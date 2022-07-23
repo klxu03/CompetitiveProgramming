@@ -173,12 +173,11 @@ class Graph {
     }
 };
 
-ll binary_search(ll lo, ll hi, bool works) {
+ll old_binary_search(ll lo, ll hi, bool works) {
 	while(lo < hi) {
 		ll mid = (lo + hi + 1)/2;
 
 		// Binary search part
-		// DEBUG(lo, hi, mid, works);
 		if(works) {
 			if(hi == mid) {
 				hi--;
@@ -195,6 +194,31 @@ ll binary_search(ll lo, ll hi, bool works) {
 		lo++;
 	}
 	return lo;
+}
+
+ll wikipedia_binary_search(ll lo, ll hi, bool works) {
+	/*
+    L := 0
+    R := n − 1
+    while L ≤ R do
+        m := floor((L + R) / 2)
+        if A[m] < T then
+            L := m + 1
+        else if A[m] > T then
+            R := m − 1
+        else:
+            return m
+    return unsuccessful
+	*/
+
+	while (lo <= hi) {
+		ll mid = (lo + hi)/2;
+		if (!works) {
+			lo = mid + 1;
+		} else {
+			hi = mid;
+		}
+	}
 }
 
 // Do something similar to upper_bound except greatest number smaller
