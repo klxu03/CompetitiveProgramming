@@ -48,27 +48,40 @@ bool works(vector<ll>& bales, ll mid, bool addHalf) {
     bool incrementing = true; // is counter going up or down as we go right
     ll counter = 0; // going up by how much right now
 
-    while (bales_exploded < bales.size()) {
+    while (bales_exploded + 1 < bales.size()) {
         // DEBUG(bales_exploded, counter, incrementing);
         // If we are still incrementing counter or not
         if (incrementing) {
+
+            if (bales_exploded + 1 >= bales.size()) {
+                throw invalid_argument("0");
+            }
             // Need to explode one or more bales in this one explosion
-            if (bales[bales_exploded + 1] - bales[bales_exploded] <= counter) {
-                ll og = bales[bales_exploded];
-                while (bales_exploded + 1 <= bales.size() && bales[bales_exploded + 1] - og <= counter) {
-                    bales_exploded++;
+            if (bales.at(bales_exploded + 1) - bales.at(bales_exploded) <= counter) {
+                ll og = bales.at(bales_exploded);
+                if (bales_exploded + 1 >= bales.size()) {
+                    throw invalid_argument("1");
                 }
                 counter++;
+                while (bales_exploded + 1 < bales.size() && bales.at(bales_exploded + 1) - og <= counter) {
+                    bales_exploded++;
+                }
             } else {
+                if (bales_exploded + 1 >= bales.size()) {
+                    throw invalid_argument("2");
+                }
                 // we need to increase the counter, right now it's not sufficient to reach the next bale
-                counter = bales[bales_exploded + 1] - bales[bales_exploded];
+                counter = bales.at(bales_exploded + 1) - bales.at(bales_exploded);
                 bales_exploded++;
             }
 
             // Case when current counter exceeds mid
             if (counter >= mid) {
+                DEBUG(bales_exploded, counter, incrementing);
+                DEBUG(mid, bales[bales_exploded - 1], bales[bales_exploded], bales[bales_exploded + 1]);
                 // no longer incrementing, going down
                 incrementing = false;
+
                 // and make sure counter isn't double mid, if it's double mid then cannot cover incrementing X and decrementing X 
                 // as well as starting the explosion in the middle of the two bales case, so false not possible mid is too low
                 if (addHalf == false) {
@@ -81,17 +94,46 @@ bool works(vector<ll>& bales, ll mid, bool addHalf) {
                         return false;
                     }
                 }
-            } 
-        } else {
-            ll og = bales[bales_exploded];
 
+                ll og = bales[bales_exploded - 1];
+
+                // If not addHalf, and counter just equals mid continue descending with current counter
+                if (!addHalf && counter == mid) {
+                    continue;
+                } else {
+                    if (addHalf) {
+                        DEBUG(bales[bales_exploded + 1] - og, mid, mid * 2 + 1);
+                        DEBUG(bales_exploded);
+                        while(bales[bales_exploded + 1] - og <= mid * 2 + 1) {
+                            bales_exploded++;
+                        }
+                        DEBUG(bales[bales_exploded - 1], bales[bales_exploded]);
+                        DEBUG(bales_exploded);
+                        counter--;
+                        counter--;
+                    } else {
+                        counter--;
+                    }
+                }
+            }
+
+        } else {
+            ll og = bales.at(bales_exploded);
+
+            if (bales_exploded + 1 >= bales.size()) {
+                throw invalid_argument("3");
+            }
             // Cannot reach the next bale with current explosion size, and since decrementing it's false
-            if (bales[bales_exploded + 1] - og > counter) {
+            if (bales.at(bales_exploded + 1) - og > counter) {
+                DEBUG(bales.at(bales_exploded + 1), og, counter);
                 DEBUG("false 1");
                 return false;
             }
 
-            while (bales_exploded + 1 <= bales.size() && bales[bales_exploded + 1] - og <= counter) {
+            if (bales_exploded + 1 >= bales.size()) {
+                throw invalid_argument("4");
+            }
+            while (bales_exploded + 1 < bales.size() && bales.at(bales_exploded + 1) - og <= counter) {
                 bales_exploded++;
             }
             counter--;
@@ -116,7 +158,7 @@ int main() {
     vector<ll> bales(n);
 
     f0r(i, n) {
-        cin >> bales[i];
+        cin >> bales.at(i);
     }
 
     sort(bales.begin(), bales.end());
@@ -138,9 +180,11 @@ int main() {
 
     if (!works(bales, lo, false)) {
         lo++;
-    }   
+    }  
 
-    DEBUG(works(bales, (lo - 1), true));
+    DEBUG(false, works(bales, 21559, true));
+    DEBUG(false, works(bales, 21560, false));
+
     if (works(bales, (lo - 1), true)) {
         cout << (lo - 1) << ".5" << endl;
     } else {
