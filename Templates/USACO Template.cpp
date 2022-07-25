@@ -206,6 +206,8 @@ ll wikipedia_binary_search(ll lo, ll hi, bool works) {
 		}
 	}
 
+	// have to check again bottom lo, if no work go up
+
 	return lo;
 }
 
