@@ -86,73 +86,43 @@ class Graph {
 		DEBUG("]");
 	}
 
-	void dfs(ll starting_node) {
-		deque<int> dq;
-		dq.push_front(starting_node);
-		DEBUG(visited, starting_node, adj[starting_node]);
-
-		while(!dq.empty()) {
-			ll current = dq.front();
-			visited[current] = true;
-
-			if(adj[current].size() == 0) {
-				dq.pop_front();
-			}
-
-			f0r(i, adj[current].size()) {
-				ll neighbor = adj[current][i];
-				if(visited[neighbor] == false) {
-					dq.push_front(neighbor);
-					break;
-				} 
-				/* If I've skipped through all and none of 
-				the neighbors haven't been visited */
-				if (i == adj[current].size() - 1) dq.pop_front();
-			}
-		}
-	}
-
-    void bfs(ll starting_node) {
+    // Modified BFS to determine shortest path back to the starting_node
+    ll bfs(ll starting_node) {
 		deque<int> dq;
 		dq.push_back(starting_node);
-		visited[starting_node] = true;
+
+		fill(visited.begin(), visited.end(), -1);
+		visited[starting_node] = 0;
+		vector<ll> prev(n, -1);
+		prev[starting_node] = -2;
+		ll ret = LLONG_MAX;
 
 		bool valid = true;
 		while(!dq.empty() && valid) {
 			ll current = dq.front();
 			dq.pop_front();
+			// DEBUG(current);
 
 			f0r(i, adj[current].size()) {
 				ll neighbor = adj[current][i];
-				if(visited[neighbor] == false) {
-					visited[neighbor] = true;
+				if(visited[neighbor] == -1) {
+					visited[neighbor] = visited[current] + 1;
+					prev[neighbor] = current;
 					dq.push_back(neighbor);
+				} else if (visited[neighbor] != -1 && prev[current] != neighbor) {
+					// We have found a cycle
+					DEBUG("found a cycle");
+					DEBUG(neighbor, current, prev[current]);
+					DEBUG(visited[neighbor], visited[current]);
+					DEBUG(ret, visited[neighbor] + visited[current] + 1);
+					// Add 1 since you are connecting two groups with one extra connection
+					ret = min(ret, visited[neighbor] + visited[current] + 1);
 				} 
 			}
 		}
-    }
 
-	void shortest_distance(ll starting_node) {
-		deque<int> dq;
-		dq.push_back(starting_node);
-		visited[starting_node] = true;
-
-        vector<ll> dist = vector<ll>(n);
-
-		bool valid = true;
-		while(!dq.empty() && valid) {
-			ll current = dq.front();
-			dq.pop_front();
-
-			f0r(i, adj[current].size()) {
-				ll neighbor = adj[current][i];
-				if(visited[neighbor] == false) {
-					visited[neighbor] = true;
-					dq.push_back(neighbor);
-                    dist[neighbor] = dist[current] + 1;
-				} 
-			}
-		}
+		DEBUG(ret);
+		return ret;
     }
 };
 
@@ -172,4 +142,16 @@ void solve() {
 
     Graph g(n, m, true);
     g.init_adj();
+
+	ll ret = LLONG_MAX;
+	f0r(i, n) {
+		ll curr = g.bfs(i);
+		ret = min(ret, curr);
+	}
+	
+	if (ret == LLONG_MAX) {
+		cout << -1 << endl;
+	} else {
+		cout << ret << endl;
+	}
 }
