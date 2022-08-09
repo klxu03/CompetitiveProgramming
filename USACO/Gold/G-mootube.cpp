@@ -40,9 +40,10 @@ void usaco(string filename) {
     freopen((filename + ".out").c_str(), "w", stdout);
 }
 
-ll n, m, q, Q, T, k, l, r, x, y, z, g;
+int n, m, q, Q, T, k, l, r, x, y, z, g;
 
 class DSU {
+    public:
     vector<int> c; // c for components
 
     DSU(int n) {
@@ -75,10 +76,11 @@ class DSU {
 
 //Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=789
 int main() {
-    // usaco("mootube");
-    io;
+    usaco("mootube");
+    // io;
 
     cin >> n >> q;
+    DSU d(n);
 
     // edges[2] is r connecting edges[0] and edges[1]
     vector<vector<int>> edges(n - 1, vector<int>(3));
@@ -88,7 +90,7 @@ int main() {
         edges[i] = {x, y, z};
     }
 
-    // queries[0] is r, queries[1] is node, queries[2] is index, queries[4] is ret
+    // queries[0] is r, queries[1] is node, queries[2] is index, queries[3] is ret
     vector<vector<int>> queries(q, vector<int>(4));
     for(int i = 0; i < q; i++) {
         int x, y;
@@ -107,11 +109,21 @@ int main() {
     DEBUG(edges);
     DEBUG(queries);
 
-    int edge_counter = 0; int queries_counter = 0;
-    while(queries_counter < q) {
+    int edge_counter = 0; 
+    for(int queries_counter = 0; queries_counter < q; queries_counter++) {
         while(edge_counter < n - 1 && edges[edge_counter][2] >= queries[queries_counter][0]) {
             // DSU join them
+            d.unite(edges[edge_counter][0], edges[edge_counter][1]);
+            edge_counter++;
         }
+        queries[queries_counter][3] = d.size(queries[queries_counter][1]) - 1;
     }
 
+    sort(queries.begin(), queries.end(), [](vector<int>& x, vector<int>& y) {
+        return x[2] < y[2];
+    });
+
+    f0r(i, q) {
+        cout << queries[i][3] << endl;
+    }
 }
