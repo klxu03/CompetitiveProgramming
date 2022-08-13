@@ -20,11 +20,11 @@ using ll = long long;
 #define pll pair<ll, ll>
 
 /* For Debugging Purposes */
-#ifdef LOCAL
-#define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
-#else
+// #ifdef LOCAL
+// #define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
+// #else
 #define DEBUG(...) 6
-#endif
+// #endif
 
 template<typename T, typename S> ostream& operator << (ostream &os, const pair<T, S> &p) {return os << "(" << p.first << ", " << p.second << ")";}
 template<typename C, typename T = decay<decltype(*begin(declval<C>()))>, typename enable_if<!is_same<C, string>::value>::type* = nullptr>
@@ -40,13 +40,18 @@ void usaco(string filename) {
     freopen((filename + ".out").c_str(), "w", stdout);
 }
 
+void usacio(string filename) {
+    io;
+    freopen((filename + ".in").c_str(), "r", stdin);
+}
+
 ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
-class DSU {
+class DSU_Node {
     public:
     vector<int> c; // c for components
 
-    DSU(int n) {
+    DSU_Node(int n) {
         c = vector<int>(n, -1);
     }
 
@@ -63,197 +68,183 @@ class DSU {
         return -c[get(x)]; 
     }
 
-    bool unite(int x, int y) {  // union by size
+    // Return which node is now alpha, or x
+    int unite(int x, int y) {  // union by size
 		x = get(x), y = get(y);
-		if (x == y) return false; // same group
+		if (x == y) return x; // same group
 		if (c[x] > c[y]) swap(x, y); // if c[x] is less negative, or greater than c[y]
 		
         c[x] += c[y]; 
         c[y] = x;
-		return true;
+		return x;
 	}
 };
 
-class UnweightedGraph {
-	public:
-	ll n; // # of nodes
-	ll e; // # of edges
-	bool undirected;
-	vector<vector<ll> > adj; // adjacency neighbor vector
-	vector<vector<ll> > into; // into neighbor vector (opposite of adjacency)
-	vector<ll> visited; // visited nodes
+DSU_Node nodes(0);
 
-	UnweightedGraph(ll nodes, ll edges, bool undirected) {
-		n = nodes;
-		e = edges;
-		this->undirected = undirected;
-		adj = vector<vector<ll> >(n);
-		into = vector<vector<ll> >(n);
-		visited = vector<ll>(n, false);
-	}
+// A different breed of DSU that's still nlogn for # of edges
+// But I combine adjacency edges when combining nodes now
+class DSU_Edge {
+    public:
+	// c[1] means for edge group of 1, the vector in c[1] is a list of all nodes that admire the mapped node group pointed to 1
+	// so c[1][5] is the 6th node that admires "node 1" or whatever 1 maps to
+    vector<vector<int> > c; // c for components
 
-	void init_adj() {
-		f0r(i, e) {
-			ll n1, n2; // n1 for node1
-			cin >> n1 >> n2;
-            into[n1 - 1].pb(n2 - 1);
-			adj[n2 - 1].pb(n1 - 1);
-		}
-	}
-
-	void display() {
-		DEBUG("[");
-		f0r(i, n) {
-			DEBUG(i, adj[i]);
-		}
-		DEBUG("]");
-	}
-
-	void display_into() {
-		DEBUG("[");
-		f0r(i, n) {
-			DEBUG(i, into[i]);
-		}
-		DEBUG("]");
-	}
-
-	void dfs(ll starting_node) {
-		deque<int> dq;
-		dq.push_front(starting_node);
-		DEBUG(visited, starting_node, adj[starting_node]);
-
-		while(!dq.empty()) {
-			ll current = dq.front();
-			visited[current] = true;
-
-			if(adj[current].size() == 0) {
-				dq.pop_front();
-			}
-
-			f0r(i, adj[current].size()) {
-				ll neighbor = adj[current][i];
-				if(visited[neighbor] == false) {
-					dq.push_front(neighbor);
-					break;
-				} 
-				/* If I've skipped through all and none of 
-				the neighbors haven't been visited */
-				if (i == adj[current].size() - 1) dq.pop_front();
-			}
-		}
-	}
-
-    void bfs(ll starting_node) {
-		deque<int> dq;
-		dq.push_back(starting_node);
-		visited[starting_node] = true;
-
-		bool valid = true;
-		while(!dq.empty() && valid) {
-			ll current = dq.front();
-			dq.pop_front();
-
-			f0r(i, adj[current].size()) {
-				ll neighbor = adj[current][i];
-				if(visited[neighbor] == false) {
-					visited[neighbor] = true;
-					dq.push_back(neighbor);
-				} 
-			}
-		}
+    DSU_Edge(int n) {
+        c = vector<vector<int> >(n);
     }
 
-	void shortest_distance(ll starting_node) {
-		deque<int> dq;
-		dq.push_back(starting_node);
-		visited[starting_node] = true;
-
-        vector<ll> dist = vector<ll>(n);
-
-		bool valid = true;
-		while(!dq.empty() && valid) {
-			ll current = dq.front();
-			dq.pop_front();
-
-			f0r(i, adj[current].size()) {
-				ll neighbor = adj[current][i];
-				if(visited[neighbor] == false) {
-					visited[neighbor] = true;
-					dq.push_back(neighbor);
-                    dist[neighbor] = dist[current] + 1;
-				} 
-			}
+	// Return the new index for the new group
+	// If y joined x, then return x
+    int unite(int x, int y) {  // union by size
+		if (x == y) return x; // same node, or case same node admires same group?
+		if (c[x].size() < c[y].size()) swap(x, y); // if c[x] is less negative, or greater than c[y]
+		
+		f0r(i, c[y].size()) {
+			c[x].pb(c[y][i]);
 		}
-    }
+
+		return x;
+	}
+
+	void prune(int x) {
+		c[x] = {nodes.get(c[x][0])};
+	}
 };
+
+#include <chrono> 
+using namespace std::chrono; 
+struct timer {
+  high_resolution_clock::time_point begin;
+
+  timer() {}
+  timer(bool b) {
+    if (b) start();
+  }
+
+  void start() {
+    begin = high_resolution_clock::now();
+  }
+
+  void print() {
+    cout << "Time taken: " << duration_cast<duration<double>>(high_resolution_clock::now() - begin).count() << " seconds" << endl;
+  }
+
+  double report() {
+    return duration_cast<duration<double>>(high_resolution_clock::now() - begin).count();
+  }
+};
+// Start of main put tin, end of main put tpr (tgt gives you value not printed)
+#define tin timer __timer__(1);
+#define tpr __timer__.print();
+#define tgt __timer__.report()
 
 //Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=1042 
 int main() {
-    // usaco("fcolor");
-    io;
+    usaco("fcolor");
+    // io;
+	// usacio("1");
+	tin
 
     cin >> n >> m;
-    DSU d(n);
-    UnweightedGraph g(n, m, false);
-    g.init_adj();
+    nodes = DSU_Node(n); // is now a global variable so DSU_Edge has access
+	DSU_Edge edges(min(n, m)); // Size of edges is the minimum since it's grouped by map. So if more edges than nodes, some indices will have multiple elements
+	// map[5] = 4 means node index 5 has into edges of edge index 4
+	// edges.c[4] is list of all nodes that admire node index 5
+	vector<int> map(n, -1);
 
-    g.display();
-    g.display_into();
+	// Current # of distinct edge groups
+	int edge_counter = 0;
 
-    // Initially setting colors together for mutual admiration
-    f0r(i, n) {
-        if (g.into[i].size() >= 2) {
-            f1r(j, 1, g.into[i].size()) {
-                d.unite(g.into[i][j - 1], g.into[i][j]);
-            }
-        }
-    }
+	f0r(i, m) {
+		int x, y;
+		cin >> x >> y;
+		// 0 index
+		x--; y--;
 
-    // Initially setting colors if a cow admires multiple other cows
-    // Observation I thought up at midnight, might not be correct and an edge case if wrong
-    f0r(i, n) {
-        if (g.adj[i].size() >= 2) {
-            f1r(j, 1, g.adj[i].size()) {
-                d.unite(g.adj[i][j - 1], g.adj[i][j]);
-            }
-        }
-    }
+		// First time creating this node to edge pairing in the group
+		if (map[x] == -1) {
+			edges.c[edge_counter].pb(y);
+			map[x] = edge_counter;
+			edge_counter++;
+		} else {
+			edges.c[map[x]].pb(y);
+		}
+	}
 
-    // For each colored node, add its BFS "neighbors" of cows admiring those colored cows
-    // Queue for the BFS
-    deque<int> dq;
-    // Set keeping track of nodes already added into the dq
-    unordered_set<int> s;
+	// DEBUG(nodes.c);
+	// DEBUG(map);
+	// DEBUG(edges.c);
 
-    f0r(i, n) {
-        // Node i is already in a group
-        if(d.c[i] != -1) {
-            DEBUG(i, d.size(i), d.get(i), g.into[i]);
-            vector<ll> neighbors = g.into[i];
-            DEBUG(neighbors);
-            f0r(j, neighbors.size()) {
-                // if neighbors[j] isn't already colored and hasn't already been added to dq, add to dq
-                if (d.c[neighbors[j]] != -1 && s.find(neighbors[j]) == s.end()) {
-                    dq.pb(neighbors[j]);
-                    s.insert(neighbors[j]);
-                }
-            }
-        }
-    }
+	deque<int> dq;
+	f0r(i, n) {
+		// List of nodes that admire node i
+		vector<int> neighbors = edges.c[map[i]];
+		if (neighbors.size() >= 2) {
+			// Need to combine nodes
+			f1r(j, 1, neighbors.size()) {
+				// These two need to be combined, not in the same group already
+				if (nodes.get(neighbors[j - 1]) != nodes.get(neighbors[j])) {
+					// Combine their edges first
+					int new_edge = edges.unite(map[nodes.get(neighbors[j - 1])], map[nodes.get(neighbors[j])]);
+					int new_node = nodes.unite(neighbors[j - 1], neighbors[j]);
+					map[new_node] = new_edge;
+					dq.pb(new_node);
+				}
+			}
+			// some sort of edge pruning
+		}
+	}
 
-    while(!dq.empty()) {
-        int curr = dq.front();
-        dq.pop_front();
-        // do stuff, sample is node 8
-        // make node 8 the same color as any node that's pointing to a node with the same color as node 5
+	DEBUG("break 1");
+	DEBUG(dq);
+	f0r(i, n) {
+		DEBUG(i, nodes.get(i), map[nodes.get(i)], edges.c[map[nodes.get(i)]]);
+	}
 
-        // the color curr admires (is pointing to)
-        int color = d.get(curr);
+	// Do the BFS-esque traversal of flipping nodes
+	while(!dq.empty()) {
+		int current = dq.front();
+		dq.pop_front();
 
-        // Erasing from hash set at end in case cow likes itself, don't want to re-add
-        s.erase(s.find(curr));
-    }
+		// Merge all adjacent nodes together into a group
 
-    DEBUG(d.c);
-    DEBUG(dq, s);
+		vector<int> neighbors = edges.c[map[current]];
+		if (neighbors.size() >= 2) {
+			// Need to combine nodes
+			f1r(j, 1, neighbors.size()) {
+				int new_node, new_edge;
+				// These two need to be combined, not in the same group already
+				if (nodes.get(neighbors[j - 1]) != nodes.get(neighbors[j])) {
+					// Combine their edges first
+					new_edge = edges.unite(map[nodes.get(neighbors[j - 1])], map[nodes.get(neighbors[j])]);
+					new_node = nodes.unite(neighbors[j - 1], neighbors[j]);
+					map[new_node] = new_edge;
+					dq.pb(new_node);
+				}
+			}
+			edges.prune(map[nodes.get(current)]);
+		}
+	}
+
+	DEBUG("break 2");
+	f0r(i, n) {
+		DEBUG(i, nodes.get(i), map[nodes.get(i)], edges.c[map[nodes.get(i)]]);
+	}
+
+	// ret_map[4] = 1 means that if a node is node group 4 actually return 1
+	vector<int> ret_map(n, -1);
+	int group_counter = 1;
+	f0r(i, n) {
+		if (ret_map[nodes.get(i)] == -1) {
+			ret_map[nodes.get(i)] = group_counter;
+			group_counter++;
+		}
+	}
+
+	f0r(i, n) {
+		cout << ret_map[nodes.get(i)] << endl;
+	}
+
+	// tpr
 }

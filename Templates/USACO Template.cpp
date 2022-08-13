@@ -40,14 +40,49 @@ void usaco(string filename) {
     freopen((filename + ".out").c_str(), "w", stdout);
 }
 
+void usacio(string filename) {
+    io;
+    freopen((filename + ".in").c_str(), "r", stdin);
+}
+
+#include <chrono> 
+using namespace std::chrono; 
+struct timer {
+  high_resolution_clock::time_point begin;
+
+  timer() {}
+  timer(bool b) {
+    if (b) start();
+  }
+
+  void start() {
+    begin = high_resolution_clock::now();
+  }
+
+  void print() {
+    cout << "Time taken: " << duration_cast<duration<double>>(high_resolution_clock::now() - begin).count() << " seconds" << endl;
+  }
+
+  double report() {
+    return duration_cast<duration<double>>(high_resolution_clock::now() - begin).count();
+  }
+};
+// Start of main put tin, end of main put tpr (tgt gives you value not printed)
+#define tin timer __timer__(1);
+#define tpr __timer__.print();
+#define tgt __timer__.report()
+
 ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 //Problem URL: 
 int main() {
-    usaco("testCases");
-    io;
+    // usaco("testCases");
+	usacio("testCase");
+    // io;
 
 }
+
+// Instead of a pair, use array<int, 2>
 
 // Sorting a vector descendingly
 // sort(vec.begin(), vec.end(), greater<ll>());
