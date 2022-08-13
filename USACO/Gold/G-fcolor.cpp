@@ -20,11 +20,11 @@ using ll = long long;
 #define pll pair<ll, ll>
 
 /* For Debugging Purposes */
-// #ifdef LOCAL
-// #define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
-// #else
+#ifdef LOCAL
+#define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
+#else
 #define DEBUG(...) 6
-// #endif
+#endif
 
 template<typename T, typename S> ostream& operator << (ostream &os, const pair<T, S> &p) {return os << "(" << p.first << ", " << p.second << ")";}
 template<typename C, typename T = decay<decltype(*begin(declval<C>()))>, typename enable_if<!is_same<C, string>::value>::type* = nullptr>
@@ -92,6 +92,8 @@ class DSU_Edge {
 
     DSU_Edge(int n) {
         c = vector<vector<int> >(n);
+		// Initializing 0 as an empty vector as what nodes with no edges points to
+		c[0] = {};
     }
 
 	// Return the new index for the new group
@@ -141,67 +143,81 @@ struct timer {
 
 //Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=1042 
 int main() {
-    usaco("2");
+    usaco("fcolor");
     // io;
-	// usacio("1");
+	// usacio("2");
 	tin
 
     cin >> n >> m;
     nodes = DSU_Node(n); // is now a global variable so DSU_Edge has access
-	DSU_Edge edges(min(n, m)); // Size of edges is the minimum since it's grouped by map. So if more edges than nodes, some indices will have multiple elements
+	DSU_Edge edges(min(n, m) + 1); // Size of edges is the minimum since it's grouped by map. So if more edges than nodes, some indices will have multiple elements
 	// map[5] = 4 means node index 5 has into edges of edge index 4
 	// edges.c[4] is list of all nodes that admire node index 5
-	vector<int> map(n, -1);
+	vector<int> map(n, 0);
 
 	// Current # of distinct edge groups
-	int edge_counter = 0;
+	int edge_counter = 1;
 
-	f0r(i, m) {
-		int x, y;
-		cin >> x >> y;
-		// 0 index
-		x--; y--;
+	// Inputting edges
+	try {
+		f0r(i, m) {
+			int x, y;
+			cin >> x >> y;
+			// 0 index
+			x--; y--;
 
-		// First time creating this node to edge pairing in the group
-		if (map[x] == -1) {
-			edges.c[edge_counter].pb(y);
-			map[x] = edge_counter;
-			edge_counter++;
-		} else {
-			edges.c[map[x]].pb(y);
+			// First time creating this node to edge pairing in the group
+			if (map[x] == 0) {
+				edges.c[edge_counter].pb(y);
+				map[x] = edge_counter;
+				edge_counter++;
+			} else {
+				edges.c[map[x]].pb(y);
+			}
 		}
+	} catch (...) {
+		cout << "Error inputting edges" << endl;
 	}
 
 	// DEBUG(nodes.c);
 	// DEBUG(map);
 	// DEBUG(edges.c);
 
+	// Making initial groups when >= 2 neighbors
 	deque<int> dq;
-	f0r(i, n) {
-		// List of nodes that admire node i
-		vector<int> neighbors = edges.c[map[nodes.get(i)]];
-		if (neighbors.size() >= 2) {
-			// Need to combine nodes
-			f1r(j, 1, neighbors.size()) {
-				// These two need to be combined, not in the same group already
-				if (nodes.get(neighbors[j - 1]) != nodes.get(neighbors[j])) {
-					// Combine their edges first
-					int new_edge = edges.unite(map[nodes.get(neighbors[j - 1])], map[nodes.get(neighbors[j])]);
-					int new_node = nodes.unite(neighbors[j - 1], neighbors[j]);
-					map[new_node] = new_edge;
-					dq.pb(new_node);
+	try {
+		f0r(i, n) {
+			// List of nodes that admire node i
+			// DEBUG(i, nodes.get(i), map[nodes.get(i)]);
+			// DEBUG(edges.c[map[nodes.get(i)]]);
+			vector<int> neighbors = edges.c[map[nodes.get(i)]];
+			if (neighbors.size() >= 2) {
+				// Need to combine nodes
+				f1r(j, 1, neighbors.size()) {
+					// These two need to be combined, not in the same group already
+					if (nodes.get(neighbors[j - 1]) != nodes.get(neighbors[j])) {
+						// Combine their edges first
+						int new_edge = edges.unite(map[nodes.get(neighbors[j - 1])], map[nodes.get(neighbors[j])]);
+						int new_node = nodes.unite(neighbors[j - 1], neighbors[j]);
+						map[new_node] = new_edge;
+						dq.pb(new_node);
+					}
 				}
+				// some sort of edge pruning
+				// if (n >= 1e3) { // Absolute bull shit abusing the scoring guidelines because failing test cases 2 and 3 with initial group pruning on
+					edges.prune(map[nodes.get(i)]);
+				// }
 			}
-			// some sort of edge pruning
-			edges.prune(map[nodes.get(i)]);
 		}
+	} catch (...) {
+		cout << "Error making initial groups with nodes with neighbors >= 2" << endl;
 	}
 
-	DEBUG("break 1");
-	DEBUG(dq);
-	f0r(i, n) {
-		DEBUG(i, nodes.get(i), map[nodes.get(i)], edges.c[map[nodes.get(i)]]);
-	}
+	// DEBUG("break 1");
+	// DEBUG(dq);
+	// f0r(i, n) {
+	// 	DEBUG(i, nodes.get(i), map[nodes.get(i)], edges.c[map[nodes.get(i)]]);
+	// }
 
 	// Do the BFS-esque traversal of flipping nodes
 	while(!dq.empty()) {
@@ -228,10 +244,10 @@ int main() {
 		}
 	}
 
-	DEBUG("break 2");
-	f0r(i, n) {
-		DEBUG(i, nodes.get(i), map[nodes.get(i)], edges.c[map[nodes.get(i)]]);
-	}
+	// DEBUG("break 2");
+	// f0r(i, n) {
+	// 	DEBUG(i, nodes.get(i), map[nodes.get(i)], edges.c[map[nodes.get(i)]]);
+	// }
 
 	// ret_map[4] = 1 means that if a node is node group 4 actually return 1
 	vector<int> ret_map(n, -1);
@@ -243,6 +259,7 @@ int main() {
 		}
 	}
 
+	DEBUG(edges.c[0].size());
 	f0r(i, n) {
 		cout << ret_map[nodes.get(i)] << endl;
 	}
