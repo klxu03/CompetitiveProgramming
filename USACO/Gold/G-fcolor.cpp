@@ -141,7 +141,7 @@ struct timer {
 
 //Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=1042 
 int main() {
-    usaco("fcolor");
+    usaco("2");
     // io;
 	// usacio("1");
 	tin
