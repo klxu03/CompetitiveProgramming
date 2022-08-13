@@ -179,7 +179,7 @@ int main() {
 	deque<int> dq;
 	f0r(i, n) {
 		// List of nodes that admire node i
-		vector<int> neighbors = edges.c[map[i]];
+		vector<int> neighbors = edges.c[map[nodes.get(i)]];
 		if (neighbors.size() >= 2) {
 			// Need to combine nodes
 			f1r(j, 1, neighbors.size()) {
@@ -193,6 +193,7 @@ int main() {
 				}
 			}
 			// some sort of edge pruning
+			edges.prune(map[nodes.get(i)]);
 		}
 	}
 

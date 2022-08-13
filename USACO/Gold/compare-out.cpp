@@ -40,7 +40,7 @@ int main() {
     vector<int> correct_out;
     int a;
     int counter = 0;
-    in.open("8.correct_out"); 
+    in.open("4.correct_out"); 
     while(!in.eof()) {
         in >> a;
         correct_out.pb(a);
@@ -49,7 +49,7 @@ int main() {
 
     in.close();
 
-    in.open("8.out"); 
+    in.open("4.out"); 
     while(!in.eof()) {
         in >> a;
         out.pb(a);
