@@ -269,7 +269,6 @@ class WeightedGraph {
     }
 };
 
-
 class DSU {
     public:
     vector<int> c; // c for components
