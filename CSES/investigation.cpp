@@ -208,8 +208,7 @@ void usacio(string filename) {
 
 // Problem: https://cses.fi/problemset/task/1202 
 int main() {
-	// io;
-    usacio("test_5");
+	io;
 	ll test_cases = 1;
 	
 	f0r(test_case, test_cases) {
