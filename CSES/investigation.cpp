@@ -35,6 +35,33 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
+#include <chrono> 
+using namespace std::chrono; 
+struct timer {
+  high_resolution_clock::time_point begin;
+
+  timer() {}
+  timer(bool b) {
+    if (b) start();
+  }
+
+  void start() {
+    begin = high_resolution_clock::now();
+  }
+
+  void print() {
+    cout << "Time taken: " << duration_cast<duration<double>>(high_resolution_clock::now() - begin).count() << " seconds" << endl;
+  }
+
+  double report() {
+    return duration_cast<duration<double>>(high_resolution_clock::now() - begin).count();
+  }
+};
+// Start of main put tin, end of main put tpr (tgt gives you value not printed)
+#define tin timer __timer__(1);
+#define tpr __timer__.print();
+#define tgt __timer__.report()
+
 ll q, Q, T, k, l, r, x, y, z, g;
 int n, m;
 
@@ -48,6 +75,8 @@ class WeightedGraph {
     vector<ll> dist; // distance to get to this node
     vector<vector<int>> prev;
 
+    vector<ll> dp;
+
     WeightedGraph(int _nodes, int _edges, bool _undirected) {
         nodes = _nodes;
         edges = _edges;
@@ -55,6 +84,9 @@ class WeightedGraph {
         adj = vector<vector<pair<int, int>>>(_nodes);
         dist = vector<ll>(_nodes, LLONG_MAX);
         prev = vector<vector<int>>(_nodes);
+
+        dp = vector<ll>(_nodes, -1);
+        dp[0] = 1;
     }
 
     void init_adj() {
@@ -98,14 +130,86 @@ class WeightedGraph {
             }
         }
     }
+
+    int get_num_paths(int node) {
+        if (dp[node] != -1) {
+            return dp[node];
+        }
+
+        int ret = 0;
+        for(int i : prev[node]) {
+            ret += get_num_paths(i);
+            while(ret > ((ll) 1e9) + 7) {
+                // ret -= ((ll) 1e9) + 7;
+                ret = 0;
+            }
+        }
+        dp[node] = ret;
+        return ret;
+    }
+
+    // Doing a shortest distance BFS where prev is the adjacency matrix from end to beginning
+    int shortest_path() {
+        vector<bool> visited(nodes, false);
+		deque<int> dq;
+        dq.pb(n - 1);
+        visited[n - 1] = true;
+
+        vector<int> local_dist = vector<int>(n);
+        local_dist[n - 1] = 0;
+
+        while(!dq.empty()) {
+            int current = dq.front();
+            dq.pop_front();
+
+            for(int neighbor : prev[current]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    dq.pb(neighbor);
+
+                    local_dist[neighbor] = local_dist[current] + 1;
+                }
+            }
+        }
+
+        return local_dist[0];
+    }
+
+    // Doing a longest distance BFS where prev is the adjacency matrix from end to beginning
+    // Just don't keep a visited array and keep going in this "inefficient" but efficient enough BFS
+    int longest_path() {
+        deque<int> dq;
+        dq.pb(n - 1);
+
+        vector<int> local_dist = vector<int>(n);
+        local_dist[n - 1] = 0;
+
+        while(!dq.empty()) {
+            int current = dq.front();
+            dq.pop_front();
+
+            for(int neighbor : prev[current]) {
+                dq.pb(neighbor);
+                local_dist[neighbor] = local_dist[current] + 1;
+            }
+        }
+
+        return local_dist[0];
+    }
 };
 
 
 void solve(); 
+void usacio(string filename) {
+    io;
+    freopen((filename + ".txt").c_str(), "r", stdin);
+}
+
 
 // Problem: https://cses.fi/problemset/task/1202 
 int main() {
-	io;
+	// io;
+    usacio("test_5");
 	ll test_cases = 1;
 	
 	f0r(test_case, test_cases) {
@@ -114,14 +218,26 @@ int main() {
 }
 
 void solve() {
+    tin
+
 	cin >> n >> m;
-    DEBUG(n, m);
     WeightedGraph g(n, m, false);
     g.init_adj();
 
     g.dijkstra(0);
 
-    f0r(i, n) {
-        DEBUG(g.prev[i]);
-    }
+    // DEBUG(g.dist);
+    // f0r(i, n) {
+    //     DEBUG(g.prev[i]);
+    // }
+
+    ll min_distance = g.dist[n - 1];
+    DEBUG(g.dist[0], g.dist[n - 1]);
+    int num_paths = g.get_num_paths(n - 1);
+    int shortest_path = g.shortest_path();
+    int longest_path = g.longest_path();
+
+    cout << min_distance << " " << num_paths << " " << shortest_path << " " << longest_path << endl;
+    
+    tpr
 }
