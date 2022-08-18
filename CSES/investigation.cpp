@@ -54,7 +54,7 @@ class WeightedGraph {
         undirected = _undirected;
         adj = vector<vector<pair<int, int>>>(_nodes);
         dist = vector<ll>(_nodes, LLONG_MAX);
-        prev = vector<vector<int>>(_nodes, vector<int>(-1));
+        prev = vector<vector<int>>(_nodes);
     }
 
     void init_adj() {
@@ -119,9 +119,9 @@ void solve() {
     WeightedGraph g(n, m, false);
     g.init_adj();
 
-    // g.dijkstra(0);
+    g.dijkstra(0);
 
-    // f0r(i, n) {
-    //     DEBUG(g.prev[i]);
-    // }
+    f0r(i, n) {
+        DEBUG(g.prev[i]);
+    }
 }
