@@ -76,6 +76,7 @@ class WeightedGraph {
     vector<vector<int>> prev;
 
     vector<ll> dp;
+    vector<int> max_path_dp;
 
     WeightedGraph(int _nodes, int _edges, bool _undirected) {
         nodes = _nodes;
@@ -87,6 +88,8 @@ class WeightedGraph {
 
         dp = vector<ll>(_nodes, -1);
         dp[0] = 1;
+        max_path_dp = vector<int>(_nodes, -1);
+        max_path_dp[0] = 0;
     }
 
     void init_adj() {
@@ -138,11 +141,7 @@ class WeightedGraph {
 
         int ret = 0;
         for(int i : prev[node]) {
-            ret += get_num_paths(i);
-            while(ret > ((ll) 1e9) + 7) {
-                // ret -= ((ll) 1e9) + 7;
-                ret = 0;
-            }
+            ret = (ret + get_num_paths(i)) % ((ll) 1e9 + 7);
         }
         dp[node] = ret;
         return ret;
@@ -175,26 +174,19 @@ class WeightedGraph {
         return local_dist[0];
     }
 
-    // Doing a longest distance BFS where prev is the adjacency matrix from end to beginning
-    // Just don't keep a visited array and keep going in this "inefficient" but efficient enough BFS
-    int longest_path() {
-        deque<int> dq;
-        dq.pb(n - 1);
-
-        vector<int> local_dist = vector<int>(n);
-        local_dist[n - 1] = 0;
-
-        while(!dq.empty()) {
-            int current = dq.front();
-            dq.pop_front();
-
-            for(int neighbor : prev[current]) {
-                dq.pb(neighbor);
-                local_dist[neighbor] = local_dist[current] + 1;
-            }
+    // Keeping track of longest distance similar to how I track # of paths
+    int longest_path(int node) {
+        if (max_path_dp[node] != -1) {
+            return max_path_dp[node];
         }
 
-        return local_dist[0];
+        int ret = -1;
+        for (int neighbor : prev[node]) {
+            ret = max(ret, longest_path(neighbor));
+        }
+
+        max_path_dp[node] = ++ret;
+        return ret;
     }
 };
 
@@ -234,9 +226,9 @@ void solve() {
     DEBUG(g.dist[0], g.dist[n - 1]);
     int num_paths = g.get_num_paths(n - 1);
     int shortest_path = g.shortest_path();
-    int longest_path = g.longest_path();
+    int longest_path = g.longest_path(n - 1);
 
     cout << min_distance << " " << num_paths << " " << shortest_path << " " << longest_path << endl;
     
-    tpr
+    // tpr
 }
