@@ -76,6 +76,7 @@ ll q, Q, T, k, l, r, x, y, z, g;
 int n, m;
 
 vector<string> inp;
+vector<pair<pll, pll>> PCL; // PCL[0].f.f is the top left's rows
 
 bool isValid(int r, int c, pll start, pll end) {
     return r >= start.f && r <= end.f && c >= start.s && c <= end.s;
@@ -121,7 +122,6 @@ int main() {
         cin >> inp[i];
     }
 
-    int counter = 0;
     f0r(r1, n) {
       f0r(c1, n) {
         f1r(r2, r1, n) {
