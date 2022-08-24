@@ -355,30 +355,23 @@ set<ll>::iterator greatest_number_smaller(set<ll>& s, ll num) {
 void floodfill(pll start) {
 	/* Create these two global variables */
 	vector<vector<bool> > visited;
-	vector<string> maze;
+	vector<string> grid;
 
-	deque<pll > dq;
+	deque<pll > dq; // [row #, col #]
 	dq.push_back(start);
+
+    vector<int> dr = {1, -1, 0, 0};
+    vector<int> dc = {0, 0, 1, -1};
 
 	while(!dq.empty()) {
 		pll current = dq.front();
 		visited[current.f][current.s] = true;
 
-		if (current.f - 1 >= 0 && visited[current.f - 1][current.s] == false && maze[current.f - 1][current.s] == '.') {
-			// Top
-			dq.push_front(mp(current.f - 1, current.s));
-		} else if (current.s + 1 <= m - 1 && visited[current.f][current.s + 1] == false && maze[current.f][current.s + 1] == '.') {
-			// Right
-			dq.push_front(mp(current.f, current.s + 1));
-		} else if (current.f + 1 <= n - 1 && visited[current.f + 1][current.s] == false && maze[current.f + 1][current.s] == '.') {
-			// Bottom
-			dq.push_front(mp(current.f + 1, current.s));
-		} else if (current.s - 1 >= 0 && visited[current.f][current.s - 1] == false && maze[current.f][current.s - 1] == '.') {
-			// Left
-			dq.push_front(mp(current.f, current.s - 1));
-		} else {
-			dq.pop_front();
-		}
+        f0r(i, 4) {
+            if (grid[current.f + dr[i]][current.s + dc[i]] == 't') {
+
+            }
+        }
 	}
 }
 class Tree {
