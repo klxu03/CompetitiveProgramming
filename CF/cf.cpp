@@ -1,21 +1,4 @@
-#include <iostream>
-#include <vector>
-#include <string>
-#include <sstream>
-#include <iterator>
-#include <map>
-#include <set>
-#include <utility>
-#include <algorithm>
-#include <unordered_map>
-#include <queue>
-#include <functional>
-#include <array>
-#include <deque>
-#include <climits>
-#include <numeric>
-#include <cmath>
-#include <iomanip>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -52,7 +35,8 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-ll n, m, q, Q, T, k, l, r, x, y, z, g;
+ll q, Q, T, k, l, r, x, y, z, g;
+int n, m;
 
 void solve(); 
 
@@ -60,6 +44,7 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
+	cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
 		solve();
@@ -67,33 +52,50 @@ int main() {
 }
 
 void solve() {
-	ll t;
-	cin >> n >> t;
-
-	vector<ll> vec(n);
+	cin >> n;
+	vector<ll> inp(n);
 	f0r(i, n) {
-		cin >> vec[i];
+		cin >> inp[i];
 	}
 
-	ll left = 0, right = 0, currSum = 0, maxDiff = 0;
+	vector<ll> prev = inp;
+	int numZeros = 0;
 
-	while(right < n) {
-		if (currSum + vec[right] <= t) {
-			currSum += vec[right++];
-			ll newDiff = right - left;
-			maxDiff = newDiff > maxDiff ? newDiff : maxDiff;
-		} else {
-			if (left == right) {
-				currSum = 0;
-				left++;
-				right++;
-			} else {
-				currSum -= vec[left++];
+	while(true) {
+		for(int i = n - 1 - numZeros; i > 0; i--) {
+			inp[i] = inp[i] - ((inp[i]/inp[i - 1]) - 1) * inp[i - 1];
+			if (inp[i] - inp[i - 1] >= 1) {
+				inp[i] -= inp[i - 1];
 			}
+
+			if (i == n - 1 - numZeros) {
+				if (inp[i] - inp[i - 1] == 0) {
+					inp[i] = 0;
+					numZeros++;
+				}
+			}
+		}
+
+		bool same = true;
+		// DEBUG(prev);
+		// DEBUG(inp);
+		f0r(i, n) {
+			if (prev[i] != inp[i]) {
+				same = false;
+			}
+		}
+
+		if (same) {
+			break;
+		} else {
+			prev = inp;
 		}
 	}
 
-	cout << maxDiff << endl;
-
-	DEBUG(vec);
+	// DEBUG(inp);
+	if (inp[1] == 0) {
+		cout << "YES" << endl;
+	} else {
+		cout << "NO" << endl;
+	}
 }

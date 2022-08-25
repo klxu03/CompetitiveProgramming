@@ -34,16 +34,6 @@ template<typename T, typename... Args> void debug(string s, T x, Args... args) {
 if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-void usaco(string filename) {
-    io;
-    freopen((filename + ".in").c_str(), "r", stdin);
-    freopen((filename + ".out").c_str(), "w", stdout);
-}
-
-void usacio(string filename) {
-    io;
-    freopen((filename + ".in").c_str(), "r", stdin);
-}
 
 #include <chrono> 
 using namespace std::chrono; 
@@ -75,78 +65,58 @@ struct timer {
 ll q, Q, T, k, l, r, x, y, z, g;
 int n, m;
 
+vector<vector<bool>> visited;
 vector<string> inp;
-vector<array<pll, 2>> PCL; // PCL[0][0].f is the top left's rows
 
-bool isValid(int r, int c, pll start, pll end) {
-    return r >= start.f && r <= end.f && c >= start.s && c <= end.s;
+bool isValid(int r, int c) {
+    return r >= 0 && r < n && c >= 0 && c < m;
 }
 
-// Check the PCL
-void floodfill(pll start, pll end) {
-    vector<int> dr = {1, -1, 0, 0};
-    vector<int> dc = {0, 0, 1, -1};
-    deque<pll> contig_dq; // [row #, col #] for contiguous
-    deque<pll> spots_dq; // [row #, col #] for spots
-    vector<vector<bool>> visited = vector<vector<bool>>(n, vector<bool>(n, false));
-
-    contig_dq.pb(start);
+void floodfill(pll start) {
+	deque<pll > dq; // [row #, col #]
+	dq.push_back(start);
     visited[start.f][start.s] = true;
 
-    // By default, assuming first one is contig 
-    char contig = inp[start.f][start.s];
-    char spots = '-';
-    bool isTrue = true; // Still could be a PCL true
+    vector<int> dr = {1, -1, 0, 0};
+    vector<int> dc = {0, 0, 1, -1};
 
-    while(!contig_dq.empty() && isTrue) {
-        pll current = contig_dq.front();
-        contig_dq.pop_front();
-        
+	while(!dq.empty()) {
+		pll current = dq.front();
+        dq.pop_front();
+
         f0r(i, 4) {
             int newR = current.f + dr[i];
             int newC = current.s + dc[i];
-            if(isValid(newR, newC, start, end) && !visited[newR][newC]) {
-              visited[newR][newC] = true;
-              if (inp[newR][newC] == contig) {
-                contig_dq.pb(mp(newR, newC));
-              } else {
-                if (spots == inp[newR][newC]) {
-                  spots_dq.pb(mp(newR, newC));
-                } else if (spots == '-') {
-                  spots = inp[newR][newC];
-                  spots_dq.pb(mp(newR, newC));
-                } 
-                else {
-                  // Some phantom 3rd spot color has appeared
-                  isTrue = false;
-                }
-              }
+            if (isValid(newR, newC) && !visited[newR][newC] && inp[newR][newC] == '.') {
+                visited[current.f + dr[i]][current.s + dc[i]] = true;
+                dq.pb(mp(current.f + dr[i], current.s + dc[i]));
             }
         }
-    }
+        DEBUG(start, current);
+	}
 }
 
-//Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=740 
+//Problem URL: https://cses.fi/problemset/task/1192 
 int main() {
-    // usaco("testCases");
-	// usacio("testCase");
     io;
+    cin >> n >> m;
 
-    cin >> n;
     inp = vector<string>(n);
+    visited = vector<vector<bool>>(n, vector<bool>(m, false));
+
     f0r(i, n) {
         cin >> inp[i];
     }
 
-    f0r(r1, n) {
-      f0r(c1, n) {
-        f1r(r2, r1, n) {
-          f1r(c2, c1, n) {
-            if (r1 == r2 && c1 == c2) continue;
-            // Top left r1 c1
-            // Bottom right r2 c2
-          }
+    int counter = 0;
+    f0r(i, n) {
+        f0r(j, m) {
+            if (visited[i][j] == false && inp[i][j] == '.') {
+                floodfill(mp(i, j));
+                counter++;
+            }
         }
-      }
     }
+
+    cout << counter << endl;
 }

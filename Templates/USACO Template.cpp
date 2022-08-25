@@ -359,17 +359,23 @@ void floodfill(pll start) {
 
 	deque<pll > dq; // [row #, col #]
 	dq.push_back(start);
+    visited[start.f][start.s] = true;
 
     vector<int> dr = {1, -1, 0, 0};
     vector<int> dc = {0, 0, 1, -1};
 
 	while(!dq.empty()) {
 		pll current = dq.front();
-		visited[current.f][current.s] = true;
+        dq.pop_front();
 
         f0r(i, 4) {
-            if (grid[current.f + dr[i]][current.s + dc[i]] == 't') {
+            int newR = current.f + dr[i];
+            int newC = current.s + dc[i];
 
+            bool isValid = true;
+            if (isValid && grid[newR][newC] == 't') {
+                visited[newR][newC] = true;
+                dq.pb(mp(newR, newC));
             }
         }
 	}
