@@ -82,48 +82,280 @@ bool isValid(int r, int c, pll start, pll end) {
     return r >= start.f && r <= end.f && c >= start.s && c <= end.s;
 }
 
-// Check the PCL
-void floodfill(pll start, pll end) {
+// Check if something is a PCL and default is spotted
+bool spots_floodfill(pll start, pll end) {
     vector<int> dr = {1, -1, 0, 0};
     vector<int> dc = {0, 0, 1, -1};
     deque<pll> contig_dq; // [row #, col #] for contiguous
     deque<pll> spots_dq; // [row #, col #] for spots
-    vector<vector<bool>> visited = vector<vector<bool>>(n, vector<bool>(n, false));
+    vector<vector<bool>> contig_visited = vector<vector<bool>>(n, vector<bool>(n, false));
+    vector<vector<bool>> spots_visited = vector<vector<bool>>(n, vector<bool>(n, false));
 
-    contig_dq.pb(start);
-    visited[start.f][start.s] = true;
+    spots_dq.pb(start);
+    spots_visited[start.f][start.s] = true;
+
+    int spots_counter = 1; // number of total spots in this PCL
 
     // By default, assuming first one is contig 
-    char contig = inp[start.f][start.s];
-    char spots = '-';
-    bool isTrue = true; // Still could be a PCL true
+    char spots = inp[start.f][start.s];
+    char contig = '-';
 
-    while(!contig_dq.empty() && isTrue) {
+    // Find which value is contig
+    while(!spots_dq.empty() && contig == '-') {
+        pll current = spots_dq.front();
+        spots_dq.pop_front();
+        
+        f0r(i, 4) {
+            int newR = current.f + dr[i];
+            int newC = current.s + dc[i];
+            if(isValid(newR, newC, start, end) && !spots_visited[newR][newC]) {
+              spots_visited[newR][newC] = true;
+              if (inp[newR][newC] == spots) {
+                spots_dq.pb(mp(newR, newC));
+                spots_counter++;
+              } else if (contig == '-') {
+                contig = inp[newR][newC];
+                contig_dq.pb(mp(newR, newC));
+                contig_visited[newR][newC] = true;
+              }
+            } 
+        }
+    }
+
+    if (contig == '-') {
+      return false;
+    }
+
+    // Now that you know where contig is
+    while(!contig_dq.empty()) {
         pll current = contig_dq.front();
         contig_dq.pop_front();
         
         f0r(i, 4) {
             int newR = current.f + dr[i];
             int newC = current.s + dc[i];
-            if(isValid(newR, newC, start, end) && !visited[newR][newC]) {
-              visited[newR][newC] = true;
+            if(isValid(newR, newC, start, end) && !contig_visited[newR][newC]) {
+              contig_visited[newR][newC] = true;
               if (inp[newR][newC] == contig) {
                 contig_dq.pb(mp(newR, newC));
               } else {
-                if (spots == inp[newR][newC]) {
+                if (spots == inp[newR][newC] && !spots_visited[newR][newC]) {
+                  spots_visited[newR][newC] = true;
                   spots_dq.pb(mp(newR, newC));
-                } else if (spots == '-') {
-                  spots = inp[newR][newC];
-                  spots_dq.pb(mp(newR, newC));
-                } 
-                else {
+                  spots_counter++;
+                } else {
                   // Some phantom 3rd spot color has appeared
-                  isTrue = false;
+                  return false;
                 }
               }
             }
         }
     }
+
+    // Redo spots again
+    while(!spots_dq.empty()) {
+        pll current = spots_dq.front();
+        spots_dq.pop_front();
+        
+        f0r(i, 4) {
+            int newR = current.f + dr[i];
+            int newC = current.s + dc[i];
+            if(isValid(newR, newC, start, end) && !spots_visited[newR][newC]) {
+              spots_visited[newR][newC] = true;
+              if (inp[newR][newC] == spots) {
+                spots_dq.pb(mp(newR, newC));
+                spots_counter++;
+              } else if (inp[newR][newC] != contig) {
+                // Some phantom 3rd color appeared
+                return false;
+              }
+            } 
+        }
+    }
+
+    // Make sure all cells are either spots or contig in this PCL
+    for (int i = start.f; i <= end.f; i++) {
+      for (int j = start.s; j <= end.s; j++) {
+        if (inp[i][j] != spots && inp[i][j] != contig) {
+          return false;
+        }
+      }
+    }
+
+    // Do a BFS floodfill from a single spot and count the number of cells visited
+    // If it equals total spots_counter, then this PCL only has one spot
+    // Otherwise there'll be other cells unvisited somewhere else in another spot
+    deque<pll> multiple_dq;
+    int multiple_counter = 1;
+    vector<vector<bool>> multiple_visited = vector<vector<bool>>(n, vector<bool>(n, false));
+    if (spots != '-') {
+      multiple_visited[start.f][start.s] = true;
+      multiple_dq.pb(mp(start.f, start.s));
+    } else {
+      return false;
+    }
+
+    while(!multiple_dq.empty()) {
+      pll current = multiple_dq.front();
+      multiple_dq.pop_front();
+
+      f0r(i, 4) {
+        int newR = current.f + dr[i];
+        int newC = current.s + dc[i];
+        if(isValid(newR, newC, start, end) && !multiple_visited[newR][newC]) {
+          multiple_visited[newR][newC] = true;
+          if (inp[newR][newC] == spots) {
+            multiple_dq.pb(mp(newR, newC));
+            multiple_counter++;
+          }
+        }
+      }
+    }
+
+    // There is only one "spot" in this PCL as no other cells have a spot
+    if (multiple_counter == spots_counter) {
+      return false;
+    }
+
+    return true;
+}
+
+/* 
+Thought of a much simpler implementation.
+Do the initial contiguous, go through and get the first spot and count
+contig_counter. Then go through n^2 sweep and count total_contig and total_spot
+
+    // Make sure all cells are either spots or contig in this PCL
+    for (int i = start.f; i <= end.f; i++) {
+      for (int j = start.s; j <= end.s; j++) {
+        if (inp[i][j] != spots && inp[i][j] != contig) {
+          return false;
+        }
+      }
+    }
+
+Then take initial spot and do the same multiple_spot check. 
+Now you catch case where there are multiple contiguous and this just works
+without shenanigans of adding spots you see during contig floodfill into spots_dq
+*/
+
+// Check if something is a PCL and default is contiguous
+// Returning true if this region is a PCL
+bool contig_floodfill(pll start, pll end) {
+    vector<int> dr = {1, -1, 0, 0};
+    vector<int> dc = {0, 0, 1, -1};
+    deque<pll> contig_dq; // [row #, col #] for contiguous
+    deque<pll> spots_dq; // [row #, col #] for spots
+    vector<vector<bool>> contig_visited = vector<vector<bool>>(n, vector<bool>(n, false));
+    vector<vector<bool>> spots_visited = vector<vector<bool>>(n, vector<bool>(n, false));
+
+    contig_dq.pb(start);
+    contig_visited[start.f][start.s] = true;
+
+    int spots_counter = 0; // number of total spots in this PCL
+
+    // By default, assuming first one is contig 
+    char contig = inp[start.f][start.s];
+    char spots = '-';
+    pll initial_spot = {-1, -1};
+
+    while(!contig_dq.empty()) {
+        pll current = contig_dq.front();
+        contig_dq.pop_front();
+        
+        f0r(i, 4) {
+            int newR = current.f + dr[i];
+            int newC = current.s + dc[i];
+            if(isValid(newR, newC, start, end) && !contig_visited[newR][newC]) {
+              contig_visited[newR][newC] = true;
+              if (inp[newR][newC] == contig) {
+                contig_dq.pb(mp(newR, newC));
+              } else {
+                if (spots == inp[newR][newC] && !spots_visited[newR][newC]) {
+                  spots_visited[newR][newC] = true;
+                  spots_dq.pb(mp(newR, newC));
+                  spots_counter++;
+                } else if (spots == '-') {
+                  spots = inp[newR][newC];
+                  spots_visited[newR][newC] = true;
+                  spots_dq.pb(mp(newR, newC));
+                  spots_counter++;
+                  initial_spot = mp(newR, newC);
+                } 
+                else {
+                  // Some phantom 3rd spot color has appeared
+                  return false;
+                }
+              }
+            }
+        }
+    }
+
+    while(!spots_dq.empty()) {
+        pll current = spots_dq.front();
+        spots_dq.pop_front();
+        
+        f0r(i, 4) {
+            int newR = current.f + dr[i];
+            int newC = current.s + dc[i];
+            if(isValid(newR, newC, start, end) && !spots_visited[newR][newC]) {
+              spots_visited[newR][newC] = true;
+              if (inp[newR][newC] == spots) {
+                spots_dq.pb(mp(newR, newC));
+                spots_counter++;
+              } else if (inp[newR][newC] != contig) {
+                // Some phantom 3rd color appeared
+                return false;
+              }
+            } 
+        }
+    }
+
+    // Make sure all cells are either spots or contig in this PCL
+    for (int i = start.f; i <= end.f; i++) {
+      for (int j = start.s; j <= end.s; j++) {
+        if (inp[i][j] != spots && inp[i][j] != contig) {
+          return false;
+        }
+      }
+    }
+
+    // Do a BFS floodfill from a single spot and count the number of cells visited
+    // If it equals total spots_counter, then this PCL only has one spot
+    // Otherwise there'll be other cells unvisited somewhere else in another spot
+    deque<pll> multiple_dq;
+    int multiple_counter = 1;
+    vector<vector<bool>> multiple_visited = vector<vector<bool>>(n, vector<bool>(n, false));
+    if (spots != '-') {
+      multiple_visited[initial_spot.f][initial_spot.s] = true;
+      multiple_dq.pb(mp(initial_spot.f, initial_spot.s));
+    } else {
+      return false;
+    }
+
+    while(!multiple_dq.empty()) {
+      pll current = multiple_dq.front();
+      multiple_dq.pop_front();
+
+      f0r(i, 4) {
+        int newR = current.f + dr[i];
+        int newC = current.s + dc[i];
+        if(isValid(newR, newC, start, end) && !multiple_visited[newR][newC]) {
+          multiple_visited[newR][newC] = true;
+          if (inp[newR][newC] == spots) {
+            multiple_dq.pb(mp(newR, newC));
+            multiple_counter++;
+          }
+        }
+      }
+    }
+
+    // There is only one "spot" in this PCL as no other cells have a spot
+    if (multiple_counter == spots_counter) {
+      return false;
+    }
+
+    return true;
 }
 
 //Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=740 
