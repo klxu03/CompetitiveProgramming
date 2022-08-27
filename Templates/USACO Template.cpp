@@ -373,7 +373,7 @@ void floodfill(pll start) {
             int newC = current.s + dc[i];
 
             bool isValid = true;
-            if (isValid && grid[newR][newC] == 't') {
+            if (isValid && !visited[newR][newC] && grid[newR][newC] == 't') {
                 visited[newR][newC] = true;
                 dq.pb(mp(newR, newC));
             }
