@@ -35,8 +35,7 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-ll q, Q, T, k, l, r, x, y, z, g;
-int n, m;
+ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
@@ -44,7 +43,6 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
-	cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
 		solve();
@@ -53,49 +51,4 @@ int main() {
 
 void solve() {
 	cin >> n;
-	vector<ll> inp(n);
-	f0r(i, n) {
-		cin >> inp[i];
-	}
-
-	vector<ll> prev = inp;
-	int numZeros = 0;
-
-	while(true) {
-		for(int i = n - 1 - numZeros; i > 0; i--) {
-			inp[i] = inp[i] - ((inp[i]/inp[i - 1]) - 1) * inp[i - 1];
-			if (inp[i] - inp[i - 1] >= 1) {
-				inp[i] -= inp[i - 1];
-			}
-
-			if (i == n - 1 - numZeros) {
-				if (inp[i] - inp[i - 1] == 0) {
-					inp[i] = 0;
-					numZeros++;
-				}
-			}
-		}
-
-		bool same = true;
-		// DEBUG(prev);
-		// DEBUG(inp);
-		f0r(i, n) {
-			if (prev[i] != inp[i]) {
-				same = false;
-			}
-		}
-
-		if (same) {
-			break;
-		} else {
-			prev = inp;
-		}
-	}
-
-	// DEBUG(inp);
-	if (inp[1] == 0) {
-		cout << "YES" << endl;
-	} else {
-		cout << "NO" << endl;
-	}
 }
