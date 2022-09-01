@@ -97,7 +97,7 @@ class WeightedGraph {
     // pair<first, second> = adj[5][0] where first is node 5's 1st neighbors pointed to node, and second is the cost
     vector<ll> dist; // distance to get to this node
     vector<int> prev;
-    vector<set<int>> next;
+    vector<vector<int>> next;
 
     // numCows[1] is the num of cows that traverse through
     vector<ll> numCows;
@@ -109,7 +109,7 @@ class WeightedGraph {
         adj = vector<vector<pair<int, int>>>(_nodes);
         dist = vector<ll>(_nodes, LLONG_MAX);
         prev = vector<int>(_nodes, -1);
-        next = vector<set<int>>(_nodes);
+        next = vector<vector<int>>(_nodes);
 
         numCows = vector<ll>(_nodes, 0);
     }
@@ -162,18 +162,16 @@ class WeightedGraph {
                 // If we can reach neighboring node in shorter distance
                 if (curr_dist + i.s <= dist[i.f]) {
                     // Dealing with lexographically smallest
+
+                    /* DO NEXT DYNAMICALLY POST DIJKSTRA WITH INFO FROM PREV */
+
                     if (curr_dist + i.s == dist[i.f]) {
                         if (node < prev[i.f]) {
-                            // DEBUG("taking out", i.f, "from", next[prev[i.f]]);
-                            next[prev[i.f]].erase(i.f);
-
                             prev[i.f] = node;
-                            next[node].insert(i.f);
                         }
                     } else {
                         // Normally what you'd do in Dijkstra if not <= dist
                         prev[i.f] = node;
-                        next[node].insert(i.f);
                     }
 
                     // Update new distance to reach this node
@@ -185,6 +183,12 @@ class WeightedGraph {
             }
             // DEBUG(tasks);
             // DEBUG(next);
+        }
+    }
+
+    void setNext() {
+        f1r(i, 1, n) {
+            next[prev[i]].pb(i);
         }
     }
 
@@ -220,6 +224,7 @@ int main() {
     g.init_adj();
 
     g.dijkstra(0);
+    g.setNext();
     g.sumCows(0);
     // DEBUG(g.dist);
     // DEBUG(g.prev);
