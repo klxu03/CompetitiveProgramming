@@ -212,7 +212,7 @@ class UnweightedGraph {
 
 // Scuffed PQ so I can iterate through a pq
 // Right after declare the PQ right the line below with this pasted in template above WeightedGraph
-// vector<pair<ll, int>> &tasks = Container(pq);
+// vector<pair<ll, int>> &scuffed_pq = Container(pq);
 template <class T, class S, class C>
 S& Container(priority_queue<T, S, C>& q) {
     struct HackedQueue : private priority_queue<T, S, C> {

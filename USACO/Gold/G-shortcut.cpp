@@ -162,9 +162,6 @@ class WeightedGraph {
                 // If we can reach neighboring node in shorter distance
                 if (curr_dist + i.s <= dist[i.f]) {
                     // Dealing with lexographically smallest
-
-                    /* DO NEXT DYNAMICALLY POST DIJKSTRA WITH INFO FROM PREV */
-
                     if (curr_dist + i.s == dist[i.f]) {
                         if (node < prev[i.f]) {
                             prev[i.f] = node;
@@ -172,17 +169,18 @@ class WeightedGraph {
                     } else {
                         // Normally what you'd do in Dijkstra if not <= dist
                         prev[i.f] = node;
+
+                        // Only pq push the first time you see a way to get to this node with same distance
+
+                        // Update new distance to reach this node
+                        dist[i.f] = curr_dist + i.s;
+                        pq.push({dist[i.f], i.f});
                     }
 
-                    // Update new distance to reach this node
-                    dist[i.f] = curr_dist + i.s;
-
-                    pq.push({dist[i.f], i.f});
                 }
 
             }
             // DEBUG(tasks);
-            // DEBUG(next);
         }
     }
 
