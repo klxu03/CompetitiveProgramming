@@ -35,20 +35,20 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-ll n, m, q, Q, T, k, l, r, x, y, z, g;
+ll q, Q, T, k, l, r, x, y, z, g;
+int n, m;
 
-// Produce the prime factorization for the number n
-// Edge case when n = 1, then prime factorization is empty
-vector<int> factor(int n) {
-	vector<int> ret;
-	for (int i = 2; i * i <= n; i++) {
-		while (n % i == 0) {
-			ret.push_back(i);
-			n /= i;
-		}
+void solve(); 
+
+// Problem: 
+int main() {
+	io;
+	ll test_cases = 1;
+    cin >> test_cases;
+	
+	f0r(test_case, test_cases) {
+		solve();
 	}
-	if (n > 1) ret.push_back(n);
-	return ret;
 }
 
 // O(logn) produce x^n mod m quickly
@@ -60,18 +60,11 @@ ll modpow(ll x, ll n, ll m) {
 	return u;
 }
 
-void solve(); 
-
-// Problem: 
-int main() {
-	io;
-	ll test_cases = 1;
-	
-	f0r(test_case, test_cases) {
-		solve();
-	}
-}
-
 void solve() {
-	cin >> n;
+    ll a, b;
+    ll m = 1e9 + 7;
+	cin >> a >> b;
+
+    ll res = modpow(a, b, m);
+    cout << res << endl;
 }
