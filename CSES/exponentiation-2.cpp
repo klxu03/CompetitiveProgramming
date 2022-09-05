@@ -69,6 +69,17 @@ ll normalpow(ll x, ll n, ll m) {
 	return u;
 }
 
+/*
+ x = 7, y = 19, x^(101 - floor(101/(y - 1))(y - 1)) mod y
+ =
+  x = 7, y = 19, x^(101) mod y
+
+  With Fermat's thm, because we know x^y mod y = y, so
+  x ^ (y - 1) mod y = 1. I abused this with
+  x ^ (100) mod y = x ^ (100 - (y - 1)) mod y 
+  because of exponent rules
+*/
+
 void solve() {
     ll a, b, c;
     ll m = 1e9 + 7;
