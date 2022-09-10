@@ -35,14 +35,11 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-ll q, Q, T, k, l, r, x, y, z, g;
-int n, m;
+ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
-vector<vector<int>> dp;
-
-// Problem: 
+// Problem: https://codeforces.com/contest/1722/problem/E
 int main() {
 	io;
 	ll test_cases = 1;
@@ -53,24 +50,111 @@ int main() {
 	}
 }
 
+bool isValid(int r, int c) {
+	return r >= 0 && r < n && c >= 0 && c < m;
+}
+
 void solve() {
-	cin >> n;
-	vector<int> inp(n);
-	dp = vector<vector<int>>(n, vector<int>(13, 0));
-
+	cin >> n >> m;
+	vector<vector<string>> inp(n, vector<string>(m));
+	vector<vector<int>> dsu(n, vector<int>(m, -1));
 
 	f0r(i, n) {
-		int num;
-		cin >> num;
-		inp[i] = num;
-		vector<int> binary; 
-		for(int i = 12; i >= 0; i--) {
-			binary.pb((num & (1 << i)) != 0);
+		string s;
+		cin >> s;
+		f0r(j, m) {
+			string ret = "";
+			ret += s[j];
+			inp[i][j] = ret;
 		}
-		dp[i] = binary;
 	}
 
 	f0r(i, n) {
-		DEBUG(dp[i]);
+		DEBUG(inp[i]);
 	}
+
+	vector<vector<pll>> L_checks = {
+		{{1, 0}, {1, 1}},
+		{{1, 0}, {0, 1}},
+		{{0, 1}, {1, 1}},
+		{{1, 0}, {1, -1}}
+	};
+
+	vector<pll> neighbor_checks = {
+		{-1, -1},
+		{-1, 0},
+		{-1, 1},
+		{0, -1},
+		{0, 1},
+		{1, -1},
+		{1, 0},
+		{1, 1}
+	};
+
+	int counter = 1;
+	f0r(i, n) {
+		f0r(j, m) {
+			if (inp[i][j] != ".") {
+				// Go make this unvisited piece a rectangle
+				if (inp[i][j] == "*" && dsu[i][j] == -1) {
+					// Go through the 4 possible rectangles and check if valid
+					bool isRect = true;
+					f0r(k, 4) {
+						vector<pll> currL = L_checks[k];
+						isRect = true;
+						f0r(l, 2) {
+							int newR = i + currL[l].f;
+							int newC = j + currL[l].s;
+
+							if (!(isValid(newR, newC) && inp[newR][newC] == "*" && dsu[newR][newC] == -1)) {
+								DEBUG(newR, newC, isValid(newR, newC));
+								if (isValid(newR, newC)) {
+									DEBUG(inp[newR][newC]);
+								}
+
+								isRect = false;
+							}
+						}
+
+						if (isRect) {
+							dsu[i][j] = counter;
+							DEBUG("isRect true, making rectangle", inp[i][j]);
+							f0r(l, 2) {
+								int newR = i + currL[l].f;
+								int newC = j + currL[l].s;
+
+								dsu[newR][newC] = counter;
+							}
+							counter++;
+							
+							break;
+						}
+					}
+
+					// This stranded '*' turned isRect false so not a rectangle on any
+					if (!isRect) {
+						DEBUG("isRect");
+						cout << "NO" << endl;
+						return;
+					}
+				}
+
+				// Check if this rect has any other rect in the neighborhood
+				int curr = dsu[i][j];
+				f0r(k, 8) {
+					int newR = i + neighbor_checks[k].f;
+					int newC = j + neighbor_checks[k].s;
+
+					if (isValid(newR, newC) && inp[newR][newC] != "." && curr != dsu[newR][newC]) {
+						DEBUG("encroaching neighbor", curr, dsu[newR][newC]);
+						cout << "NO" << endl;
+						return;
+					}
+				}
+
+			}
+		}
+	}
+
+	cout << "YES" << endl;
 }

@@ -92,6 +92,7 @@ int main() {
 // sort(inp.begin(), inp.end(), [](pll& x, pll& y) {
 //     return x.s < y.s;
 // });
+
 class UnweightedGraph {
 	public:
 	ll n; // # of nodes
@@ -209,6 +210,19 @@ class UnweightedGraph {
     }
 };
 
+// Scuffed PQ so I can iterate through a pq
+// Right after declare the PQ right the line below with this pasted in template above WeightedGraph
+// vector<pair<ll, int>> &scuffed_pq = Container(pq);
+template <class T, class S, class C>
+S& Container(priority_queue<T, S, C>& q) {
+    struct HackedQueue : private priority_queue<T, S, C> {
+        static S& Container(priority_queue<T, S, C>& q) {
+            return q.*&HackedQueue::c;
+        }
+    };
+    return HackedQueue::Container(q);
+}
+
 class WeightedGraph {
     public:
     int nodes; // # of nodes
@@ -241,6 +255,13 @@ class WeightedGraph {
         }
     }
 
+    // Priority queues are sus and can't pass objects or lambda functions as comparator
+    // This is how you get around it
+    // auto comp = [](pair<ll, int>&a, pair<ll, int>&b) {
+    //     return a.f > b.f;
+    // };
+    // // Priority queue where first is distance and second is the node you reach there with that distance
+    // priority_queue<pair<ll, int>, vector<pair<ll, int>>, decltype(comp)> pq(comp);
     void dijkstra(int src) {
         fill(dist.begin(), dist.end(), LLONG_MAX);
 
@@ -373,7 +394,7 @@ void floodfill(pll start) {
             int newC = current.s + dc[i];
 
             bool isValid = true;
-            if (isValid && grid[newR][newC] == 't') {
+            if (isValid && !visited[newR][newC] && grid[newR][newC] == 't') {
                 visited[newR][newC] = true;
                 dq.pb(mp(newR, newC));
             }

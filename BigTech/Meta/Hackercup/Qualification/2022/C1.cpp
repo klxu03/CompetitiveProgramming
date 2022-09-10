@@ -35,41 +35,8 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-ll n, m, q, Q, T, k, l, r, x, y, z, g;
-
-// Produce the prime factorization for the number n
-// Edge case when n = 1, then prime factorization is empty
-vector<int> factor(int n) {
-	vector<int> ret;
-	for (int i = 2; i * i <= n; i++) {
-		while (n % i == 0) {
-			ret.push_back(i);
-			n /= i;
-		}
-	}
-	if (n > 1) ret.push_back(n);
-	return ret;
-}
-
-<<<<<<< HEAD
-// Bit masking
-vector<int> bitmask(int num, int numBits) {
-	vector<int> binary;
-	for(int i = numBits; i >= 0; i--) {
-		binary.pb((num & (1 << i)) != 0);
-	}
-
-	return binary;
-=======
-// O(logn) produce x^n mod m quickly
-ll modpow(ll x, ll n, ll m) {
-	if (n == 0) return 1%m;
-	long long u = modpow(x,n/2,m);
-	u = (u*u)%m;
-	if (n%2 == 1) u = (u*x)%m;
-	return u;
->>>>>>> eded2c666286c48481af1c3f3933ced8d2305bde
-}
+ll q, Q, T, k, l, r, x, y, z, g;
+int n, m;
 
 void solve(); 
 
@@ -77,12 +44,48 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
+    cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
+        cout << "Case #" << test_case + 1 << ": ";
 		solve();
 	}
 }
 
 void solve() {
-	cin >> n;
+    cin >> n;
+    n--;
+    string inp;
+    cin >> inp;
+
+    vector<string> ret;
+    if (inp[0] == '.') {
+        string curr = ".";
+        f0r(i, 99) {
+            curr += "-";
+        }
+        // f0r(i, 4) {
+        //     curr += "-";
+        // }
+        for (int i = 100; i < 100 + n; i++) {
+            curr += "-";
+            ret.pb(curr);
+        }
+    } else {
+        string curr = "-";
+        f0r(i, 99) {
+            curr += ".";
+        }
+        // f0r(i, 4) {
+        //     curr += ".";
+        // }
+        for (int i = 100; i < 100 + n; i++) {
+            curr += ".";
+            ret.pb(curr);
+        }
+    }
+
+    f0r(i, ret.size()) {
+        cout << ret[i] << endl;
+    }
 }

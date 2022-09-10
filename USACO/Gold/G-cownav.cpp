@@ -251,16 +251,5 @@ int main() {
 		}
 	}
 
-	// DEBUG(0, visited[2][0][0][2][0][1]);
-	// DEBUG(1, visited[1][0][0][2][1][1]);
-	// DEBUG(2, visited[1][0][1][2][1][2]);
-	// DEBUG(3, visited[1][1][1][2][1][2]);
-	// DEBUG(4, visited[1][2][1][2][1][2]);
-	// DEBUG(5, visited[1][2][0][2][1][1]);
-	// DEBUG(6, visited[0][2][0][2][2][1]);
-	// DEBUG(7, visited[0][2][0][2][2][0]);
-	// DEBUG(8, visited[0][2][0][1][2][0]);
-	// DEBUG(9, visited[0][2][0][0][2][0]);
-
 	cout << ret << endl;
 }

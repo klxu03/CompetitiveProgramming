@@ -1,0 +1,8 @@
+1. Clear global variables between test cases
+2. Make sure variable names are unique
+3. Don't use i when you're supposed to use j in for loops
+4. Return early for "NO" outputs
+5. Follow output specifications (sometimes "YES" or "Yes")
+6. Finish getting all the inputs in loops
+7. Watch for overflows with long long and be careful casting ll to int 
+8. Array out of bounds (make array slightly bigger than max)
