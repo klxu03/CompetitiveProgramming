@@ -51,6 +51,16 @@ vector<int> factor(int n) {
 	return ret;
 }
 
+// Bit masking
+vector<int> bitmask(int num, int numBits) {
+	vector<int> binary;
+	for(int i = numBits; i >= 0; i--) {
+		binary.pb((num & (1 << i)) != 0);
+	}
+
+	return binary;
+}
+
 void solve(); 
 
 // Problem: 

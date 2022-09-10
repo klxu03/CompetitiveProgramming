@@ -40,6 +40,8 @@ int n, m;
 
 void solve(); 
 
+vector<vector<int>> dp;
+
 // Problem: 
 int main() {
 	io;
@@ -53,49 +55,22 @@ int main() {
 
 void solve() {
 	cin >> n;
-	vector<ll> inp(n);
+	vector<int> inp(n);
+	dp = vector<vector<int>>(n, vector<int>(13, 0));
+
+
 	f0r(i, n) {
-		cin >> inp[i];
+		int num;
+		cin >> num;
+		inp[i] = num;
+		vector<int> binary; 
+		for(int i = 12; i >= 0; i--) {
+			binary.pb((num & (1 << i)) != 0);
+		}
+		dp[i] = binary;
 	}
 
-	vector<ll> prev = inp;
-	int numZeros = 0;
-
-	while(true) {
-		for(int i = n - 1 - numZeros; i > 0; i--) {
-			inp[i] = inp[i] - ((inp[i]/inp[i - 1]) - 1) * inp[i - 1];
-			if (inp[i] - inp[i - 1] >= 1) {
-				inp[i] -= inp[i - 1];
-			}
-
-			if (i == n - 1 - numZeros) {
-				if (inp[i] - inp[i - 1] == 0) {
-					inp[i] = 0;
-					numZeros++;
-				}
-			}
-		}
-
-		bool same = true;
-		// DEBUG(prev);
-		// DEBUG(inp);
-		f0r(i, n) {
-			if (prev[i] != inp[i]) {
-				same = false;
-			}
-		}
-
-		if (same) {
-			break;
-		} else {
-			prev = inp;
-		}
-	}
-
-	// DEBUG(inp);
-	if (inp[1] == 0) {
-		cout << "YES" << endl;
-	} else {
-		cout << "NO" << endl;
+	f0r(i, n) {
+		DEBUG(dp[i]);
 	}
 }
