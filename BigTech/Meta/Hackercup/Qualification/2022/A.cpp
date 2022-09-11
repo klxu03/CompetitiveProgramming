@@ -52,6 +52,8 @@ int main() {
 	}
 }
 
+// Failed cuz of simple ordering bug
+
 void solve() {
 	cin >> n >> k;
 
@@ -71,6 +73,8 @@ void solve() {
     int counter = 1;
     bool isValid = true;
     f1r(i, 1, n) {
+        // Need to check counter > 2 after I increment it, not before
+        // Wrong order, so I fail case of AAA
         if (counter > 2) {
             cout << "NO" << endl;
             return;

@@ -45,6 +45,20 @@ ll n, m;
 
 void solve(); 
 
+/* 
+This is wrong, I need to check not if it's split in half
+but if it is ABCABCABC it should be yes if already ordered
+but in half it's not, but its fine since you can move ABC to the end
+
+1
+9 1
+1 2 3 1 2 3 1 2 3
+1 2 3 1 2 3 1 2 3
+
+My code outputs "NO", it should be "YES"
+*/
+
+
 // Problem: https://www.facebook.com/codingcompetitions/hacker-cup/2022/round-1/problems/A2
 int main() {
 	io;
@@ -180,6 +194,20 @@ void solve() {
                     }
 
                     // DEBUG(each_card_is_same, halfway_exact_same);
+
+                    /* 
+                    This is wrong, I need to check not if it's split in half
+                    but if it is ABCABCABC it should be yes if already ordered
+                    but in half it's not, but its fine since you can move ABC to the end
+
+                    1
+                    9 1
+                    1 2 3 1 2 3 1 2 3
+                    1 2 3 1 2 3 1 2 3
+
+                    My code outputs "NO", it should be "YES"
+                    */
+
                     if (each_card_is_same || halfway_exact_same) {
                         cout << "YES" << endl;
                     } else {
