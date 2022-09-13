@@ -51,7 +51,6 @@ vector<int> factor(int n) {
 	return ret;
 }
 
-<<<<<<< HEAD
 // Bit masking
 vector<int> bitmask(int num, int numBits) {
 	vector<int> binary;
@@ -60,7 +59,8 @@ vector<int> bitmask(int num, int numBits) {
 	}
 
 	return binary;
-=======
+}
+
 // O(logn) produce x^n mod m quickly
 ll modpow(ll x, ll n, ll m) {
 	if (n == 0) return 1%m;
@@ -68,7 +68,6 @@ ll modpow(ll x, ll n, ll m) {
 	u = (u*u)%m;
 	if (n%2 == 1) u = (u*x)%m;
 	return u;
->>>>>>> eded2c666286c48481af1c3f3933ced8d2305bde
 }
 
 void solve(); 
