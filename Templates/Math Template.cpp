@@ -61,13 +61,32 @@ vector<int> bitmask(int num, int numBits) {
 	return binary;
 }
 
-// O(logn) produce x^n mod m quickly
-ll modpow(ll x, ll n, ll m) {
-	if (n == 0) return 1%m;
-	long long u = modpow(x,n/2,m);
-	u = (u*u)%m;
-	if (n%2 == 1) u = (u*x)%m;
-	return u;
+// Binary exponentiation
+ll ipow(ll base, ll exp) {
+    ll result = 1;
+    while (exp) {
+        if (exp & 1)
+            result *= base;
+        
+        exp >>= 1;
+        base *= base;
+    }
+}
+
+// Binary exponentiation with mod
+// O(logn) iteratively give base^exp % mod
+ll modpow(ll base, ll exp, ll mod) {
+    ll result = 1;
+    while (exp) {
+        if (exp & 1) {
+            result *= base;
+			result %= mod;
+		}
+        
+        exp >>= 1;
+        base *= base;
+		base %= mod;
+    }
 }
 
 void solve(); 
