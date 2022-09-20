@@ -65,19 +65,26 @@ struct timer {
 ll q, Q, T, k, l, r, x, y, z, g;
 ll n, m;
 
+ll const MOD = (ll) 1e9 + 7;
+
+void usacio(string filename) {
+    io;
+    freopen((filename + ".txt").c_str(), "r", stdin);
+}
+
 // Binary exponentiation with mod
 // O(logn) iteratively give base^expo % mod
 ll modpow(ll base, ll expo, ll mod) {
     ll result = 1;
     while (expo) {
-        if (expo & 1) {
-            result *= base;
-			result %= mod;
-		}
+      if (expo & 1) {
+        result *= base;
+        result %= mod;
+      }
         
-        expo >>= 1;
-        base *= base;
-		base %= mod;
+      expo >>= 1;
+      base *= base;
+      base %= mod;
     }
 
     return result;
@@ -85,7 +92,8 @@ ll modpow(ll base, ll expo, ll mod) {
 
 //Problem URL: https://cses.fi/problemset/task/2182
 int main() {
-    io;
+    // io;
+    usacio("test_input");
     cin >> n;
     vector<pll> inp(n);
     f0r(i, n) {
@@ -99,9 +107,9 @@ int main() {
     ll og_num = 1; // x^k multiplied by each other 
     f0r(i, n) {
         number *= inp[i].s + 1;
-        number %= (ll) 1e9 + 7;
-        og_num *= modpow(inp[i].f, inp[i].s, (ll) 1e9 + 7); 
-        og_num %= (ll) 1e9 + 7;
+        number %= MOD;
+        og_num *= modpow(inp[i].f, inp[i].s, MOD); 
+        og_num %= MOD;
     }
     DEBUG(og_num, number, number/2, (ll) sqrt(og_num));
 
@@ -113,14 +121,15 @@ int main() {
         ll sqrt = 1;
         f0r(i, n) {
             sqrt *= modpow(inp[i].f, inp[i].s/2, (ll) 1e9 + 7);
-            sqrt %= (ll) 1e9 + 7;
+            sqrt %= MOD;
         }
         product *= sqrt;
-        product %= (ll) 1e9 + 7;
+        product %= MOD;
     }
 
     f0r(i, n) {
-        sum *= (modpow(inp[i].f, inp[i].s + 1, (ll) 1e9 + 7) - 1)/(inp[i].f - 1);
+        sum *= (modpow(inp[i].f, inp[i].s + 1, MOD) - 1)/(inp[i].f - 1);
+        sum %= MOD;
     }
 
     cout << number << " " << sum << " " << product << endl;
