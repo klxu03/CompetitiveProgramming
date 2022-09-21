@@ -54,24 +54,35 @@ int main() {
 void solve() {
 	cin >> n >> x;
     vector<ll> coins(n);
-    vector<ll> dp(x + 1, 0); // dp[x] means number of coin combinations that can build up a coin sum of x
+    vector<vector<ll>> dp(n, vector<ll>(x + 1, 0)); // dp[n][x] means number of coin combinations that can build up a coin sum of x using any amount of the previous coins n including n
     f0r(i, n) {
         cin >> coins[i];
+        dp[i][0] = 1;
     }
-	dp[0] = 1;
 
-	f1r(i, 1, x + 1) {
-		ll counter = 0;
-		f0r(j, n) {
-			ll coin = coins[j];
-			if (i - coin >= 0) {
-				counter += dp[i - coin];
-				counter %= MOD;
-			}
-		}
+    // Do first coin/first row
+    f1r(i, 1, x + 1) {
+        if (i % coins[0] == 0) {
+            dp[0][i] = 1;
+        }
+    }
 
-		dp[i] = counter;
-	}
+    f1r(i, 1, n) {
+        ll coin = coins[i];
+        f1r(j, 1, x + 1) {
+            dp[i][j] += dp[i - 1][j];
 
-	cout << dp[x] << endl;
+            if (j - coin >= 0) {
+                dp[i][j] += dp[i][j - coin];
+                dp[i][j] %= MOD;
+            }
+        }
+    }
+
+
+    // f0r(i, n) {
+    //     DEBUG(dp[i]);
+    // }
+
+	cout << dp[n - 1][x] << endl;
 }
