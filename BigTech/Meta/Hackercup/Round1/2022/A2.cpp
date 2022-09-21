@@ -93,8 +93,6 @@ vector<int> find_matches(vector<ll> text, vector<ll> pat) {
     int n = pat.size(), m = text.size();
     vector<ll> v = pat;
     v.push_back(-1);
-    // DEBUG(v);
-    // DEBUG(text);
     v.insert(v.end(), text.begin(), text.end());
     vector<int> lps = compute_lps(v), ans;
     for (int i = n + 1; i <= n + m; i++) { /* n + 1 is where the text starts */
@@ -102,8 +100,6 @@ vector<int> find_matches(vector<ll> text, vector<ll> pat) {
             ans.push_back(i - 2 * n); /* i - (n - 1) - (n + 1) */
         }
     }
-    // DEBUG(v);
-    // DEBUG(lps);
     return ans;
 }
 
