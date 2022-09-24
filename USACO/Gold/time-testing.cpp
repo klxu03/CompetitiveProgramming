@@ -80,7 +80,7 @@ int main() {
     tin
 
     int x = 5;
-    for (int i = 0; i < 1 * 1e8; i++) {
+    for (ll i = 0; i < 1 * 1e10; i++) {
         x += (i ^ 5) >> 2;
     }
 
