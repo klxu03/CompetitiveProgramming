@@ -39,7 +39,7 @@ ll n, m, q, Q, T, k, l, r, x, y, z, g;
 
 void solve(); 
 
-// Problem: https://codeforces.com/contest/1722/problem/E
+// Problem: 
 int main() {
 	io;
 	ll test_cases = 1;
@@ -50,111 +50,54 @@ int main() {
 	}
 }
 
-bool isValid(int r, int c) {
-	return r >= 0 && r < n && c >= 0 && c < m;
-}
+// Test Case:
+/*
+1
+41093474
+
+Result: 02344589
+*/
 
 void solve() {
-	cin >> n >> m;
-	vector<vector<string>> inp(n, vector<string>(m));
-	vector<vector<int>> dsu(n, vector<int>(m, -1));
+	string str;
+	cin >> str;
+	n = str.size();
 
+	vector<ll> inp(n);
 	f0r(i, n) {
-		string s;
-		cin >> s;
-		f0r(j, m) {
-			string ret = "";
-			ret += s[j];
-			inp[i][j] = ret;
+		inp[i] = str[i] - '0';
+	}
+
+	auto r_inp = inp;
+	reverse(r_inp.begin(), r_inp.end());
+
+	vector<ll> min_beyond(n); // min_beyond[i] after reverse: Min of this value and all values to the right of index i
+	ll curr_min = LLONG_MAX;
+	f0r(i, n) {
+		if (r_inp[i] < curr_min) {
+			curr_min = r_inp[i];
+		}
+		min_beyond[i] = curr_min;
+	}
+
+	reverse(min_beyond.begin(), min_beyond.end());
+	DEBUG(inp);
+	DEBUG(min_beyond);
+
+	vector<ll> ret;
+	f0r(i, n) {
+		if (inp[i] == min_beyond[i]) {
+			ret.pb(inp[i]);
+		} else {
+			ret.pb(min(inp[i] + 1, (ll) 9));
 		}
 	}
 
+	sort(ret.begin(), ret.end());
+	string ret_str = "";
 	f0r(i, n) {
-		DEBUG(inp[i]);
+		ret_str += to_string(ret[i]);
 	}
-
-	vector<vector<pll>> L_checks = {
-		{{1, 0}, {1, 1}},
-		{{1, 0}, {0, 1}},
-		{{0, 1}, {1, 1}},
-		{{1, 0}, {1, -1}}
-	};
-
-	vector<pll> neighbor_checks = {
-		{-1, -1},
-		{-1, 0},
-		{-1, 1},
-		{0, -1},
-		{0, 1},
-		{1, -1},
-		{1, 0},
-		{1, 1}
-	};
-
-	int counter = 1;
-	f0r(i, n) {
-		f0r(j, m) {
-			if (inp[i][j] != ".") {
-				// Go make this unvisited piece a rectangle
-				if (inp[i][j] == "*" && dsu[i][j] == -1) {
-					// Go through the 4 possible rectangles and check if valid
-					bool isRect = true;
-					f0r(k, 4) {
-						vector<pll> currL = L_checks[k];
-						isRect = true;
-						f0r(l, 2) {
-							int newR = i + currL[l].f;
-							int newC = j + currL[l].s;
-
-							if (!(isValid(newR, newC) && inp[newR][newC] == "*" && dsu[newR][newC] == -1)) {
-								DEBUG(newR, newC, isValid(newR, newC));
-								if (isValid(newR, newC)) {
-									DEBUG(inp[newR][newC]);
-								}
-
-								isRect = false;
-							}
-						}
-
-						if (isRect) {
-							dsu[i][j] = counter;
-							DEBUG("isRect true, making rectangle", inp[i][j]);
-							f0r(l, 2) {
-								int newR = i + currL[l].f;
-								int newC = j + currL[l].s;
-
-								dsu[newR][newC] = counter;
-							}
-							counter++;
-							
-							break;
-						}
-					}
-
-					// This stranded '*' turned isRect false so not a rectangle on any
-					if (!isRect) {
-						DEBUG("isRect");
-						cout << "NO" << endl;
-						return;
-					}
-				}
-
-				// Check if this rect has any other rect in the neighborhood
-				int curr = dsu[i][j];
-				f0r(k, 8) {
-					int newR = i + neighbor_checks[k].f;
-					int newC = j + neighbor_checks[k].s;
-
-					if (isValid(newR, newC) && inp[newR][newC] != "." && curr != dsu[newR][newC]) {
-						DEBUG("encroaching neighbor", curr, dsu[newR][newC]);
-						cout << "NO" << endl;
-						return;
-					}
-				}
-
-			}
-		}
-	}
-
-	cout << "YES" << endl;
+	
+	cout << ret_str << endl;
 }
