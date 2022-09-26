@@ -20,7 +20,7 @@ using ll = long long;
 #define pll pair<ll, ll>
 
 /* For Debugging Purposes */
-#ifdef LOCAL
+#ifdef LOCALL
 #define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
 #else
 #define DEBUG(...) 6
@@ -46,9 +46,8 @@ ll n, m;
 void solve(); 
 
 int main() {
-	// io;
-    usaco("perfectly_balanced_chapter_1_validation_input");
-    // usaco("copy");
+	// io
+    usaco("perfectly_balanced_chapter_1_input");
 	ll test_cases = 1;
     cin >> test_cases;
 	
@@ -61,104 +60,96 @@ int main() {
 void solve() {
     string str;
     cin >> str;
+    n = str.size();
 
-    DEBUG("starting new test case", str.size());
-    // cin >> q;
-    // f0r(i, q) {
-    //     ll x;
-    //     cin >> x >> x;
-    // }
+    vector<vector<int>> dp(n + 1, vector<int>(26, 0));
 
-    vector<vector<ll>> dp(26, vector<ll>(str.size() + 1, 0));
-    dp[str[0] - 'a'][1] = 1; // Increment first character
-    f1r(i, 2, str.size() + 1) {
+    dp[1][str[0] - 'a']++; // 1-index
+    f1r(i, 2, n + 1) {
         f0r(j, 26) {
-            dp[j][i] = dp[j][i - 1];
+            dp[i][j] = dp[i - 1][j];
         }
-        dp[str[i - 1] - 'a'][i]++;
+        dp[i][str[i - 1] - 'a']++;
     }
 
-    // cout << endl;
-    // f0r(i, 26) {
-    //     char c = 'a' + i;
-    //     DEBUG(c, dp[i]);
-    // }
-    DEBUG("dped the input");
-
-    cin >> q; // q queries
+    cin >> q;
     ll ret = 0;
     f0r(i, q) {
         DEBUG(i);
-        ll l, r;
+        int l, r;
         cin >> l >> r;
-        l--; // already 1 indexed
-        DEBUG(l, r);
-
-        vector<ll> left_right(26, 0);
-        f0r(j, 26) {
-            left_right[j] = dp[j][r] - dp[j][l];
-        }
-        DEBUG(left_right);
-        
-        int num_odd = 0;
-        int odd = -1;
-        f0r(j, 26) {
-            if (left_right[j] % 2 == 1) {
-                num_odd++;
-                odd = j;
-            }
-        }
-        // char codd = odd + 'a';
-        // DEBUG(num_odd, codd);
-
-        if (num_odd >= 2) {
+        l--;
+        DEBUG(dp[r]);
+        DEBUG(dp[l]);
+        if ((r - l) % 2 == 0) { // even # of letters
+            DEBUG("even number of letters");
             continue;
         }
 
-        vector<ll> left_mid(26, 0);
-        int mid = (r + l + 1)/2;
-        DEBUG(mid);
+        vector<int> right_left(26, 0); // right - left
         f0r(j, 26) {
-            left_mid[j] = dp[j][mid] - dp[j][l];
+            right_left[j] = dp[r][j] - dp[l][j];
         }
+        DEBUG(right_left);
 
-        if (num_odd == 1) {
-            // Fix odd query
-            if (left_mid[odd] * 2 > left_right[odd]) {
-                // the odd one is on the left
-                left_mid[odd]--;
-            } else {
-                // the odd one is on the right, so take out middle one
-                int mid_char = str[mid - 1] - 'a';
-                // char mid_cchar = mid_char + 'a';
-                // DEBUG(mid_char, mid_cchar, left_mid[mid_char]);
-                left_mid[mid_char]--;
-                // DEBUG(left_mid[mid_char]);
-                // DEBUG(str[mid + l - 1]);
-            }
-
-            left_right[odd]--; // Subtract the odd on the right
-        }
-
-        DEBUG(left_mid);
-
-        bool add = true;
-        // Working with an even length now after turning odd into even
+        vector<int> mid_left(26, 0); // mid - left
+        ll mid = (l + r + 1)/2;
         f0r(j, 26) {
-            if (left_mid[j] * 2 != left_right[j]) {
-                DEBUG(j, left_mid[j], left_right[j]);
-                add = false;
-                break;
+            mid_left[j] = dp[mid][j] - dp[l][j];
+        }  
+        DEBUG(mid_left);
+
+        // Odd letter on left side
+        DEBUG("odd_left case");
+        bool odd_found = false;
+        bool valid = true;
+        f0r(j, 26) {
+            if (mid_left[j] * 2 != right_left[j]) {
+                if (odd_found) {
+                    DEBUG("left valid", j);
+                    valid = false;
+                    break;
+                } else {
+                    odd_found = true;
+                    DEBUG("left odd_found", j);
+                }
             }
         }
-        DEBUG("done checking", add);
 
-        if (add) {
+        DEBUG("left", valid);
+        if (valid) {
+            ret++;
+            continue;
+        }
+
+        // Odd letter on right side
+        DEBUG("odd_right case");
+        mid = (l + r - 1)/2;
+        f0r(j, 26) {
+            mid_left[j] = dp[mid][j] - dp[l][j];
+        }  
+        DEBUG(mid_left);
+
+        odd_found = false;
+        valid = true;
+        f0r(j, 26) {
+            if (mid_left[j] * 2 != right_left[j]) {
+                if (odd_found) {
+                    valid = false;
+                    DEBUG("right valid: ", j);
+                    break;
+                } else {
+                    odd_found = true;
+                    DEBUG("right odd_found", j);
+                }
+            }
+        }
+
+        if (valid) {
             ret++;
         }
-        DEBUG(ret);
+        DEBUG("right", valid);
     }
 
-    DEBUG("cout ret", ret);
     cout << ret << endl;
 }
