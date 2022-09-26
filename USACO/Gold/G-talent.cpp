@@ -36,22 +36,91 @@ template<typename T, typename... Args> void debug(string s, T x, Args... args) {
 if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+void usaco(string filename) {
+    io;
+    freopen((filename + ".in").c_str(), "r", stdin);
+    freopen((filename + ".out").c_str(), "w", stdout);
+}
+
+void usacio(string filename) {
+    io;
+    freopen((filename + ".in").c_str(), "r", stdin);
+}
+
+#include <chrono> 
+using namespace std::chrono; 
+struct timer {
+  high_resolution_clock::time_point begin;
+
+  timer() {}
+  timer(bool b) {
+    if (b) start();
+  }
+
+  void start() {
+    begin = high_resolution_clock::now();
+  }
+
+  void print() {
+    cout << "Time taken: " << duration_cast<duration<double>>(high_resolution_clock::now() - begin).count() << " seconds" << endl;
+  }
+
+  double report() {
+    return duration_cast<duration<double>>(high_resolution_clock::now() - begin).count();
+  }
+};
+// Start of main put tin, end of main put tpr (tgt gives you value not printed)
+#define tin timer __timer__(1);
+#define tpr __timer__.print();
+#define tgt __timer__.report()
 
 ll q, Q, T, k, l, r, x, y, z, g;
 int n, m;
 
-void solve(); 
-
-// Problem: 
+//Problem URL: http://www.usaco.org/index.php?page=viewproblem2&cpid=839 
 int main() {
-	io;
-	ll test_cases = 1;
-	
-	f0r(test_case, test_cases) {
-		solve();
-	}
-}
+    usaco("talent");
+	// usacio("testCase");
+    // io;
 
-void solve() {
-	cin >> n;
+    cin >> n >> m;
+    vector<pll> inp(n);
+
+    ll max_weight = -1;
+    f0r(i, n) {
+        cin >> x >> y; // x is weight, y is talent
+        if (x > max_weight) {
+            max_weight = x;
+        }
+
+        inp[i] = {x, y};
+    }
+
+    vector<ll> dp(m + max_weight, 0);
+    
+    // Do the first row
+    dp[inp[0].f] = inp[0].s;
+
+    f1r(i, 1, n) {
+        r0f(j, m + max_weight) {
+            if (j - inp[i].f >= 0) {
+                dp[j] = max(dp[j], dp[j - inp[i].f] + inp[i].s);
+            }
+        }
+    }
+
+    ll ret = -1;
+
+    DEBUG(inp);
+    DEBUG(dp);
+
+    f1r(i, m, m + max_weight) {
+        ll talent = dp[i]; // talent
+        talent *= 1000;
+        if (talent/i > ret) {
+            ret = talent/i;
+        }
+    }
+
+    cout << ret << endl;
 }

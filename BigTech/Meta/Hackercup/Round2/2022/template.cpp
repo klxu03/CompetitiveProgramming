@@ -34,70 +34,28 @@ template<typename T, typename... Args> void debug(string s, T x, Args... args) {
 if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+void usaco(string filename) {
+    io;
+    freopen((filename + ".txt").c_str(), "r", stdin);
+    freopen((filename + "_output.txt").c_str(), "w", stdout);
+}
 
-ll n, m, q, Q, T, k, l, r, x, y, z, g;
+ll q, Q, T, k, l, r, x, y, z, g;
+ll n, m;
 
 void solve(); 
 
-// Problem: 
 int main() {
-	io;
+	// io;
+    usaco("");
 	ll test_cases = 1;
-	cin >> test_cases;
+    cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
+        cout << "Case #" << test_case + 1 << ": ";
 		solve();
 	}
 }
 
-// Test Case:
-/*
-1
-41093474
-
-Result: 02344589
-*/
-
 void solve() {
-	string str;
-	cin >> str;
-	n = str.size();
-
-	vector<ll> inp(n);
-	f0r(i, n) {
-		inp[i] = str[i] - '0';
-	}
-
-	auto r_inp = inp;
-	reverse(r_inp.begin(), r_inp.end());
-
-	vector<ll> min_beyond(n); // min_beyond[i] after reverse: Min of this value and all values to the right of index i
-	ll curr_min = LLONG_MAX;
-	f0r(i, n) {
-		if (r_inp[i] < curr_min) {
-			curr_min = r_inp[i];
-		}
-		min_beyond[i] = curr_min;
-	}
-
-	reverse(min_beyond.begin(), min_beyond.end());
-	DEBUG(inp);
-	DEBUG(min_beyond);
-
-	vector<ll> ret;
-	f0r(i, n) {
-		if (inp[i] == min_beyond[i]) {
-			ret.pb(inp[i]);
-		} else {
-			ret.pb(min(inp[i] + 1, (ll) 9));
-		}
-	}
-
-	sort(ret.begin(), ret.end());
-	string ret_str = "";
-	f0r(i, n) {
-		ret_str += to_string(ret[i]);
-	}
-	
-	cout << ret_str << endl;
 }

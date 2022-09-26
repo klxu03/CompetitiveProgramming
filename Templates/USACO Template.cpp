@@ -6,6 +6,8 @@ using namespace std;
 
 #define f0r(a, b) for (long long a = 0; a < b; a++)
 #define f1r(a, b, c) for (long long a = b; a < c; a++)
+#define r0f(a, b) for (long long a = b - 1; a >= 0; a--)
+#define r1f(a, b, c) for (long long a = c - 1; a >= b; a--)
 #define isOdd & 1
 #define qpow2(exponent) 1 << exponent
 /* 2^exponent, because every time shifting bit to the leftBound you are essentially multiplying function by two */
