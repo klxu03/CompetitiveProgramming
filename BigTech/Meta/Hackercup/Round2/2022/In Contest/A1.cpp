@@ -20,7 +20,7 @@ using ll = long long;
 #define pll pair<ll, ll>
 
 /* For Debugging Purposes */
-#ifdef LOCAL
+#ifdef LOCALL
 #define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
 #else
 #define DEBUG(...) 6
@@ -47,7 +47,7 @@ void solve();
 
 int main() {
 	// io;
-    usaco("perfectly_balanced_chapter_1_validation_input");
+    usaco("perfectly_balanced_chapter_1_input");
     // usaco("copy");
 	ll test_cases = 1;
     cin >> test_cases;
@@ -111,6 +111,8 @@ void solve() {
         // char codd = odd + 'a';
         // DEBUG(num_odd, codd);
 
+        // The error below caused my submission to fail. Needed:
+        // if (num_odd >= 2 || num_odd == 0) since case of even length query
         if (num_odd >= 2) {
             continue;
         }
