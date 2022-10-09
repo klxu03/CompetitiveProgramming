@@ -6,6 +6,8 @@ using namespace std;
 
 #define f0r(a, b) for (long long a = 0; a < b; a++)
 #define f1r(a, b, c) for (long long a = b; a < c; a++)
+#define r0f(a, b) for (long long a = b - 1; a >= 0; a--)
+#define r1f(a, b, c) for (long long a = c - 1; a >= b; a--)
 #define isOdd & 1
 #define qpow2(exponent) 1 << exponent
 /* 2^exponent, because every time shifting bit to the leftBound you are essentially multiplying function by two */
@@ -35,7 +37,8 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-ll n, m, q, Q, T, k, l, r, x, y, z, g;
+ll q, Q, T, k, l, r, x, y, z, g;
+int n, m;
 
 void solve(); 
 

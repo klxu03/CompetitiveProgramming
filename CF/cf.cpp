@@ -6,6 +6,8 @@ using namespace std;
 
 #define f0r(a, b) for (long long a = 0; a < b; a++)
 #define f1r(a, b, c) for (long long a = b; a < c; a++)
+#define r0f(a, b) for (long long a = b - 1; a >= 0; a--)
+#define r1f(a, b, c) for (long long a = c - 1; a >= b; a--)
 #define isOdd & 1
 #define qpow2(exponent) 1 << exponent
 /* 2^exponent, because every time shifting bit to the leftBound you are essentially multiplying function by two */
@@ -35,7 +37,8 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-ll n, m, q, Q, T, k, l, r, x, y, z, g;
+ll q, Q, T, k, l, r, x, y, z, g;
+int n, m;
 
 void solve(); 
 
@@ -50,54 +53,6 @@ int main() {
 	}
 }
 
-// Test Case:
-/*
-1
-41093474
-
-Result: 02344589
-*/
-
 void solve() {
-	string str;
-	cin >> str;
-	n = str.size();
-
-	vector<ll> inp(n);
-	f0r(i, n) {
-		inp[i] = str[i] - '0';
-	}
-
-	auto r_inp = inp;
-	reverse(r_inp.begin(), r_inp.end());
-
-	vector<ll> min_beyond(n); // min_beyond[i] after reverse: Min of this value and all values to the right of index i
-	ll curr_min = LLONG_MAX;
-	f0r(i, n) {
-		if (r_inp[i] < curr_min) {
-			curr_min = r_inp[i];
-		}
-		min_beyond[i] = curr_min;
-	}
-
-	reverse(min_beyond.begin(), min_beyond.end());
-	DEBUG(inp);
-	DEBUG(min_beyond);
-
-	vector<ll> ret;
-	f0r(i, n) {
-		if (inp[i] == min_beyond[i]) {
-			ret.pb(inp[i]);
-		} else {
-			ret.pb(min(inp[i] + 1, (ll) 9));
-		}
-	}
-
-	sort(ret.begin(), ret.end());
-	string ret_str = "";
-	f0r(i, n) {
-		ret_str += to_string(ret[i]);
-	}
-	
-	cout << ret_str << endl;
+	cin >> n;
 }
