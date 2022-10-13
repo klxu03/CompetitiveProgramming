@@ -1,4 +1,5 @@
-// https://leetcode.com/contest/weekly-contest-314/problems/paths-in-matrix-whose-sum-is-divisible-by-k/
+// https://leetcode.com/problems/two-sum-iv-input-is-a-bst/
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -35,43 +36,53 @@ else if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr 
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
+ // Definition for a binary tree node.
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode() : val(0), left(nullptr), right(nullptr) {}
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+    TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
 class Solution {
 public:
-    int numberOfPaths(vector<vector<int>>& grid, int k) {
-        vector<vector<vector<int>>> dp = vector<vector<vector<int>>>(grid.size(), vector<vector<int>>(grid[0].size(), vector<int>(k, 0)));
-        // dp[row][col][k]
+    vector<int> vals;
 
-        // Do top row
-        dp[0][0][grid[0][0] % k]++; // Set first one to 1
-        f1r(i, 1, grid[0].size()) {
-            int add = grid[0][i] % k;
+    void inOrder(TreeNode* root) {
+        if (root->left != nullptr) {
+            inOrder(root->left);
+        }
 
-            f0r(j, k) {
-                dp[0][i][j] = dp[0][i - 1][(j - add + k) % k];
+        vals.pb(root->val);
+
+        if (root->right != nullptr) {
+            inOrder(root->right);
+        }
+    }
+    
+    bool findTarget(TreeNode* root, int k) {
+        inOrder(root);
+
+        int left = 0;
+        int right = vals.size() - 1;
+
+        while (left != right) {
+            if (vals[left] + vals[right] < k) {
+                left++;
+            } else if (vals[left] + vals[right] > k) {
+                right--;
+            } else if (vals[left] + vals[right] == k) {
+                return true;
             }
         }
 
-        // Do left column
-        f1r(i, 1, grid.size()) {
-            int add = grid[i][0] % k;
-
-            f0r(j, k) {
-                dp[i][0][j] = dp[i - 1][0][(j - add + k) % k];
-            }
-        }
-
-        f1r(i, 1, grid.size()) {
-            f1r(j, 1, grid[0].size()) {
-                int add = grid[i][j] % k;
-
-                f0r(i2, k) {
-                    dp[i][j][i2] = dp[i - 1][j][(i2 - add + k) % k];
-                    dp[i][j][i2] += dp[i][j - 1][(i2 - add + k) % k];
-                    dp[i][j][i2] %= (int) 1e9 + 7;
-                }
-            }
-        }
-
-        return dp[grid.size() - 1][grid[0].size() - 1][0];
+        return false;
     }
 };
+
+int main() {
+    Solution s;
+    // vector<vector<int>> sample = {{5, 2, 4}, {3, 0, 5}, {0, 7, 2}};
+    // s.numberOfPaths(sample, 3);
+}

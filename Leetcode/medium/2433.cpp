@@ -1,3 +1,5 @@
+// https://leetcode.com/contest/weekly-contest-314/problems/find-the-original-array-of-prefix-xor/
+
 #include <bits/stdc++.h>
 
 using namespace std;
