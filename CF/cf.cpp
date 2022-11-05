@@ -22,11 +22,11 @@ using ll = long long;
 #define pll pair<ll, ll>
 
 /* For Debugging Purposes */
-#ifdef LOCAL
-#define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
-#else
+// #ifdef LOCAL
+// #define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
+// #else
 #define DEBUG(...) 6
-#endif
+// #endif
 
 template<typename T, typename S> ostream& operator << (ostream &os, const pair<T, S> &p) {return os << "(" << p.first << ", " << p.second << ")";}
 template<typename C, typename T = decay<decltype(*begin(declval<C>()))>, typename enable_if<!is_same<C, string>::value>::type* = nullptr>
@@ -54,5 +54,117 @@ int main() {
 }
 
 void solve() {
-	cin >> n;
+	ll a, b, c, d;
+
+	cin >> a >> b >> c >> d;
+
+	ll prod = a * b;
+
+	vector<ll> smol_fac; // factors of prod
+	vector<ll> big_fac;
+	for(int i = 1; i*i <= prod; i++) {
+		if (prod % i == 0) {
+			smol_fac.pb(i);
+			big_fac.pb(prod/i);
+		}
+	}
+	DEBUG(prod);
+	DEBUG(smol_fac);
+	DEBUG(big_fac);
+
+	bool swapped = false;
+	// I want a - c to be smol, and b to d be big
+	if (c > d) {
+		swapped = true;
+		// swap(a, b);
+		// swap(c, d);
+
+		ll temp_b = b;
+		b = a;
+		a = temp_b;
+
+		ll temp_d = d;
+		d = c;
+		c = temp_d;
+
+	}
+
+	f0r(i, smol_fac.size()) {
+		ll smol = smol_fac[i];
+		ll big = big_fac[i];
+
+		DEBUG(i, smol, big);
+
+		ll ret_left = -1;
+		ll ret_right = -1;
+
+		double epsilon = 0.000000000001;
+
+		double left = (((double) (a + 1)) - epsilon)/smol; // left bound not okay
+		left -= epsilon;
+		double right = (((double) c) + epsilon)/smol;
+		right += epsilon;
+		ll b_left = ceil(left);
+		ll b_right = floor(right);
+
+		DEBUG("left: ", b_left, b_right);
+		if (b_right >= b_left) {
+			// found a match
+			ret_left = b_right * smol;
+		}
+
+
+		left = (((double) (b + 1)) - epsilon)/big; // left bound not okay
+		left -= epsilon;
+		right = (((double) d) + epsilon)/big;
+		right += epsilon;
+		ll a_left = ceil(left);
+		ll a_right = floor(right);
+		DEBUG("right: ", a_left, a_right);
+
+		if (a_right >= a_left) {
+			// found a match
+
+			ret_right = a_right * big;
+		}
+		DEBUG(ret_left, ret_right);
+
+		if (ret_left != -1 && ret_right != -1) {
+			if (swapped) {
+				cout << ret_right << " " << ret_left << endl;
+			} else {
+				cout << ret_left << " " << ret_right << endl;
+			}
+			return;
+		}
+
+		// if (a < smol && smol <= c) {
+		// 	double left = ((double) (b + 1))/big; // left bound not okay
+		// 	double right = ((double) d)/big;
+		// 	ll a_left = ceil(left);
+		// 	ll a_right = floor(right);
+
+		// 	if (a_right >= a_left) {
+		// 		// found a match
+		// 		cout << smol << " " << a_right * big << endl;
+		// 		return;
+		// 	}
+
+		// }
+
+		// if (b < big && big <= d) {
+		// 	double left = ((double) (a + 1))/smol; // left bound not okay
+		// 	double right = ((double) c)/smol;
+		// 	ll b_left = ceil(left);
+		// 	ll b_right = floor(right);
+
+		// 	if (b_right >= b_left) {
+		// 		// found a match
+		// 		cout << b_right * smol << " " << big << endl;
+		// 		return;
+		// 	}
+		// }
+	}
+
+	cout << -1 << " " << -1 << endl;
 }

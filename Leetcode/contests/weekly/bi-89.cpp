@@ -34,12 +34,44 @@ else if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr 
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
+// [1, 2, 8, 64, 1024, 32768, 2097152, 268435456, 719476260, 371842544, 766762396, 329376018, 124160285, 121047601, 243880903, 489373567, 585862415, 157921350, 134084614, 953612746, 431750151, 686331837, 349105660, 511821710, 322050759, 217770278, 867243987, 742004924, 733922348, 549790477]
+
 class Solution {
 public:
+    int minimizeArrayValue(vector<int>& nums) {
+        ll lo = -1, hi = -1;
+        ll sum = -1;
+
+        ll actual_max = nums[0];
+        f1r(i, 1, nums.size()) {
+            if (nums[i] > actual_max) {
+                actual_max = nums[i];
+            }
+
+            if (nums[i] - nums[i - 1] > 0 && nums[i] + nums[i - 1] > sum) {
+                lo = i - 1;
+                hi = i;
+                sum = nums[i] + nums[i - 1];
+            }
+        }
+
+        DEBUG(nums[lo], nums[hi], sum);
+
+        if (sum == -1) {
+            return actual_max;
+        }
+
+        if (sum % 2 == 1) {
+            return sum/2 + 1;
+        } else {
+            return sum/2;
+        }
+    }
 };
 
 int main() {
     Solution s;
-    // vector<vector<int>> sample = {{5, 2, 4}, {3, 0, 5}, {0, 7, 2}};
-    // s.numberOfPaths(sample, 3);
+    vector<int> nums = {3, 7, 1, 6};
+
+    cout << s.minimizeArrayValue(nums);
 }
