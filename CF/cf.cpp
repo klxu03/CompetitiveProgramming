@@ -54,43 +54,9 @@ int main() {
 }
 
 void solve() {
-	cin >> n;
-	vector<ll> bricks(n);
+	ll a, b, d;
+	cin >> a >> b >> d;
 
-	ll small_big_small = -1;
-
-	f0r(i, n) {
-		cin >> bricks[i];
-	}
-	sort(bricks.begin(), bricks.end());
-	DEBUG(bricks);
-
-	ll min_brick = bricks[0];
-
-	pll big_diff = {bricks[2], bricks[1]}; // first is big brick, second is small brick
-	f1r(i, 3, n) {
-		if (bricks[i] - bricks[i - 1] + bricks[i] - min_brick > big_diff.f - big_diff.s + big_diff.f - min_brick) {
-			big_diff.f = bricks[i];
-			big_diff.s = bricks[i - 1];
-		}
-	}
-
-	DEBUG(min_brick, big_diff.f, big_diff.s);
-	small_big_small = (big_diff.f - min_brick) + (big_diff.f - big_diff.s);
-
-	sort(bricks.begin(), bricks.end(), greater<ll>());
-	DEBUG(bricks);
-
-	ll max_brick = bricks[0];
-	big_diff = {bricks[2], bricks[1]}; // first is smaller, second is bigger
-	f1r(i, 3, n) {
-		if (max_brick - bricks[i] + bricks[i - 1] - bricks[i] > max_brick - big_diff.f + big_diff.s - big_diff.f) {
-			big_diff.f = bricks[i];
-			big_diff.s = bricks[i - 1];
-		}
-	}
-	DEBUG(max_brick, big_diff.f, big_diff.s);
-	ll big_small_big = (max_brick - big_diff.f) + (big_diff.s - big_diff.f);
-
-	cout << max(small_big_small, big_small_big) << endl;
+	DEBUG(25599 | 420);
+	DEBUG(25599 | 666);
 }

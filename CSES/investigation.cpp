@@ -211,7 +211,7 @@ int main() {
 void solve() {
     tin
 
-	cin >> n >> m;
+    cin >> n >> m;
     WeightedGraph g(n, m, false);
     g.init_adj();
 
