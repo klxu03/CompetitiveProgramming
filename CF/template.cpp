@@ -46,6 +46,7 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
+	cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
 		solve();

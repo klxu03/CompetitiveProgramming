@@ -54,9 +54,74 @@ int main() {
 }
 
 void solve() {
-	ll a, b, d;
-	cin >> a >> b >> d;
+	ll hum;
+	cin >> n >> hum;
+	int num_double = 2;
+	int num_triple = 1;
 
-	DEBUG(25599 | 420);
-	DEBUG(25599 | 666);
+	vector<ll> astros(n + 1);
+	f0r(i, n) {
+		cin >> astros[i];
+	}
+	astros[n] = 0;
+
+	sort(astros.begin(), astros.end());
+
+	int num_rows = (num_double + 1) * (num_triple + 1);
+	vector<vector<ll>> dp(n + 1, vector<ll>(num_rows));
+	// dp[1][0] is the case we're on astro 1 and best case of no potions used
+
+	// num 2s used, then num 3. And then split by num 2, so iterate over all num 3 possibilities order:
+	// <0, 0>, <0, 1> | <1, 0>, <1, 1> | <2, 0>, <2, 1>
+
+	dp[0][0] = hum;
+	dp[0][1] = hum * 3;
+
+	f1r(i, 2, num_triple + 1) {
+		dp[0][i] = dp[0][i - 1] * 3;
+	}
+
+	f1r(i, num_triple + 1, num_rows) {
+		// Usually more complicating, abusing num_triple == 1 here so just each iteration lol
+		dp[0][i] = dp[0][i - num_triple - 1] * 2;
+	}
+
+	int ret = 0;
+	// Do the actual DP now
+	f1r(i, 1, n + 1) {
+		f0r(j, num_rows) {
+			if (dp[i - 1][j] > astros[i]) {
+				dp[i][j] = dp[i - 1][j] + (astros[i]/2);
+			} else {
+				dp[i][j] = -1;
+			}
+
+			// Do comparisons for max value, doubling and tripling right value
+
+			// Double
+			if (j >= num_triple + 1) {
+				dp[i][j] = max(dp[i][j], 2 * dp[i][j - num_triple - 1]);
+			}
+
+			// Triple, make sure actually has used a triple pot and not none used
+			if (j > 0 && j % (num_triple + 1) != 0) {
+				dp[i][j] = max(dp[i][j], 3 * dp[i][j - 1]);
+			}
+
+			if (dp[i][j] != -1) {
+				ret = i;
+			}
+		}
+	}
+
+	/*
+	f0r(j, num_rows) {
+		f0r(i, n + 1) {
+			printf("%5d ", dp[i][j]);
+		}
+		printf("\n");
+	}
+	*/
+
+	cout << ret << endl;
 }
