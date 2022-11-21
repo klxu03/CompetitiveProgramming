@@ -37,8 +37,10 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-ll q, Q, T, k, l, r, x, y, z, g;
+ll q, Q, T, k, l, r, x, y, z;
+
 int n, m;
+ll a, b;
 
 void solve(); 
 
@@ -53,75 +55,86 @@ int main() {
 	}
 }
 
+vector<vector<pll> > adj; // adjacency neighbor vector going to be {other node, weight}
+vector<ll> a_visited;
+vector<ll> b_visited;
+
+void a_bfs() {
+	deque<ll> dq;
+	dq.pb(a);
+
+	a_visited[a] = 0;
+	while(!dq.empty()) {
+		ll curr = dq.front();
+		dq.pop_front();
+
+		for(pll other: adj[curr]) {
+			if (a_visited[other.f] == -1 && other.f != b) {
+				a_visited[other.f] = a_visited[curr] ^ other.s;
+				dq.pb(other.f);
+			}
+		}
+	}
+}
+
+void b_bfs() {
+	deque<ll> dq;
+	dq.pb(b);
+
+	b_visited[b] = 0;
+	while(!dq.empty()) {
+		ll curr = dq.front();
+		dq.pop_front();
+
+		for(pll other: adj[curr]) {
+			if (b_visited[other.f] == -1) {
+				b_visited[other.f] = b_visited[curr] ^ other.s;
+				dq.pb(other.f);
+			}
+		}
+	}
+}
+
 void solve() {
-	ll hum;
-	cin >> n >> hum;
-	int num_double = 2;
-	int num_triple = 1;
+	cin >> n >> a >> b;
+	a--; b--;
+	adj = vector<vector<pll>>(n);
+	a_visited = vector<ll>(n, -1);
+	b_visited = vector<ll>(n, -1);
 
-	vector<ll> astros(n + 1);
-	f0r(i, n) {
-		cin >> astros[i];
-	}
-	astros[n] = 0;
-
-	sort(astros.begin(), astros.end());
-
-	int num_rows = (num_double + 1) * (num_triple + 1);
-	vector<vector<ll>> dp(n + 1, vector<ll>(num_rows));
-	// dp[1][0] is the case we're on astro 1 and best case of no potions used
-
-	// num 2s used, then num 3. And then split by num 2, so iterate over all num 3 possibilities order:
-	// <0, 0>, <0, 1> | <1, 0>, <1, 1> | <2, 0>, <2, 1>
-
-	dp[0][0] = hum;
-	dp[0][1] = hum * 3;
-
-	f1r(i, 2, num_triple + 1) {
-		dp[0][i] = dp[0][i - 1] * 3;
+	f0r(i, n - 1) {
+		ll x, y, w;
+		cin >> x >> y >> w;
+		adj[x - 1].pb({y - 1, w});
+		adj[y - 1].pb({x - 1, w});
 	}
 
-	f1r(i, num_triple + 1, num_rows) {
-		// Usually more complicating, abusing num_triple == 1 here so just each iteration lol
-		dp[0][i] = dp[0][i - num_triple - 1] * 2;
-	}
+	a_bfs();
+	b_bfs();
 
-	int ret = 0;
-	// Do the actual DP now
-	f1r(i, 1, n + 1) {
-		f0r(j, num_rows) {
-			if (dp[i - 1][j] > astros[i]) {
-				dp[i][j] = dp[i - 1][j] + (astros[i]/2);
-			} else {
-				dp[i][j] = -1;
-			}
+	// a_visited[a] = -1;
+	b_visited[b] = -1;
+	DEBUG(a_visited);
+	DEBUG(b_visited);
 
-			// Do comparisons for max value, doubling and tripling right value
-
-			// Double
-			if (j >= num_triple + 1) {
-				dp[i][j] = max(dp[i][j], 2 * dp[i][j - num_triple - 1]);
-			}
-
-			// Triple, make sure actually has used a triple pot and not none used
-			if (j > 0 && j % (num_triple + 1) != 0) {
-				dp[i][j] = max(dp[i][j], 3 * dp[i][j - 1]);
-			}
-
-			if (dp[i][j] != -1) {
-				ret = i;
-			}
+	set<ll> in_a;
+	f0r(i, a_visited.size()) {
+		if (a_visited[i] != -1) {
+			in_a.insert(a_visited[i]);
 		}
 	}
 
-	/*
-	f0r(j, num_rows) {
-		f0r(i, n + 1) {
-			printf("%5d ", dp[i][j]);
+	bool valid = false;
+	f0r(i, b_visited.size()) {
+		if (in_a.find(b_visited[i]) != in_a.end()) {
+			valid = true;
+			break;
 		}
-		printf("\n");
 	}
-	*/
 
-	cout << ret << endl;
+	if (valid) {
+		cout << "YES" << endl;
+	} else {
+		cout << "NO" << endl;
+	}
 }

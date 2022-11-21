@@ -37,7 +37,7 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
-ll n, m, q, Q, T, k, l, r, x, y, z, g;
+ll n, m, q, Q, T, k, l, r, x, y, z;
 
 // Produce the prime factorization for the number n
 // Edge case when n = 1, then prime factorization is empty

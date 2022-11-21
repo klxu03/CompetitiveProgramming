@@ -74,7 +74,7 @@ struct timer {
 #define tpr __timer__.print();
 #define tgt __timer__.report()
 
-ll q, Q, T, k, l, r, x, y, z, g;
+ll q, Q, T, k, l, r, x, y, z;
 int n, m;
 
 //Problem URL: 
