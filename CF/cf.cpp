@@ -38,9 +38,7 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
 ll q, Q, T, k, l, r, x, y, z;
-
 int n, m;
-ll a, b;
 
 void solve(); 
 
@@ -55,86 +53,40 @@ int main() {
 	}
 }
 
-vector<vector<pll> > adj; // adjacency neighbor vector going to be {other node, weight}
-vector<ll> a_visited;
-vector<ll> b_visited;
+void recurse(int start, int num) {
 
-void a_bfs() {
-	deque<ll> dq;
-	dq.pb(a);
-
-	a_visited[a] = 0;
-	while(!dq.empty()) {
-		ll curr = dq.front();
-		dq.pop_front();
-
-		for(pll other: adj[curr]) {
-			if (a_visited[other.f] == -1 && other.f != b) {
-				a_visited[other.f] = a_visited[curr] ^ other.s;
-				dq.pb(other.f);
-			}
-		}
-	}
-}
-
-void b_bfs() {
-	deque<ll> dq;
-	dq.pb(b);
-
-	b_visited[b] = 0;
-	while(!dq.empty()) {
-		ll curr = dq.front();
-		dq.pop_front();
-
-		for(pll other: adj[curr]) {
-			if (b_visited[other.f] == -1) {
-				b_visited[other.f] = b_visited[curr] ^ other.s;
-				dq.pb(other.f);
-			}
-		}
-	}
 }
 
 void solve() {
-	cin >> n >> a >> b;
-	a--; b--;
-	adj = vector<vector<pll>>(n);
-	a_visited = vector<ll>(n, -1);
-	b_visited = vector<ll>(n, -1);
+	cin >> n >> x;
 
-	f0r(i, n - 1) {
-		ll x, y, w;
-		cin >> x >> y >> w;
-		adj[x - 1].pb({y - 1, w});
-		adj[y - 1].pb({x - 1, w});
-	}
-
-	a_bfs();
-	b_bfs();
-
-	// a_visited[a] = -1;
-	b_visited[b] = -1;
-	DEBUG(a_visited);
-	DEBUG(b_visited);
-
-	set<ll> in_a;
-	f0r(i, a_visited.size()) {
-		if (a_visited[i] != -1) {
-			in_a.insert(a_visited[i]);
-		}
-	}
-
-	bool valid = false;
-	f0r(i, b_visited.size()) {
-		if (in_a.find(b_visited[i]) != in_a.end()) {
-			valid = true;
-			break;
-		}
-	}
-
-	if (valid) {
-		cout << "YES" << endl;
+	if (n % x != 0) {
+		cout << -1 << endl;
 	} else {
-		cout << "NO" << endl;
+		vector<ll> ans1(n + 1, -1); // let's do 1 indexing
+		ans1[1] = x;
+
+		int last_possible = -1;
+		ll counter = x;
+		while (counter <= n) {
+			// DEBUG(n, counter, last_possible);
+			if (n % (counter * 2) == 0) {
+				ans1[counter] = counter * 2;
+				last_possible = counter;
+				counter *= 2;
+			} else {
+				ans1[counter] = n;
+				break;
+			}
+		}
+
+		f1r(i, 1, n) {
+			if (ans1[i] == -1) {
+				ans1[i] = i;
+			}
+		}
+		ans1[n] = 1;
+
+		cout << endl;
 	}
 }
