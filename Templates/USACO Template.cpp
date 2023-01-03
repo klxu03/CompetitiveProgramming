@@ -349,7 +349,7 @@ ll old_binary_search(ll lo, ll hi, bool works) {
 
 ll wikipedia_binary_search(ll lo, ll hi, bool works) {
 	while (lo < hi) {
-		ll mid = (lo + hi)/2;
+		ll mid = lo + (hi - lo)/2;
 		if (!works) {
 			lo = mid + 1;
 		} else {
