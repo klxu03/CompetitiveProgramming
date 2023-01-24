@@ -102,6 +102,7 @@
 		"climits": "cpp",
 		"filesystem": "cpp",
 		"*.cp": "cpp",
-		"source_location": "cpp"
+		"source_location": "cpp",
+		"stack": "cpp"
 	}
 }

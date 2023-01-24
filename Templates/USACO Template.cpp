@@ -20,6 +20,7 @@ using ll = long long;
 #define mp make_pair
 #define t third
 #define pll pair<ll, ll>
+#define pii pair<int, int>
 
 /* For Debugging Purposes */
 #ifdef LOCAL
