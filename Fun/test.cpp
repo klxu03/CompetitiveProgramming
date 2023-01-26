@@ -2,7 +2,7 @@
 
 using namespace std;
 
-void recurse(vector<int> left, int n) {
+void recurse(vector<int> &left, int n) {
 	if (n <= 1) {
 		for(int i = 0; i < left.size(); i++) {
 			cout << left[i] << " ";
@@ -15,20 +15,43 @@ void recurse(vector<int> left, int n) {
 		return;
 	}
 
-    vector<int> copy = left;
-    copy.push_back(2);
+    // 2 2
+    // 2 1 1
+    // 
+    // 1
+    // 1 2
+    // 1 1
+
+    left.push_back(2);
 
 	// merge
-	recurse(copy, n - 2);
+	recurse(left, n - 2);
 
-    copy.pop_back();
-    copy.push_back(1);
+    left.pop_back();
+
+    // 1 1 1
+    // 1 1
+    // 1 1 1
+    // 1 1 
+
+    left.push_back(1);
 	// no merge
-	recurse(copy, n - 1);
+	recurse(left, n - 1);
+
+    left.pop_back();
+
+    // 1         n - 4
+    // 1 1       n - 3
+    // 1 1 1     n - 2
+    // 1 1 1     n - 2
+    // 1 1 1 1 1 n - 1
+
 }
 
 int main() {
     int n;
 	cin >> n;
-	recurse({}, n);
+
+    vector<int> inp;
+	recurse(inp, n);
 }
