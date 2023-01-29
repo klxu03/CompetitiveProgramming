@@ -47,7 +47,7 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
-	cin >> test_cases;
+	// cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
 		solve();
@@ -144,24 +144,6 @@ void solve() {
 		} else {
 			first = ss;
 		}
-
-		if (inp[i + 1] <= ss) {
-			second = inp[i + 1];
-		} else {
-			second = inp[i + 1] - ss;
-		}
-
-		vals.push_back({first, second});
 	}
 
-	if (inp[n - 2] <= ss) {
-		first = 0;
-	} else {
-		first = ss;
-	}
-	vals.push_back({first, inp[n - 1]});
-
-	ans = min(ans, greedy_swaps());
-
-	cout << ans << endl;
 }
