@@ -14,12 +14,13 @@ using namespace std;
 #define max3(a, b, c) max(a, max(b, c))
 #define pb push_back
 #define f first
-// #define s second
+#define s second
 using ll = long long;
 
 #define mp make_pair
 #define t third
 #define pll pair<ll, ll>
+#define pii pair<int, int>
 
 /* For Debugging Purposes */
 #ifdef LOCAL
@@ -38,7 +39,7 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
 ll q, Q, T, k, l, r, x, y, z;
-int n, m;
+int n, m, ss;
 
 void solve(); 
 
@@ -52,140 +53,115 @@ int main() {
 		solve();
 	}
 }
+vector<pair<ll, ll>> vals;
 
-#include <ext/pb_ds/assoc_container.hpp> 
-#include <ext/pb_ds/tree_policy.hpp>
+ll greedy_swaps() {
+	ll ret = 0;
 
-using namespace __gnu_pbds; 
+	f0r(i, vals.size()) {
+		ret += vals[i].first * vals[i].second;
+	}
 
-template <typename num_t>
-using ordered_set = tree<num_t, null_type, less<num_t>, rb_tree_tag, tree_order_statistics_node_update>;
+	while (true) {
+		ll diff = 0;
 
-ll p;
+		f0r(i, vals.size() - 1) {
+			// check if swap is smaller
+			ll orig = vals[i].first * vals[i].second + vals[i + 1].first * vals[i + 1].second;
+			ll next = vals[i].first * vals[i + 1].first + vals[i].second * vals[i + 1].second;
+
+			if (next < orig) {
+				// go swap
+				diff -= (orig - next);
+
+				swap(vals[i].second, vals[i + 1].first);
+			}
+		}
+
+		ret += diff;
+
+		if (diff == 0) break;
+	}
+	DEBUG(vals);
+	
+	return ret;
+}
+
 void solve() {
-	cin >> n >> p;
-	vector<ll> inp(n);
+	cin >> n >> ss;
+	vector<int> inp(n);
 
-	set<ll> inps; // numbers that have been seen
 	f0r(i, n) {
-		ll x;
-		cin >> x;
-		inp[i] = x;
-		inps.insert(x);
+		cin >> inp[i];
 	}
-	DEBUG(inp);
+	int first;
+	int second;
 
-	set<ll> s; // Set containing number "ranges" that need to be dealt with
-	// If set contains 0 5, then 0 1 2 3 4 5 are not present
-
-	// Insert in the smallest element possible starting at 0
-	// f0r(i, p - 1) {
-	// 	if (inps.count(i) == 0) {
-	// 		s.insert(i);
-	// 		break;
-	// 	}
-	// }
-
-	// Create the set s
-	f0r(i, n) {
-		bool prev_num = true; // insert previous number into set
-		bool next_num = true; // insert next number into set
-
-		ll prev_number = inp[i] - 1;
-		if (inp[i] == 0) {
-			prev_number = p - 1;
-		}
-		if (inps.count(prev_number) > 0) {
-			prev_num = false;
-		}
-		ll next_number = inp[i] + 1;
-		if (inp[i] == p - 1) {
-			next_number = 0;
-		}
-		if (inps.count(next_number) > 0) {
-			next_num = false;
-		}
-
-		if (prev_num) {
-			s.insert(prev_number);
-		}
-		if (next_num) {
-			s.insert(next_number);
-		}
-	}
-	DEBUG(s);
-
-	// Case where no overflow is required
-	if (s.size() == 0 || *(s.begin()) > inp[n - 1]) {
-		DEBUG("overflow not needed");
-		if (s.size() == 0) {
-			cout << 0 << endl;
-		} else {
-			// Attempt to add the biggest element
-			if (inps.count(p - 1) == 0) {
-				s.insert(p - 1);
-			}
-
-			// Since no overflow needed, just subtract the biggest end bound with last digit
-			cout << *(--s.end()) - inp[n - 1] << endl;
-		}
+	// assume a small big initial construct
+	vals = vector<pair<ll, ll>>(0);
+	if (inp[1] <= ss) {
+		vals.push_back({inp[0], 0});
 	} else {
-		DEBUG("overflow needed");
-		DEBUG(s);
-
-		// Simulate overflow happening
-		s.erase(0); // since we are overflowing, 0 is achieved
-		
-		if (n - 1 == 0) {
-			// manually erase 1 from "last" digit overflowing
-			s.erase(1);
-			inps.insert(1);
-
-			if (inps.count(2) == 0) {
-				s.insert(2);
-			}
-		}
-		r0f(i, n - 1) {
-			if (inp[i] != p - 1) {
-				// break overflowing continuing
-
-				// kill a lower bound, now see if you need to push up the lower bound
-				DEBUG("erase:", inp[i] + 1);
-				s.erase(inp[i] + 1);
-				inps.insert(inp[i] + 1); // a new number we have "visited"
-
-				if (inps.count(inp[i] + 2) == 0) {
-					s.insert(inp[i] + 2);
-				}
-				DEBUG(s);
-
-				break;
-			} else if (i == 0) {
-				// the last, or "first" digit is also p - 1 manually erase 1
-				s.erase(1);
-				inps.insert(1);	
-
-				if (inps.count(2) == 0) {
-					s.insert(2);
-				}
-			}
-
-			// else keep overflowing
-		}
-
-		ll max_num = 0; // max number less than pivot that we still haven't had yet
-		DEBUG("final", s);
-		for (ll num : s) {
-			DEBUG(num, inp[n - 1]);
-			if (num > inp[n - 1]) {
-				break;
-			}
-
-			max_num = num;
-		}
-		DEBUG(max_num, p - 1, inp[n - 1]);
-
-		// res = overflowed up amount + amount needed to begin overflowing
-		cout << (max_num + 1) + ((p - 1) - inp[n - 1]) << endl; 
+		vals.push_back({inp[0], ss});
 	}
+
+	for (int i = 1; i < n - 2; i++) {
+		if (inp[i] <= ss) {
+			first = inp[i];
+		} else {
+			first = inp[i] - ss;
+		}
+
+		if (inp[i + 1] <= ss) {
+			second = 0;
+		} else {
+			second = ss;
+		}
+
+		vals.push_back({first, second});
+	}
+
+	if (inp[n - 2] <= ss) {
+		first = inp[n - 2];
+	} else {
+		first = inp[n - 2] - ss;
+	}
+	vals.push_back({first, inp[n - 1]});
+
+	ll ans = greedy_swaps();
+	
+	// then try again big small construct again
+	vals = vector<pair<ll, ll>>(0);
+	if (inp[1] <= ss) {
+		vals.push_back({inp[0], inp[1]});
+	} else {
+		vals.push_back({inp[0], inp[1] - ss});
+	}
+
+	for (int i = 1; i < n - 2; i++) {
+		if (inp[i] <= ss) {
+			first = 0;
+		} else {
+			first = ss;
+		}
+
+		if (inp[i + 1] <= ss) {
+			second = inp[i + 1];
+		} else {
+			second = inp[i + 1] - ss;
+		}
+
+		vals.push_back({first, second});
+	}
+
+	if (inp[n - 2] <= ss) {
+		first = 0;
+	} else {
+		first = ss;
+	}
+	vals.push_back({first, inp[n - 1]});
+
+	ans = min(ans, greedy_swaps());
+
+	cout << ans << endl;
 }
