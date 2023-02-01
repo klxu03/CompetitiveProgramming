@@ -26,9 +26,9 @@ template<typename A> ostream& operator<<(ostream &cout, vector<A> const &v) {cou
 template<typename T, typename S> ostream& operator << (ostream &os, const pair<T, S> &p) {return os << "(" << p.first << ", " << p.second << ")";}
 template<typename C, typename T = decay<decltype(*begin(declval<C>()))>, typename enable_if<!is_same<C, string>::value>::type* = nullptr>
 ostream& operator << (ostream &os, const C &c) {bool f = true; os << "["; for (const auto &x : c) {if (!f) os << ", "; f = false; os << x;} return os << "]";}
-template<typename T> void debug(string s, T x) {cerr << s << " = " << x << "\n";}
-template <typename T, typename... Args> void debug(string s, T x, Args... args) {for (int i=0, b=0; i<(int)s.size(); i++) if (s[i] == '(' || s[i] == '{') b++;
-else if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << s.substr(0, i) << " = " << x << " | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
+template<typename T> void debug(string s, T x) {cerr << "\033[1;35m" << s << "\033[0;32m = \033[33m" << x << "\033[0m\n";}
+template<typename T, typename... Args> void debug(string s, T x, Args... args) {for (int i=0, b=0; i<(int)s.size(); i++) if (s[i] == '(' || s[i] == '{') b++; else
+if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 void usaco(string filename) {
@@ -38,78 +38,101 @@ void usaco(string filename) {
 }
 
 ll n, k;
-vector<vector<ll>> cost;
+vector<int> inp;
+vector<vector<ll>> prefix;
 
-ll saved(int leftmost, int old_rightmost, int new_rightmost) {
-    ll old_cost = cost[old_rightmost][leftmost];
-    
-    // just old_cost - new_cost overcounts an amount "saved" of old right to new right
-    // as new_cost doesn't need to calculate this intermediary cost from old to new right
-    if (new_rightmost == 0) {
-        old_cost -= cost[old_rightmost][n - 1];
-    } else {
-        old_cost -= cost[old_rightmost][new_rightmost - 1];
-    }
+vector<vector<ll>> dp;
 
-    ll new_cost = cost[new_rightmost][leftmost];
+ll saved(int leftmost, int old_right, int new_right) {
+    ll old_cost = prefix[old_right][(leftmost - 1 + n) % n];
+    ll new_cost = prefix[old_right][(new_right - 1 + n) % n] + prefix[new_right][(leftmost - 1 + n) % n];
 
-    return old_cost - new_cost;    
+    return old_cost - new_cost;
 }
 
 int main() {
-    io;
+    // io;
+    usaco("cbarn2");
     cin >> n >> k;
-    vector<ll> inp(n);
+    k = min(k, n); // no 4 cows 6 gates situation
+    inp = vector<int>(n);
+    prefix = vector<vector<ll>>(n, vector<ll>(n));
+    dp = vector<vector<ll>>(k, vector<ll>(n)); 
+
     f0r(i, n) {
         cin >> inp[i];
     }
 
-    cost = vector<vector<ll>>(n, vector<ll>(n, 0)); // cost[i][j] is right entrance at i, wrap to left entrace of j, the cost or total distance it takes
-    // Populate cost
+    // build the prefix 2D array
     f0r(i, n) {
-        int sum = 0;
+        ll counter = 0;
+        ll sum = 0;
+
         f0r(j, n) {
-            int new_index = (j + i) % n; // wrapped index
-            sum += inp[new_index] * j;
-            cost[i][new_index] = sum;
+            sum += counter * inp[(j + i) % n];
+            prefix[i][(j + i) % n] = sum;
+            counter++;
         }
+
+        // note that the 0th row, dp[0][x] is going to be completely empty since 0th extra gate is N/A
+        // ^ this note changed cuz last line in case k = 1, just make it sums
+        dp[0][i] = sum;
     }
 
     ll ret = LLONG_MAX;
-    for (int leftmost = 0; leftmost < n; leftmost++) {
-        DEBUG(leftmost);
-        ll initial = cost[leftmost][n - 1];
-        if (leftmost != 0) initial = cost[leftmost][leftmost - 1];
-        // dp[2][8] stores place the 4th entrance at rightmost position 8, cheapest cost
-        vector<vector<ll>> dp(k - 1, vector<ll>(n, LLONG_MAX));
+    f0r (i, n) {
+        ret = min(ret, dp[0][i]);
+    }
 
-        // i == 0 case
-        for (int rightmost = 0; rightmost < n; rightmost++) {
-            if (leftmost == rightmost) continue;
+    f0r(left, n) {
+        // could maybe fill the 2D dp matrix with MAX if wanted
 
-            dp[0][rightmost] = cost[leftmost][rightmost - 1] + cost[rightmost][leftmost - 1];
-        }
-
-        f1r(i, 1, k - 1) {
-            for (int rightmost = 0; rightmost < n; rightmost++) {
-                if (leftmost == rightmost) continue;
-
-                // find optimal dp[i][rightmost]
-                int left_counter = leftmost + 1;
-                while (left_counter != rightmost) {
-                    // old cost of left_counter that keeps going right - amt saved with new entrance at rightmost
-                    dp[i][rightmost] = min(dp[i][rightmost], dp[i - 1][left_counter] - saved(leftmost, left_counter, rightmost));
-
-                    left_counter++;
-                    left_counter %= n; // in case left is to "right" of right
-                }
+        // dp[x][left] is just bruh new gate as same as left
+        f0r(i, k) {
+            f0r(j, n) {
+                dp[i][j] = LLONG_MAX - 1e12;
             }
         }
 
-        f0r(i, n) {
-            ret = min(ret, dp[k - 1][i]);
+        // handle the k == 1 special case
+        // no particular reason this is the special case, as I'm pretty sure you can generalize this for k == 2 but this is the only one I can hand code to be something else and just make it cleaner why not (just in case)
+        if (k >= 2) {
+            f1r(j, 1, n) { // dp[1][left] is just bruh new gate as same as left
+                dp[1][(left + j) % n] = prefix[left][(left + j - 1) % n] + prefix[(left + j) % n][(left - 1 + n) % n];
+            }
+        }
+
+        f1r(i, 2, k) {
+            f1r(right_counter, i, n) {
+                int new_right = (left + right_counter) % n; // can put a gate on new_right
+
+                ll min_val = LLONG_MAX; // trying to find dp[i][new_right]
+
+                int curr_j = (left + i) % n; // the min newest kth gate
+                // 3 
+                while (curr_j != (new_right + 1) % n) { // keep going until equals new_right
+                    min_val = min(min_val, dp[i - 1][curr_j] - saved(left, curr_j, new_right)); 
+                    DEBUG(curr_j);
+                    DEBUG(dp[i - 1][curr_j], saved(left, curr_j, new_right));
+                    
+                    curr_j++;
+                    curr_j %= n;
+                }
+
+                dp[i][new_right] = min_val;
+            }
+        }
+
+        f0r(j, n) {
+            ret = min(ret, dp[k - 1][j]);
+        }
+
+        DEBUG(left);
+        f0r(i, k) {
+            DEBUG(dp[i]);
         }
     }
+
 
     cout << ret << endl;
 }
