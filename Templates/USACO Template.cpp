@@ -8,10 +8,6 @@ using namespace std;
 #define f1r(a, b, c) for (long long a = b; a < c; a++)
 #define r0f(a, b) for (long long a = b - 1; a >= 0; a--)
 #define r1f(a, b, c) for (long long a = c - 1; a >= b; a--)
-#define isOdd & 1
-#define qpow2(exponent) 1 << exponent
-/* 2^exponent, because every time shifting bit to the leftBound you are essentially multiplying function by two */
-#define max3(a, b, c) max(a, max(b, c))
 #define pb push_back
 #define f first
 #define s second
@@ -35,6 +31,14 @@ ostream& operator << (ostream &os, const C &c) {bool f = true; os << "["; for (c
 template<typename T> void debug(string s, T x) {cerr << "\033[1;35m" << s << "\033[0;32m = \033[33m" << x << "\033[0m\n";}
 template<typename T, typename... Args> void debug(string s, T x, Args... args) {for (int i=0, b=0; i<(int)s.size(); i++) if (s[i] == '(' || s[i] == '{') b++; else
 if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
+
+/* Variartic Macros and Functions so max(a, b, c, d, ... z) works out of box */
+template<typename T> constexpr const inline T& _max(const T& x, const T& y) {return x<y?y:x;}
+template<typename T> constexpr const inline T& _min(const T& x, const T& y) {return x<y?x:y;}
+template<typename T,typename ...S>constexpr const inline T& _max(const T& m, const S&...s){return _max(m,_max(s...));}
+template<typename T,typename ...S>constexpr const inline T& _min(const T& m, const S&...s){return _min(m,_min(s...));}
+#define max(...) _max(__VA_ARGS__)
+#define min(...) _min(__VA_ARGS__)
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 void usaco(string filename) {
