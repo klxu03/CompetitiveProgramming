@@ -39,7 +39,7 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
 ll q, Q, T, k, l, r, x, y, z;
-int n, m, ss;
+int n, m;
 
 void solve(); 
 
@@ -47,103 +47,149 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
-	// cin >> test_cases;
+	cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
 		solve();
 	}
 }
-vector<pair<ll, ll>> vals;
 
-ll greedy_swaps() {
-	ll ret = 0;
+vector<char> letters;
+// all n choose m permutations : # letters | k
+vector<vector<char>> gen_permutations(int n, int m) {
+	vector<int> starts(m);
 
-	f0r(i, vals.size()) {
-		ret += vals[i].first * vals[i].second;
+	int sz = 1;
+	for (int i = 2; i < n + 1; i++) {
+		sz *= i;
 	}
 
-	while (true) {
-		ll diff = 0;
+	int div1 = 1;
+	for (int i = 2; i < m + 1; i++) {
+		div1 *= i;
+	}
 
-		f0r(i, vals.size() - 1) {
-			// check if swap is smaller
-			ll orig = vals[i].first * vals[i].second + vals[i + 1].first * vals[i + 1].second;
-			ll next = vals[i].first * vals[i + 1].first + vals[i].second * vals[i + 1].second;
+	int div2 = 1;
+	for (int i = 2; i < n - m + 1; i++) {
+		div2 *= i;
+	}
+	sz = sz/(div1 * div2);
 
-			if (next < orig) {
-				// go swap
-				diff -= (orig - next);
+	vector<vector<char>> ret(sz);
+	for (int i = 0; i < m; i++) {
+		starts[i] = i;
+	}
 
-				swap(vals[i].second, vals[i + 1].first);
+	for (int i = 0; i < sz; i++) {
+		vector<char> curr(m);
+		f0r(j, m) {
+			curr[j] = letters[starts[j]];
+		}
+		ret[i] = curr;
+
+		int reset_counter = 0; // # of eles from back u gotta reset
+		for (int j = 1; j < m; j++) {
+			if (starts[m - j] == n - j) {
+				reset_counter++;
 			}
 		}
 
-		ret += diff;
+		if (reset_counter == 0) {
+			starts[m - 1]++;
+		} else {
+			starts[m - reset_counter - 1]++;
 
-		if (diff == 0) break;
+			int add_counter = 1;
+			for (int j = m - reset_counter; j < m; j++) {
+				starts[j] = starts[m - reset_counter - 1] + add_counter;
+				add_counter++;
+			}
+		}	
 	}
-	DEBUG(vals);
-	
+
 	return ret;
 }
 
 void solve() {
-	cin >> n >> ss;
-	vector<int> inp(n);
+	cin >> n >> k;
+	string a;
+	string b;
+	letters.clear();
 
-	f0r(i, n) {
-		cin >> inp[i];
-	}
-	int first;
-	int second;
+	cin >> a >> b;
 
-	// assume a small big initial construct
-	vals = vector<pair<ll, ll>>(0);
-	if (inp[1] <= ss) {
-		vals.push_back({inp[0], 0});
-	} else {
-		vals.push_back({inp[0], ss});
-	}
-
-	for (int i = 1; i < n - 2; i++) {
-		if (inp[i] <= ss) {
-			first = inp[i];
+	set<char> letters_in_a;
+	for (int i = 0; i < a.size(); i++) {
+		if (a[i] == b[i]) {
+			a[i] = 'X';
 		} else {
-			first = inp[i] - ss;
-		}
-
-		if (inp[i + 1] <= ss) {
-			second = 0;
-		} else {
-			second = ss;
-		}
-
-		vals.push_back({first, second});
-	}
-
-	if (inp[n - 2] <= ss) {
-		first = inp[n - 2];
-	} else {
-		first = inp[n - 2] - ss;
-	}
-	vals.push_back({first, inp[n - 1]});
-
-	ll ans = greedy_swaps();
-	
-	// then try again big small construct again
-	vals = vector<pair<ll, ll>>(0);
-	if (inp[1] <= ss) {
-		vals.push_back({inp[0], inp[1]});
-	} else {
-		vals.push_back({inp[0], inp[1] - ss});
-	}
-
-	for (int i = 1; i < n - 2; i++) {
-		if (inp[i] <= ss) {
-			first = 0;
-		} else {
-			first = ss;
+			letters_in_a.insert(a[i]);
 		}
 	}
 
+	for (auto it : letters_in_a) {
+		letters.push_back(it);
+	}
+
+	k = min(k, (ll) letters.size());
+
+	ll ret = 0;
+
+	if (k == 0) {
+		// sum em up now
+		int j = 0;
+		ll curr_sum = 0;
+		while (j < n) {
+			ll curr_add = 0;
+
+			while (a[j] == 'X') {
+				curr_add++;
+				j++;
+			}
+
+			curr_sum += ((curr_add) * (curr_add + 1))/2;
+			j++;
+		}
+
+		ret = max(ret, curr_sum);
+
+		cout << ret << endl;
+		return;
+	}
+
+	// test out every permutation of # of letters in A choose k
+	vector<vector<char>> permutes = gen_permutations(letters.size(), k);
+	f0r(i, permutes.size()) {
+		set<char> curr_permute;
+		f0r(j, k) {
+			curr_permute.insert(permutes[i][j]);
+		}
+
+		// now group each of these
+		string temp_a = a;
+		f0r(j, n) {
+			if (curr_permute.count(temp_a[j]) > 0) {
+				temp_a[j] = 'X';
+			}
+		}
+
+		// sum em up now
+		int j = 0;
+		ll curr_sum = 0;
+		while (j < n) {
+			ll curr_add = 0;
+
+			while (temp_a[j] == 'X') {
+				curr_add++;
+				j++;
+			}
+
+			curr_sum += ((curr_add) * (curr_add + 1))/2;
+			j++;
+		}
+
+		ret = max(ret, curr_sum);
+	}
+
+	cout << ret << endl;
 }
