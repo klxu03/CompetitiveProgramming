@@ -39,7 +39,7 @@ if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
 ll q, Q, T, k, l, r, x, y, z;
-ll n, c, m;
+int n, m;
 
 void solve(); 
 
@@ -47,169 +47,53 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
-	cin >> test_cases;
+	// cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
 		solve();
 	}
 }
 
+// rightmost element that is less than or equal to val
+int binary_search_rightmost(int val, vector<int> &arr) {
+	int l = 0; // left
+	int r = n - 1; // right
+ 
+	while (l < r) {
+		int mid = l + (r - l + 1)/2;
+		DEBUG(l, r);
+ 
+		if (arr[mid] <= val) {
+			l = mid;
+		} else {
+			r = mid - 1;
+		}
+	}
+	DEBUG(l);
+
+	if (arr[l] > val) {
+		l--;
+	}
+ 
+	return l;
+}
+
 void solve() {
-	cin >> n >> c;
-	vector<ll> teleporters(n);
-	f0r(i, n) {
-		cin >> teleporters[i];
-	}
-
-	vector<ll> costs(n);
-	vector<ll> left_costs(n);
-	vector<ll> right_costs(n);
-
-	map<ll, int> left_costs_s;
-	map<ll, int> right_costs_s;
+	cin >> n >> k;
+	vector<int> inp(n);
 
 	f0r(i, n) {
-		// you either full go left chain or go right
-		// costs is just n - i + 1 or just i + 1
-		left_costs[i] = i + 1 + teleporters[i];
-		left_costs_s.insert({left_costs[i], i});
-
-		right_costs[i] = n - i + teleporters[i];
-		right_costs_s.insert({right_costs[i], i});
-
-		costs[i] = min(left_costs[i], right_costs[i]);
+		cin >> inp[i];
 	}
+	DEBUG(inp);
 
-	int right_ret = 0;
-	ll right_cost = 0;
-
-	bool used_left = false;
-	// simulate always choosing right
-	while (right_costs_s.size() > 2 && right_costs_s.begin()->first < left_costs_s.begin()->first) {
-		if (right_costs_s.begin()->second == left_costs_s.begin()->second) {
-			// DEBUG("made it into the first if");
-			// the best right is the same as the best left, figure out next one
-			
-			ll next_left = (++left_costs_s.begin())->first + right_costs_s.begin()->first;
-			ll next_right = (++right_costs_s.begin())->first + (++left_costs_s.begin())->first;
-
-			if (right_cost + min(next_left, next_right) > c) {
-				DEBUG("break1");
-				break;
-			}
-
-			if (next_right == next_left) {
-				// use current right as a left
-				right_cost += next_right;
-
-				// erase from leftmost from left
-				left_costs_s.erase(left_costs_s.begin());
-
-				// erase rightmost and next right from right
-				right_costs_s.erase(right_costs_s.begin());
-				right_costs_s.erase(right_costs_s.begin());
-
-				right_ret += 2;
-				used_left = true;
-				DEBUG("break2");
-				break; // found a suitable left
-			} else {
-				// use next left, and keep current right as a right
-				right_cost += right_costs_s.begin()->first;
-
-				// erase right most
-				right_costs_s.erase(right_costs_s.begin());
-
-				// erase leftmost 
-				left_costs_s.erase(left_costs_s.begin());
-
-				right_ret++;
-			}
-
-		} else {
-			// DEBUG("made it into the first else");
-			ll to_add = right_costs_s.begin()->first;
-			if (right_cost + to_add + left_costs_s.begin()->first > c) {
-				// need to add left right now
-				right_cost += left_costs_s.begin()->first;
-				right_ret++;
-				used_left = true;
-
-				DEBUG("break3");
-				break;
-			} else {
-				right_cost += right_costs_s.begin()->first;
-				right_costs_s.erase(right_costs_s.begin());
-				right_ret++;
-			}
-
-		}
+	vector<int> queries(k);
+	f0r(i, k) {
+		cin >> queries[i];
 	}
+	DEBUG(queries);
 
-	if (!used_left) {
-		DEBUG("did not use left");
-		DEBUG(right_cost, right_ret);
-		DEBUG(left_costs_s.begin()->first);
-		if (left_costs_s.begin()->first > c) {
-			
-		} else {
-		// use left right now
-		right_cost += left_costs_s.begin()->first;
-		right_ret++;
-
-		// erase the equivalent in the right
-		int ind = left_costs_s.begin()->second;
-		right_costs_s.erase(right_costs[ind]);
-
-		left_costs_s.erase(left_costs_s.begin());
-
-		used_left = true;
-		DEBUG(left_costs_s, right_costs_s);
-		}
+	f0r(i, k) {
+		cout << binary_search_rightmost(queries[i], inp) + 1 << endl;
 	}
-
-	if (used_left) {
-		while (right_costs_s.size() > 0 && c >= right_cost + min(right_costs_s.begin()->first, left_costs_s.begin()->first)) {
-			if (right_costs_s.begin()->first < left_costs_s.begin()->first) {
-				right_cost += right_costs_s.begin()->first;
-				right_ret++;
-
-				// erase equivalent in left
-				int ind = right_costs_s.begin()->second;
-				left_costs_s.erase(left_costs[ind]);
-
-				right_costs_s.erase(right_costs_s.begin());
-			} else if (left_costs_s.begin()->first < right_costs_s.begin()->first) {
-				right_cost += left_costs_s.begin()->first;
-				right_ret++;
-
-				// erase equivalent in right
-				int ind = left_costs_s.begin()->second;
-				right_costs_s.erase(right_costs[ind]);
-
-				left_costs_s.erase(left_costs_s.begin());
-			} else {
-				if (right_costs_s.begin()->second == left_costs_s.begin()->second) {
-					right_cost += right_costs_s.begin()->first;
-
-					right_costs_s.erase(right_costs_s.begin());
-					left_costs_s.erase(left_costs_s.begin());
-
-					right_ret++;
-				} else {
-					// arbitrarily decide to use right
-					right_cost += right_costs_s.begin()->first;
-
-					// erase equivalent in left
-					int ind = right_costs_s.begin()->second;
-					left_costs_s.erase(left_costs[ind]);
-
-					right_costs_s.erase(right_costs_s.begin());
-					right_ret++;
-				}
-			}
-		}
-	}
-
-	cout << right_ret << endl;
 }
