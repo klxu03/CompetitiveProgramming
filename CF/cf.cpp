@@ -47,149 +47,49 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
-	cin >> test_cases;
+	// cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
 		solve();
 	}
 }
 
-vector<char> letters;
-// all n choose m permutations : # letters | k
-vector<vector<char>> gen_permutations(int n, int m) {
-	vector<int> starts(m);
-
-	int sz = 1;
-	for (int i = 2; i < n + 1; i++) {
-		sz *= i;
-	}
-
-	int div1 = 1;
-	for (int i = 2; i < m + 1; i++) {
-		div1 *= i;
-	}
-
-	int div2 = 1;
-	for (int i = 2; i < n - m + 1; i++) {
-		div2 *= i;
-	}
-	sz = sz/(div1 * div2);
-
-	vector<vector<char>> ret(sz);
-	for (int i = 0; i < m; i++) {
-		starts[i] = i;
-	}
-
-	for (int i = 0; i < sz; i++) {
-		vector<char> curr(m);
-		f0r(j, m) {
-			curr[j] = letters[starts[j]];
-		}
-		ret[i] = curr;
-
-		int reset_counter = 0; // # of eles from back u gotta reset
-		for (int j = 1; j < m; j++) {
-			if (starts[m - j] == n - j) {
-				reset_counter++;
-			}
-		}
-
-		if (reset_counter == 0) {
-			starts[m - 1]++;
+int find_lis(vector<int>& a) {
+	vector<int> dp;
+	for (int i : a) {
+		int pos = lower_bound(dp.begin(), dp.end(), i) - dp.begin();
+		if (pos == dp.size()) {
+			// we can have a new, longer increasing subsequence!
+			dp.push_back(i);
 		} else {
-			starts[m - reset_counter - 1]++;
-
-			int add_counter = 1;
-			for (int j = m - reset_counter; j < m; j++) {
-				starts[j] = starts[m - reset_counter - 1] + add_counter;
-				add_counter++;
-			}
-		}	
+			// oh ok, at least we can make the ending element smaller
+			dp[pos] = i;
+		}
 	}
-
-	return ret;
+	return dp.size();
 }
 
 void solve() {
-	cin >> n >> k;
-	string a;
-	string b;
-	letters.clear();
-
-	cin >> a >> b;
-
-	set<char> letters_in_a;
-	for (int i = 0; i < a.size(); i++) {
-		if (a[i] == b[i]) {
-			a[i] = 'X';
-		} else {
-			letters_in_a.insert(a[i]);
-		}
+	cin >> n;
+	vector<int> a(n), b(n);
+	f0r(i, n) {
+		cin >> a[i];
 	}
 
-	for (auto it : letters_in_a) {
-		letters.push_back(it);
+	f0r(i, n) {
+		cin >> b[i];
 	}
 
-	k = min(k, (ll) letters.size());
-
-	ll ret = 0;
-
-	if (k == 0) {
-		// sum em up now
-		int j = 0;
-		ll curr_sum = 0;
-		while (j < n) {
-			ll curr_add = 0;
-
-			while (a[j] == 'X') {
-				curr_add++;
-				j++;
-			}
-
-			curr_sum += ((curr_add) * (curr_add + 1))/2;
-			j++;
-		}
-
-		ret = max(ret, curr_sum);
-
-		cout << ret << endl;
-		return;
+	map<int, int> m;
+	f0r(i, n) {
+		m[a[i]] = i;
 	}
 
-	// test out every permutation of # of letters in A choose k
-	vector<vector<char>> permutes = gen_permutations(letters.size(), k);
-	f0r(i, permutes.size()) {
-		set<char> curr_permute;
-		f0r(j, k) {
-			curr_permute.insert(permutes[i][j]);
-		}
+	vector<int> mapped(n);
 
-		// now group each of these
-		string temp_a = a;
-		f0r(j, n) {
-			if (curr_permute.count(temp_a[j]) > 0) {
-				temp_a[j] = 'X';
-			}
-		}
-
-		// sum em up now
-		int j = 0;
-		ll curr_sum = 0;
-		while (j < n) {
-			ll curr_add = 0;
-
-			while (temp_a[j] == 'X') {
-				curr_add++;
-				j++;
-			}
-
-			curr_sum += ((curr_add) * (curr_add + 1))/2;
-			j++;
-		}
-
-		ret = max(ret, curr_sum);
+	f0r(i, n) {
+		mapped[i] = m[b[i]];
 	}
 
-	cout << ret << endl;
+	cout << find_lis(mapped) << endl;
 }
