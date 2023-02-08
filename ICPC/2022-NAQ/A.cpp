@@ -92,33 +92,32 @@ int main() {
 
 void solve() {
 	cin >> n;
-  vector<ll> inp(n);
+  vector<int> inp(n);
 
   f0r(i, n) {
     cin >> inp[i];
   }
+
   sort(inp.begin(), inp.end());
+  ll sum = inp[n - 1];
+  ll curr_sum = 0;
 
-  ll sum = 0;
-  f0r(i, n) {
-    sum += inp[i];
-  }
-  ll max_guy = inp[n - 1];
+  int ret = 1;
+  int inc = 0;
 
-  if (max_guy > sum - max_guy) {
-    cout << 1 << endl;
-    return;
-  }
+  for (int i = n - 2; i >= 0; i--) {
+    curr_sum += inp[i];
+    inc++;
 
-  DEBUG(sum);
+    // switch beasts groups, convert them all into attacking
+    if (curr_sum >= sum) {
+      sum += curr_sum;
+      ret += inc;
 
-  ll running_sum = 0;
-  int ind = 0;
-
-  while (sum - max_guy - inp[ind] > max_guy) {
-    sum -= inp[ind];
-    ind++;
+      curr_sum = 0;
+      inc = 0;
+    }
   }
 
-  cout << n - ind << endl;
+  cout << ret << endl;
 }
