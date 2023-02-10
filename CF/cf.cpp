@@ -47,53 +47,44 @@ void solve();
 int main() {
 	io;
 	ll test_cases = 1;
-	// cin >> test_cases;
+	cin >> test_cases;
 	
 	f0r(test_case, test_cases) {
 		solve();
 	}
 }
 
-// rightmost element that is less than or equal to val
-int binary_search_rightmost(int val, vector<int> &arr) {
-	int l = 0; // left
-	int r = n - 1; // right
- 
-	while (l < r) {
-		int mid = l + (r - l + 1)/2;
-		DEBUG(l, r);
- 
-		if (arr[mid] <= val) {
-			l = mid;
-		} else {
-			r = mid - 1;
-		}
-	}
-	DEBUG(l);
-
-	if (arr[l] > val) {
-		l--;
-	}
- 
-	return l;
-}
-
 void solve() {
-	cin >> n >> k;
-	vector<int> inp(n);
+	cin >> n;
+	if (n % 2 == 0) {
+		cout << "No" << endl;
+		return;
+	}
+	cout << "Yes" << endl;
+
+	vector<int> left(n);
+	vector<int> right(n);
 
 	f0r(i, n) {
-		cin >> inp[i];
+		left[i] = i + 1;
 	}
-	DEBUG(inp);
 
-	vector<int> queries(k);
-	f0r(i, k) {
-		cin >> queries[i];
+	f0r(i, n) {
+		right[i] = n * 2 - i;
 	}
-	DEBUG(queries);
 
-	f0r(i, k) {
-		cout << binary_search_rightmost(queries[i], inp) + 1 << endl;
+	DEBUG(left);
+	DEBUG(right);
+	DEBUG(right[n/2]);
+
+	int counter = 1;
+	f1r(i, 1, n/2 + 1) {
+		cout << left[i * 2] << " " << right[counter] << endl;
+		counter++;
+	}
+	cout << left[0] << " " << right[0] << endl;
+	f0r(i, n/2) {
+		cout << left[i * 2 + 1] << " " << right[counter] << endl;
+		counter++;
 	}
 }
