@@ -54,37 +54,38 @@ int main() {
 	}
 }
 
+int num_trips;
+int num_dubs;
+
 void solve() {
 	cin >> n;
-	if (n % 2 == 0) {
-		cout << "No" << endl;
-		return;
-	}
-	cout << "Yes" << endl;
-
-	vector<int> left(n);
-	vector<int> right(n);
+	vector<int> inp(n);
 
 	f0r(i, n) {
-		left[i] = i + 1;
+		cin >> inp[i];
 	}
 
-	f0r(i, n) {
-		right[i] = n * 2 - i;
-	}
+	num_trips = 0;
+	num_dubs = 0;
+	set<int> diffs;
 
-	DEBUG(left);
-	DEBUG(right);
-	DEBUG(right[n/2]);
+	for (int i = 0; i < n; i += 3) {
+		vector<int> three(3);
+		f0r(j, 3) {
+			three[j] = inp[i + j];
+		}
+		sort(three.begin(), three.end(), greater<>());
 
-	int counter = 1;
-	f1r(i, 1, n/2 + 1) {
-		cout << left[i * 2] << " " << right[counter] << endl;
-		counter++;
-	}
-	cout << left[0] << " " << right[0] << endl;
-	f0r(i, n/2) {
-		cout << left[i * 2 + 1] << " " << right[counter] << endl;
-		counter++;
+		int big_sum = three[0] + three[1];
+		int mid_sum = three[0] + three[2];
+		int small_sum = three[1] + three[2];
+		
+		if (big_sum == mid_sum && mid_sum == small_sum) {
+			num_trips++;
+		} else if (big_sum == mid_sum) {
+			num_dubs++;
+		} else {
+			diffs.insert(big_sum - mid_sum);
+		}
 	}
 }
