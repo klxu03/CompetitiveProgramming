@@ -54,38 +54,6 @@ int main() {
 	}
 }
 
-int num_trips;
-int num_dubs;
-
 void solve() {
 	cin >> n;
-	vector<int> inp(n);
-
-	f0r(i, n) {
-		cin >> inp[i];
-	}
-
-	num_trips = 0;
-	num_dubs = 0;
-	set<int> diffs;
-
-	for (int i = 0; i < n; i += 3) {
-		vector<int> three(3);
-		f0r(j, 3) {
-			three[j] = inp[i + j];
-		}
-		sort(three.begin(), three.end(), greater<>());
-
-		int big_sum = three[0] + three[1];
-		int mid_sum = three[0] + three[2];
-		int small_sum = three[1] + three[2];
-		
-		if (big_sum == mid_sum && mid_sum == small_sum) {
-			num_trips++;
-		} else if (big_sum == mid_sum) {
-			num_dubs++;
-		} else {
-			diffs.insert(big_sum - mid_sum);
-		}
-	}
 }
