@@ -54,6 +54,28 @@ int main() {
 	}
 }
 
+vector<int> inp; 
+vector<int> cold;
+vector<int> hot;
+
 void solve() {
-	cin >> n;
+	cin >> n >> k;
+	inp = vector<int>(n);
+
+	cold = vector<int>(k);
+	hot = vector<int>(k);
+
+	f0r(i, n) {
+		cin >> inp[i];
+	}
+
+	f0r(i, k) {
+		cin >> cold[i];
+	}
+
+	f0r(i, k) {
+		cin >> hot[i];
+	}
+
+	
 }
