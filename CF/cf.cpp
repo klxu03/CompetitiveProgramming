@@ -22,12 +22,9 @@ using ll = long long;
 #define pii pair<int, int>
 
 /* For Debugging Purposes */
-
-
-#ifdef galen_colin_local
+#ifdef LOCAL
 #define DEBUG(...) debug(#__VA_ARGS__, __VA_ARGS__)
 #else
-
 #define DEBUG(...) 6
 #endif
 
@@ -64,124 +61,64 @@ int main() {
     }
 }
 
-const unsigned int sz = 2e5;
-//const unsigned int sz = 11;
-
-class UnweightedGraph {
-public:
-    long long nodes; // # of nodes
-    long long edges; // # of edges
-    bool undirected;
-    vector<vector<long long> > adj; // adjacency neighbor vector
-
-    ll global_min;
-    vector<int> global_visited; // constantly storing one's min distance to another black node
-
-    UnweightedGraph() {}
-
-    void init(long long nodes, long long edges, bool undirected) {
-        this->nodes = nodes;
-        this->edges = edges;
-        this->undirected = undirected;
-        adj = vector<vector<long long> >(nodes);
-        global_visited = vector<int>(nodes, 2 * 1e5 + 7);
-
-        global_min = 2 * 1e5 + 7;
-    }
-
-    void init_adj() {
-        f0r(i, edges) {
-            ll n1, n2; // n1 for node1
-            cin >> n1 >> n2;
-            adj[n1 - 1].pb(n2 - 1);
-            if(undirected) {
-                adj[n2 - 1].pb(n1 - 1);
-            }
-        }
-    }
-
-    void init_global_visited(int start) {
-        deque<int> dq;
-        dq.push_back(start);
-        global_visited[start] = 0;
-
-        while (!dq.empty()) {
-            int curr = dq.front();
-            dq.pop_front();
-
-            for (int neighbor : adj[curr]) {
-                if (global_visited[neighbor] == 2 * 1e5 + 7) {
-                    global_visited[neighbor] = global_visited[curr] + 1;
-                    dq.push_back(neighbor);
-                }
-            }
-        }
-
-        // DEBUG(global_visited);
-    }
-
-    void black(int node) {
-        deque<pair<int, int>> dq; // other node, current node distance
-        dq.push_back({node, 0});
-
-        global_visited[node] = 0;
-
-//        set<int> visited;
-//        visited.insert(node);
-
-//        vector<bool> visited(n);
-//        visited[node] = true;
-
-        bitset<sz> bs;
-        bs.set(node);
-
-        while(!dq.empty()) {
-            pii current = dq.front();
-            dq.pop_front();
-
-            if (current.s >= global_min) {
-                break;
-            }
-
-            for (int neighbor : adj[current.f]) {
-//                if (!visited[neighbor]) {
-                if (!(bs[neighbor])) {
-                    bs.set(neighbor);
-//                    visited[neighbor] = true;
-                    global_min = min(global_min, (ll)global_visited[neighbor] + current.s + 1);
-                    if (current.s + 1 < global_visited[neighbor]) {
-                        // DEBUG(current, neighbor, global_visited[neighbor], global_min);
-                        dq.pb({neighbor, current.s + 1});
-                    }
-                    global_visited[neighbor] = min(global_visited[neighbor], current.s + 1);
-                }
-            }
-        }
-
-        // DEBUG(global_visited, global_min);
-    }
-};
-
-UnweightedGraph g;
-
 void solve() {
-    int init;
-    cin >> n >> init;
-    init--;
+    cin >> n >> k;
 
-    vector<int> colors(n - 1); // coloring order
-    f0r(i, n - 1) {
-        cin >> colors[i];
-        colors[i]--;
+    vector<ll> inp1(n);
+    vector<ll> inp2(n);
+    f0r (i, n) {
+        cin >> inp1[i];
+    }
+    f0r(i, n) {
+        cin >> inp2[i];
     }
 
-    g.init(n, n - 1, true);
-    g.init_adj();
-    g.init_global_visited(init);
-
-    f0r(i, n - 1) {
-        g.black(colors[i]);
-        cout << g.global_min << " ";
+    vector<pll> ranges_p;
+    ranges_p.pb({inp1[0], inp2[0]});
+    f1r(i, 1, n) {
+        if (inp1[i] <= inp2[i - 1]) {
+            ranges_p[ranges_p.size() - 1].s = max(inp2[i - 1], inp2[i]);
+        } else {
+            ranges_p.pb({inp1[i], inp2[i]});
+        }
     }
-    cout << endl;
+
+    vector<ll> ranges(ranges_p.size());
+    f0r(i, ranges_p.size()) {
+        ranges[i] = ranges_p[i].s - ranges_p[i].f + 1;
+    }
+
+    multiset<ll, greater<ll>> s;
+    ll sum = 0;
+
+    ll ret = LLONG_MAX;
+    f0r(i, ranges.size()) {
+        sum += ranges[i];
+        s.insert(ranges[i]);
+
+        DEBUG(sum, *(--s.end()), k, s.size());
+
+        while (sum - *(--s.end()) >= k) {
+            ll rightmost = inp2[i] - (sum - k);
+            ll new_cost = rightmost + s.size() * 2;
+            ret = min(ret, new_cost);
+            sum -= *(--s.end());
+            s.erase((--s.end()));
+        }
+
+        if (sum >= k) {
+            ll rightmost = inp2[i] - (sum - k);
+            ll new_cost = rightmost + s.size() * 2;
+            ret = min(ret, new_cost);
+        }
+
+        DEBUG("post", sum, *(--s.end()), k, s.size());
+    }
+
+    if (ret == LLONG_MAX) {
+        cout << -1 << endl;
+        return;
+    }
+
+    cout << ret << endl;
 }
