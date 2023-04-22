@@ -50,75 +50,63 @@ int n, m;
 
 void solve();
 
+vector<int> fib(46);
+
 // Problem:
 int main() {
     io;
     ll test_cases = 1;
     cin >> test_cases;
 
+    fib[0] = 1;
+    fib[1] = 1;
+    f1r(i, 2, 46) {
+        fib[i] = fib[i - 1] + fib[i - 2];
+    }
+
     f0r(test_case, test_cases) {
         solve();
     }
 }
 
+// every input is inclusive, f is the fib number
+bool handle(int x, int y, int f, int x0, int x1, int y0, int y1) {
+    DEBUG(x, y, f, x0, x1, y0, y1);
+    // check up
+    if (y - y0 >= fib[f]) {
+        return handle(x, y, f - 1, x0, x1, y0 + fib[f], y1);
+    }
+
+    // check right
+    if (x1 - x >= fib[f]) {
+        return handle(x, y, f - 1, x0, x1 - fib[f], y0, y1);
+    }
+
+    // check down
+    if (y1 - y >= fib[f]) {
+        return handle(x, y, f - 1, x0, x1, y0, y1 - fib[f]);
+    }
+
+    // check left
+    if (x - x0 >= fib[f]) {
+        return handle(x, y, f - 1, x0 + fib[f], x1, y0, y1);
+    }
+
+    DEBUG("stopped recursing down");
+    if (f == 0 && x0 == x1 && y0 == y1) {
+        return true;
+    }
+
+    return false;
+}
+
 void solve() {
-    cin >> n >> k;
+    int x, y;
+    cin >> n >> y >> x;
 
-    vector<ll> inp1(n);
-    vector<ll> inp2(n);
-    f0r (i, n) {
-        cin >> inp1[i];
+    if (handle(x, y, n, 1, fib[n + 1], 1, fib[n])) {
+        cout << "YES" << endl;
+    } else {
+        cout << "NO" << endl;
     }
-    f0r(i, n) {
-        cin >> inp2[i];
-    }
-
-    vector<pll> ranges_p;
-    ranges_p.pb({inp1[0], inp2[0]});
-    f1r(i, 1, n) {
-        if (inp1[i] <= inp2[i - 1]) {
-            ranges_p[ranges_p.size() - 1].s = max(inp2[i - 1], inp2[i]);
-        } else {
-            ranges_p.pb({inp1[i], inp2[i]});
-        }
-    }
-
-    vector<ll> ranges(ranges_p.size());
-    f0r(i, ranges_p.size()) {
-        ranges[i] = ranges_p[i].s - ranges_p[i].f + 1;
-    }
-
-    multiset<ll, greater<ll>> s;
-    ll sum = 0;
-
-    ll ret = LLONG_MAX;
-    f0r(i, ranges.size()) {
-        sum += ranges[i];
-        s.insert(ranges[i]);
-
-        DEBUG(sum, *(--s.end()), k, s.size());
-
-        while (sum - *(--s.end()) >= k) {
-            ll rightmost = inp2[i] - (sum - k);
-            ll new_cost = rightmost + s.size() * 2;
-            ret = min(ret, new_cost);
-            sum -= *(--s.end());
-            s.erase((--s.end()));
-        }
-
-        if (sum >= k) {
-            ll rightmost = inp2[i] - (sum - k);
-            ll new_cost = rightmost + s.size() * 2;
-            ret = min(ret, new_cost);
-        }
-
-        DEBUG("post", sum, *(--s.end()), k, s.size());
-    }
-
-    if (ret == LLONG_MAX) {
-        cout << -1 << endl;
-        return;
-    }
-
-    cout << ret << endl;
 }
