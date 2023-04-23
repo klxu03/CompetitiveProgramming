@@ -61,64 +61,134 @@ int main() {
     }
 }
 
+int s;
+
+class UnweightedGraph {
+public:
+    long long nodes; // # of nodes
+    long long edges; // # of edges
+    bool undirected;
+    vector<vector<long long> > adj; // adjacency neighbor vector
+    vector<long long> visited; // visited nodes
+
+    vector<int> prev;
+
+    UnweightedGraph() {}
+
+    void init(long long nodes, long long edges, bool undirected) {
+        this->nodes = nodes;
+        this->edges = edges;
+        this->undirected = undirected;
+        adj = vector<vector<long long> >(nodes);
+        visited = vector<long long>(nodes, false);
+
+        prev = vector<int>(nodes, -1);
+    }
+
+    void init_adj() {
+        f0r(i, edges) {
+            ll n1, n2; // n1 for node1
+            cin >> n1 >> n2;
+            adj[n1 - 1].pb(n2 - 1);
+            if(undirected) {
+                adj[n2 - 1].pb(n1 - 1);
+            }
+        }
+    }
+
+    // return the int or the num_visited from this cycle and the final node (that should be pointing towards the start node)
+    pair<int, int> valid_corner(int node, int num_visited) {
+        visited[node] = true;
+        for (int neighbor : adj[node]) {
+            if (!visited[neighbor] && adj[neighbor].size() == 2) {
+                return valid_corner(neighbor, num_visited + 1);
+            }
+        }
+        return {num_visited, node};
+    }
+
+    int valid_center(int node, int num_visited) {
+        visited[node] = true;
+        for (int neighbor : adj[node]) {
+            if (!visited[neighbor] && adj[neighbor].size() == 4) {
+                return valid_center(neighbor, num_visited + 1);
+            }
+        }
+        return num_visited;
+    }
+};
+
+UnweightedGraph g;
+
 void solve() {
-    cin >> n >> k;
+    cin >> n >> m;
 
-    vector<ll> inp1(n);
-    vector<ll> inp2(n);
-    f0r (i, n) {
-        cin >> inp1[i];
-    }
-    f0r(i, n) {
-        cin >> inp2[i];
-    }
+    g.init(n, m, true);
+    g.init_adj();
 
-    vector<pll> ranges_p;
-    ranges_p.pb({inp1[0], inp2[0]});
-    f1r(i, 1, n) {
-        if (inp1[i] <= inp2[i - 1]) {
-            ranges_p[ranges_p.size() - 1].s = max(inp2[i - 1], inp2[i]);
-        } else {
-            ranges_p.pb({inp1[i], inp2[i]});
-        }
-    }
+    s = sqrtl(n); // the true sqrt(n) without floating bs
 
-    vector<ll> ranges(ranges_p.size());
-    f0r(i, ranges_p.size()) {
-        ranges[i] = ranges_p[i].s - ranges_p[i].f + 1;
-    }
-
-    multiset<ll, greater<ll>> s;
-    ll sum = 0;
-
-    ll ret = LLONG_MAX;
-    f0r(i, ranges.size()) {
-        sum += ranges[i];
-        s.insert(ranges[i]);
-
-        DEBUG(sum, *(--s.end()), k, s.size());
-
-        while (sum - *(--s.end()) >= k) {
-            ll rightmost = inp2[i] - (sum - k);
-            ll new_cost = rightmost + s.size() * 2;
-            ret = min(ret, new_cost);
-            sum -= *(--s.end());
-            s.erase((--s.end()));
-        }
-
-        if (sum >= k) {
-            ll rightmost = inp2[i] - (sum - k);
-            ll new_cost = rightmost + s.size() * 2;
-            ret = min(ret, new_cost);
-        }
-
-        DEBUG("post", sum, *(--s.end()), k, s.size());
-    }
-
-    if (ret == LLONG_MAX) {
-        cout << -1 << endl;
+    if ((s - 1) * (s - 1) == n) {
+        s--;
+    } else if ((s + 1) * (s + 1) == n) {
+        s++;
+    } else if (s * s != n) {
+        DEBUG("NO1");
+        cout << "NO" << endl;
         return;
     }
 
-    cout << ret << endl;
+    // Nodes with 4 neighbors are the center nodes since they are connected to central cycle, and each node has 2 more incoming/outcoming for their own s cycle
+    vector<int> center_nodes;
+    for (int i = 0; i < n; i++) {
+        if (g.adj[i].size() == 4) {
+            center_nodes.pb(i);
+        } else if (g.adj[i].size() != 2) {
+            DEBUG("NO2", g.adj[i].size());
+            cout << "NO" << endl;
+            return;
+        }
+    }
+
+    // there has to be exactly s nodes with 4 neighbors, everything else should just have 2 in order for this to be right
+    if (center_nodes.size() != s) {
+        DEBUG("NO3");
+        cout << "NO" << endl;
+        return;
+    }
+
+    // there should be exactly s * (s + 1) # of edges
+    if (m != s * (s + 1)) {
+        DEBUG("NO4");
+        cout << "NO" << endl;
+        return;
+    }
+
+    // now do a traversal for each center node and make sure it is a cycle of length s
+    for (int i = 0; i < s; i++) {
+        pair<int, int> res = g.valid_corner(center_nodes[i], 1);
+        if (res.f != s) {
+            DEBUG("NO5.1", i);
+            cout << "NO" << endl;
+            return;
+        }
+
+        // if the final node has 4 neighbors OR as part of its neighbor it does not include original starting node
+        if (g.adj[res.s].size() != 2 || find(g.adj[res.s].begin(), g.adj[res.s].end(), center_nodes[i]) == g.adj[res.s].end()) {
+            DEBUG("NO5.2", i);
+            cout << "NO" << endl;
+            return;
+        }
+
+        // reset visited for center_nodes for next check that center nodes make their own cycle of length s
+        g.visited[center_nodes[i]] = false;
+    }
+
+    if (g.valid_center(center_nodes[0], 1) != s) {
+        DEBUG("NO6");
+        cout << "NO" << endl;
+        return;
+    }
+
+    cout << "YES" << endl;
 }
