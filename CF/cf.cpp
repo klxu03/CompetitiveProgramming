@@ -64,20 +64,20 @@ int main() {
 void solve() {
     cin >> n >> x >> y;
 
-    vector<int> inp(n);
+    vector<llt> inp(n);
 
     f0r(i, n) {
         cin >> inp[i];
 
         // help catch bugs
         if (inp[i] >= y) {
-            inp[i] = INT_MAX;
+            inp[i] = LLONG_MAX;
         }
     }
 
     sort(inp.begin(), inp.end());
 
-    int curr = x;
+    ll curr = x;
 
     int stop = -1; // index he stops at, also the left counter for future code
     f0r(i, n) {
@@ -89,7 +89,7 @@ void solve() {
         }
     }
 
-    int total_diff = y - x; // how much rating he wants to gain
+    ll total_diff = y - x; // how much rating he wants to gain
 
     // do some actual math
     if (stop == -1) {
@@ -119,7 +119,7 @@ void solve() {
     DEBUG(x, y);
 
     while (stop < n && inp[stop] < y) {
-        int diff = inp[stop] - curr; // how much rating you need to get in order to achieve next level of rating gain
+        ll diff = inp[stop] - curr; // how much rating you need to get in order to achieve next level of rating gain
 
         int per = stop - (n - stop); // how much you win per cycle
         DEBUG(((diff - stop) + (per - 1))); // ceil((diff - stop)/per) num cycles you go through
@@ -129,7 +129,7 @@ void solve() {
         total_rds += num;
         curr += per * num;
 
-        int orig = curr;
+        ll orig = curr;
         curr += stop;
         f1r(i, stop, n) {
             if (curr >= y) {
@@ -156,13 +156,13 @@ void solve() {
     if (stop == n) {
         // do some math time, but not really since you've unlocked em all now
         total_diff = y - curr;
-        cout << total_rds * n + total_diff;
+        cout << total_rds * n + total_diff << endl;
         DEBUG("r5");
         return;
     }
 
     // your next goal is y, not the next unlocking phase
-    int diff = inp[stop + 1] - curr; // how much rating you need to get in order to achieve your goal elo
+    ll diff = y - curr; // how much rating you need to get in order to achieve your goal elo
 
     int per = stop - (n - stop); // how much you win per cycle
     int num = ((diff - stop) + (per - 1))/per; // ceil((diff - stop)/per)
@@ -170,7 +170,7 @@ void solve() {
     total_rds += num;
     curr += per * num;
 
-    int final_res = (y - curr) + total_rds * n;
+    ll final_res = (y - curr) + total_rds * n;
     DEBUG("final return");
     cout << final_res << endl;
 }
