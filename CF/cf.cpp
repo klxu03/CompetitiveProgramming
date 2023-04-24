@@ -50,196 +50,127 @@ int n, m;
 
 void solve();
 
-vector<int> fib(46);
-
 // Problem:
 int main() {
     io;
     ll test_cases = 1;
     cin >> test_cases;
 
-    fib[0] = 1;
-    fib[1] = 1;
-    f1r(i, 2, 46) {
-        fib[i] = fib[i - 1] + fib[i - 2];
-    }
-
     f0r(test_case, test_cases) {
         solve();
     }
 }
 
-<<<<<<< HEAD
-int s;
-
-class UnweightedGraph {
-public:
-    long long nodes; // # of nodes
-    long long edges; // # of edges
-    bool undirected;
-    vector<vector<long long> > adj; // adjacency neighbor vector
-    vector<long long> visited; // visited nodes
-
-    vector<int> prev;
-
-    UnweightedGraph() {}
-
-    void init(long long nodes, long long edges, bool undirected) {
-        this->nodes = nodes;
-        this->edges = edges;
-        this->undirected = undirected;
-        adj = vector<vector<long long> >(nodes);
-        visited = vector<long long>(nodes, false);
-
-        prev = vector<int>(nodes, -1);
-    }
-
-    void init_adj() {
-        f0r(i, edges) {
-            ll n1, n2; // n1 for node1
-            cin >> n1 >> n2;
-            adj[n1 - 1].pb(n2 - 1);
-            if(undirected) {
-                adj[n2 - 1].pb(n1 - 1);
-            }
-        }
-    }
-
-    // return the int or the num_visited from this cycle and the final node (that should be pointing towards the start node)
-    pair<int, int> valid_corner(int node, int num_visited) {
-        visited[node] = true;
-        for (int neighbor : adj[node]) {
-            if (!visited[neighbor] && adj[neighbor].size() == 2) {
-                return valid_corner(neighbor, num_visited + 1);
-            }
-        }
-        return {num_visited, node};
-    }
-
-    int valid_center(int node, int num_visited) {
-        visited[node] = true;
-        for (int neighbor : adj[node]) {
-            if (!visited[neighbor] && adj[neighbor].size() == 4) {
-                return valid_center(neighbor, num_visited + 1);
-            }
-        }
-        return num_visited;
-    }
-};
-
-UnweightedGraph g;
-
 void solve() {
-    cin >> n >> m;
+    cin >> n >> x >> y;
 
-    g.init(n, m, true);
-    g.init_adj();
+    vector<int> inp(n);
 
-    s = sqrtl(n); // the true sqrt(n) without floating bs
+    f0r(i, n) {
+        cin >> inp[i];
 
-    if ((s - 1) * (s - 1) == n) {
-        s--;
-    } else if ((s + 1) * (s + 1) == n) {
-        s++;
-    } else if (s * s != n) {
-        DEBUG("NO1");
-        cout << "NO" << endl;
-        return;
-    }
-
-    // Nodes with 4 neighbors are the center nodes since they are connected to central cycle, and each node has 2 more incoming/outcoming for their own s cycle
-    vector<int> center_nodes;
-    for (int i = 0; i < n; i++) {
-        if (g.adj[i].size() == 4) {
-            center_nodes.pb(i);
-        } else if (g.adj[i].size() != 2) {
-            DEBUG("NO2", g.adj[i].size());
-            cout << "NO" << endl;
-            return;
+        // help catch bugs
+        if (inp[i] >= y) {
+            inp[i] = INT_MAX;
         }
     }
 
-    // there has to be exactly s nodes with 4 neighbors, everything else should just have 2 in order for this to be right
-    if (center_nodes.size() != s) {
-        DEBUG("NO3");
-        cout << "NO" << endl;
-        return;
-    }
+    sort(inp.begin(), inp.end());
 
-    // there should be exactly s * (s + 1) # of edges
-    if (m != s * (s + 1)) {
-        DEBUG("NO4");
-        cout << "NO" << endl;
-        return;
-    }
+    int curr = x;
 
-    // now do a traversal for each center node and make sure it is a cycle of length s
-    for (int i = 0; i < s; i++) {
-        pair<int, int> res = g.valid_corner(center_nodes[i], 1);
-        if (res.f != s) {
-            DEBUG("NO5.1", i);
-            cout << "NO" << endl;
-            return;
+    int stop = -1; // index he stops at, also the left counter for future code
+    f0r(i, n) {
+        if (curr >= inp[i]) {
+            curr++;
+        } else {
+            stop = i;
+            break;
         }
-
-        // if the final node has 4 neighbors OR as part of its neighbor it does not include original starting node
-        if (g.adj[res.s].size() != 2 || find(g.adj[res.s].begin(), g.adj[res.s].end(), center_nodes[i]) == g.adj[res.s].end()) {
-            DEBUG("NO5.2", i);
-            cout << "NO" << endl;
-            return;
-        }
-
-        // reset visited for center_nodes for next check that center nodes make their own cycle of length s
-        g.visited[center_nodes[i]] = false;
     }
 
-    if (g.valid_center(center_nodes[0], 1) != s) {
-        DEBUG("NO6");
-        cout << "NO" << endl;
+    int total_diff = y - x; // how much rating he wants to gain
+
+    // do some actual math
+    if (stop == -1) {
+        cout << total_diff << endl;
+        DEBUG("r1");
         return;
     }
 
-    cout << "YES" << endl;
-=======
-// every input is inclusive, f is the fib number
-bool handle(int x, int y, int f, int x0, int x1, int y0, int y1) {
-    DEBUG(x, y, f, x0, x1, y0, y1);
-    // check up
-    if (y - y0 >= fib[f]) {
-        return handle(x, y, f - 1, x0, x1, y0 + fib[f], y1);
+    if (x + stop >= y) {
+        cout << total_diff << endl;
+        DEBUG("r2");
+        return;
     }
 
-    // check right
-    if (x1 - x >= fib[f]) {
-        return handle(x, y, f - 1, x0, x1 - fib[f], y0, y1);
+    // tie or you gain less than you win
+    if (stop <= n - stop) {
+        cout << -1 << endl;
+        DEBUG("r3");
+        return;
     }
 
-    // check down
-    if (y1 - y >= fib[f]) {
-        return handle(x, y, f - 1, x0, x1, y0, y1 - fib[f]);
+    // actual problem time
+    int total_rds = 0;
+    curr = x;
+
+    DEBUG(inp, stop);
+    DEBUG(x, y);
+
+    while (stop < n && inp[stop] < y) {
+        int diff = inp[stop] - curr; // how much rating you need to get in order to achieve next level of rating gain
+
+        int per = stop - (n - stop); // how much you win per cycle
+        DEBUG(((diff - stop) + (per - 1))); // ceil((diff - stop)/per) num cycles you go through
+        int num = ((diff - stop) + (per - 1))/per; // ceil((diff - stop)/per) num cycles you go through
+
+        // now let's apply the buff of num cycles
+        total_rds += num;
+        curr += per * num;
+
+        int orig = curr;
+        curr += stop;
+        f1r(i, stop, n) {
+            if (curr >= y) {
+                // do the math right now, you achieved your ELO in this cycle
+                DEBUG(diff, per, num);
+                DEBUG(total_rds, curr, orig);
+                cout << total_rds * n + curr - orig << endl;
+                DEBUG("r4");
+                return;
+            }
+
+            if (curr >= inp[i]) {
+                stop++;
+                curr++;
+            } else {
+                curr -= (n - stop);
+                break; // you cannot beat this opponent, get out, and subtract out all the losses
+            }
+        }
+        total_rds++; // just did another round above
     }
 
-    // check left
-    if (x - x0 >= fib[f]) {
-        return handle(x, y, f - 1, x0 + fib[f], x1, y0, y1);
+    // case you've unlocked em all
+    if (stop == n) {
+        // do some math time, but not really since you've unlocked em all now
+        total_diff = y - curr;
+        cout << total_rds * n + total_diff;
+        DEBUG("r5");
+        return;
     }
 
-    DEBUG("stopped recursing down");
-    if (f == 0 && x0 == x1 && y0 == y1) {
-        return true;
-    }
+    // your next goal is y, not the next unlocking phase
+    int diff = inp[stop + 1] - curr; // how much rating you need to get in order to achieve your goal elo
 
-    return false;
->>>>>>> 376c4b83dd4f8e2a51d199b9837ac57a4b3708df
-}
+    int per = stop - (n - stop); // how much you win per cycle
+    int num = ((diff - stop) + (per - 1))/per; // ceil((diff - stop)/per)
 
-void solve() {
-    int x, y;
-    cin >> n >> y >> x;
+    total_rds += num;
+    curr += per * num;
 
-    if (handle(x, y, n, 1, fib[n + 1], 1, fib[n])) {
-        cout << "YES" << endl;
-    } else {
-        cout << "NO" << endl;
-    }
+    int final_res = (y - curr) + total_rds * n;
+    DEBUG("final return");
+    cout << final_res << endl;
 }
