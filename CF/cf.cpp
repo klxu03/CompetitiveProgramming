@@ -61,116 +61,65 @@ int main() {
     }
 }
 
+string s;
+
 void solve() {
-    cin >> n >> x >> y;
+    cin >> n >> s;
 
-    vector<llt> inp(n);
-
-    f0r(i, n) {
-        cin >> inp[i];
-
-        // help catch bugs
-        if (inp[i] >= y) {
-            inp[i] = LLONG_MAX;
-        }
-    }
-
-    sort(inp.begin(), inp.end());
-
-    ll curr = x;
-
-    int stop = -1; // index he stops at, also the left counter for future code
-    f0r(i, n) {
-        if (curr >= inp[i]) {
-            curr++;
-        } else {
-            stop = i;
-            break;
-        }
-    }
-
-    ll total_diff = y - x; // how much rating he wants to gain
-
-    // do some actual math
-    if (stop == -1) {
-        cout << total_diff << endl;
-        DEBUG("r1");
-        return;
-    }
-
-    if (x + stop >= y) {
-        cout << total_diff << endl;
-        DEBUG("r2");
-        return;
-    }
-
-    // tie or you gain less than you win
-    if (stop <= n - stop) {
+    if (n % 2 == 1) {
         cout << -1 << endl;
-        DEBUG("r3");
         return;
     }
 
-    // actual problem time
-    int total_rds = 0;
-    curr = x;
+    string rev = s;
+    reverse(rev.begin(), rev.end());
+    DEBUG(s, rev);
 
-    DEBUG(inp, stop);
-    DEBUG(x, y);
+    vector<int> same(26); // how many same of each letter
+    ll same_c = 0; // same counter
 
-    while (stop < n && inp[stop] < y) {
-        ll diff = inp[stop] - curr; // how much rating you need to get in order to achieve next level of rating gain
-
-        int per = stop - (n - stop); // how much you win per cycle
-        DEBUG(((diff - stop) + (per - 1))); // ceil((diff - stop)/per) num cycles you go through
-        int num = ((diff - stop) + (per - 1))/per; // ceil((diff - stop)/per) num cycles you go through
-
-        // now let's apply the buff of num cycles
-        total_rds += num;
-        curr += per * num;
-
-        ll orig = curr;
-        curr += stop;
-        f1r(i, stop, n) {
-            if (curr >= y) {
-                // do the math right now, you achieved your ELO in this cycle
-                DEBUG(diff, per, num);
-                DEBUG(total_rds, curr, orig);
-                cout << total_rds * n + curr - orig << endl;
-                DEBUG("r4");
-                return;
-            }
-
-            if (curr >= inp[i]) {
-                stop++;
-                curr++;
-            } else {
-                curr -= (n - stop);
-                break; // you cannot beat this opponent, get out, and subtract out all the losses
-            }
+    // only need to do for half the string
+    f0r(i, n/2) {
+        if (s[i] == rev[i]) {
+            same[s[i] - 'a']++;
+            same_c++;
         }
-        total_rds++; // just did another round above
     }
 
-    // case you've unlocked em all
-    if (stop == n) {
-        // do some math time, but not really since you've unlocked em all now
-        total_diff = y - curr;
-        cout << total_rds * n + total_diff << endl;
-        DEBUG("r5");
+    int most_same = 0;
+    char most_c = 'Z';
+    f0r(i, 26) {
+        if (same[i] > most_same) {
+            most_c = 'a' + i;
+            most_same = same[i];
+        }
+    }
+    DEBUG(most_same, same_c);
+
+    int non_same = 0; // the # of letters that are the same as most_c in the first half
+    f0r(i, n/2) {
+        if (s[i] == most_c) {
+            non_same++;
+        }
+    }
+
+    // swap amongst themselves
+    if (most_same <= same_c / 2) {
+        DEBUG("we can end early");
+        if (same_c % 2 == 1) {
+            cout << same_c/2 + 1 << endl;
+        } else {
+            cout << same_c/2 << endl;
+        }
+        return;
+    }
+    // there's one letter to rule them all
+
+    // ones the most_same can swap with
+    if (most_same > n/2 - non_same) {
+        cout << -1 << endl;
         return;
     }
 
-    // your next goal is y, not the next unlocking phase
-    ll diff = y - curr; // how much rating you need to get in order to achieve your goal elo
-
-    int per = stop - (n - stop); // how much you win per cycle
-    int num = ((diff - stop) + (per - 1))/per; // ceil((diff - stop)/per)
-
-    total_rds += num;
-    curr += per * num;
-
-    ll final_res = (y - curr) + total_rds * n;
-    DEBUG("final return");
-    cout << final_res << endl;
+    cout << most_same << endl;
 }
