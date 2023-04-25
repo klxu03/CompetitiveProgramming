@@ -96,9 +96,9 @@ void solve() {
     }
     DEBUG(most_same, same_c);
 
-    int non_same = 0; // the # of letters that are the same as most_c in the first half
+    int non_same = 0; // the # of letters that you can swap the most_same letters that are c | c with
     f0r(i, n/2) {
-        if (s[i] == most_c) {
+        if (s[i] != most_c && rev[i] != most_c) {
             non_same++;
         }
     }
@@ -116,7 +116,7 @@ void solve() {
     // there's one letter to rule them all
 
     // ones the most_same can swap with
-    if (most_same > n/2 - non_same) {
+    if (most_same > non_same) {
         cout << -1 << endl;
         return;
     }
