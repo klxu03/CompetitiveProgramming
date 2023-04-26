@@ -61,65 +61,8 @@ int main() {
     }
 }
 
-string s;
-
 void solve() {
-    cin >> n >> s;
+    cin >> n;
 
-    if (n % 2 == 1) {
-        cout << -1 << endl;
-        return;
-    }
-
-    string rev = s;
-    reverse(rev.begin(), rev.end());
-    DEBUG(s, rev);
-
-    vector<int> same(26); // how many same of each letter
-    ll same_c = 0; // same counter
-
-    // only need to do for half the string
-    f0r(i, n/2) {
-        if (s[i] == rev[i]) {
-            same[s[i] - 'a']++;
-            same_c++;
-        }
-    }
-
-    int most_same = 0;
-    char most_c = 'Z';
-    f0r(i, 26) {
-        if (same[i] > most_same) {
-            most_c = 'a' + i;
-            most_same = same[i];
-        }
-    }
-    DEBUG(most_same, same_c);
-
-    int non_same = 0; // the # of letters that you can swap the most_same letters that are c | c with
-    f0r(i, n/2) {
-        if (s[i] != most_c && rev[i] != most_c) {
-            non_same++;
-        }
-    }
-
-    // swap amongst themselves
-    if (most_same <= same_c / 2) {
-        DEBUG("we can end early");
-        if (same_c % 2 == 1) {
-            cout << same_c/2 + 1 << endl;
-        } else {
-            cout << same_c/2 << endl;
-        }
-        return;
-    }
-    // there's one letter to rule them all
-
-    // ones the most_same can swap with
-    if (most_same > non_same) {
-        cout << -1 << endl;
-        return;
-    }
-
-    cout << most_same << endl;
+    // n(n - 1)/2 # of sums that need to happen
 }
