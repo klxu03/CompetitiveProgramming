@@ -46,7 +46,7 @@ template<typename T,typename ...S>constexpr const inline T& _min(const T& m, con
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
 ll q, Q, T, k, l, r, x, y, z;
-int n, m;
+ll n, m;
 
 void solve();
 
@@ -62,7 +62,44 @@ int main() {
 }
 
 void solve() {
-    cin >> n;
+    cin >> n >> m;
+    vector<int> v(n); // current v
 
-    // n(n - 1)/2 # of sums that need to happen
+    f0r(i, n) {
+        cin >> v[i];
+    }
+
+    vector<pii> c(m); // changes
+    f0r(i, m) {
+        pii p;
+        cin >> p.f >> p.s;
+        p.f--;
+        c[i] = p;
+    }
+
+    map<int, ll> start; // value, counter
+    map<int, ll> val; // value, # of times they've occurred
+
+    f0r(i, n) {
+        start[v[i]] = -1;
+    }
+
+    f0r(i, m) {
+        val[v[c[i].f]] += (i - start[v[c[i].f]]);
+        start[c[i].s] = i;
+        v[c[i].f] = c[i].s;
+    }
+
+    f0r(i, n) {
+        val[v[i]] += m - start[v[i]];
+    }
+
+    ll ret = 0;
+    for (auto p : val) {
+        ret += ((m + 1) * m)/2;
+        ll m_d = m + 1 - p.s;
+        ret -= (m_d) * (m_d - 1)/2;
+    }
+
+    cout << ret << endl;
 }
