@@ -61,45 +61,79 @@ int main() {
     }
 }
 
+vector<ll> opp;
+
 void solve() {
-    cin >> n >> m;
-    vector<int> v(n); // current v
-
+    cin >> n >> x >> y;
+    opp = vector<ll>(n);
     f0r(i, n) {
-        cin >> v[i];
+        cin >> opp[i];
     }
 
-    vector<pii> c(m); // changes
-    f0r(i, m) {
-        pii p;
-        cin >> p.f >> p.s;
-        p.f--;
-        c[i] = p;
-    }
+    sort(opp.begin(), opp.end());
 
-    map<int, ll> start; // value, counter
-    map<int, ll> val; // value, # of times they've occurred
-
-    f0r(i, n) {
-        start[v[i]] = -1;
-    }
-
-    f0r(i, m) {
-        val[v[c[i].f]] += (i - start[v[c[i].f]]);
-        start[c[i].s] = i;
-        v[c[i].f] = c[i].s;
-    }
-
-    f0r(i, n) {
-        val[v[i]] += m - start[v[i]];
-    }
-
+    int win_streak = 0;
+    int cycle_gain = 0;
     ll ret = 0;
-    for (auto p : val) {
-        ret += ((m + 1) * m)/2;
-        ll m_d = m + 1 - p.s;
-        ret -= (m_d) * (m_d - 1)/2;
+    ll counter = x; // the amt of elo you have rn
+
+    f0r(i, n) {
+        if (counter < opp[i]) break;
+        win_streak++;
+        counter++;
     }
 
-    cout << ret << endl;
+    // case where initial is good enough
+    if (x + win_streak >= y) {
+        cout << y - x << endl;
+        return;
+    }
+
+    // case of -1
+    if (win_streak - (n - win_streak) <= 0) {
+        cout << -1 << endl;
+        return;
+    }
+
+    cycle_gain = win_streak - (n - win_streak);
+    counter -= (n - win_streak);
+    ret += n; // 1 cycle happened in calculating initial values
+    while (win_streak < n) {
+        if (opp[win_streak] >= y) {
+            break;
+        }
+
+        ll num_cyc = (((opp[win_streak] - counter) - win_streak) + (cycle_gain - 1))/cycle_gain;
+        ret += num_cyc * n + win_streak;
+        counter += num_cyc * cycle_gain + win_streak;
+        while(win_streak < n && counter >= opp[win_streak]) {
+            counter++;
+            win_streak++;
+            ret++;
+        }
+
+        cycle_gain = win_streak - (n - win_streak);
+        if (counter >= y) {
+            // figured out answer right here
+            cout << ret - (counter - y) << endl;
+            return;
+        }
+
+        // do remaining losses
+        counter -= n - win_streak;
+        ret += n - win_streak;
+    }
+
+    if (win_streak == n) {
+        cout << (y - counter) + ret << endl;
+        return;
+    }
+
+    // handle case where next opponent has more elo than y
+    ll num_cyc = (((y - counter) - win_streak) + (cycle_gain - 1))/cycle_gain;
+    ret += num_cyc * n;
+    counter += num_cyc * cycle_gain;
+
+    // can win in the very next cycle
+    cout << (y - counter) + ret << endl;
 }
