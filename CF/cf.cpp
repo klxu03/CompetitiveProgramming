@@ -46,7 +46,7 @@ template<typename T,typename ...S>constexpr const inline T& _min(const T& m, con
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
 ll q, Q, T, k, l, r, x, y, z;
-ll n, m;
+int n, m;
 
 void solve();
 
@@ -61,79 +61,114 @@ int main() {
     }
 }
 
-vector<ll> opp;
+int s;
+
+class UnweightedGraph {
+public:
+    long long nodes; // # of nodes
+    long long edges; // # of edges
+    bool undirected;
+    vector<vector<long long> > adj; // adjacency neighbor vector
+    vector<long long> visited; // visited nodes
+
+    vector<int> prev;
+
+    UnweightedGraph() {}
+
+    void init(long long nodes, long long edges, bool undirected) {
+        this->nodes = nodes;
+        this->edges = edges;
+        this->undirected = undirected;
+        adj = vector<vector<long long> >(nodes);
+        visited = vector<long long>(nodes, false);
+
+        prev = vector<int>(nodes, -1);
+    }
+
+    void init_adj() {
+        f0r(i, edges) {
+            ll n1, n2; // n1 for node1
+            cin >> n1 >> n2;
+            adj[n1 - 1].pb(n2 - 1);
+            if(undirected) {
+                adj[n2 - 1].pb(n1 - 1);
+            }
+        }
+    }
+
+    // return the int or the num_visited from this cycle and the final node (that should be pointing towards the start node)
+    pair<int, int> valid_corner(int node, int num_visited) {
+        visited[node] = true;
+        for (int neighbor : adj[node]) {
+            if (!visited[neighbor] && adj[neighbor].size() == 2) {
+                return valid_corner(neighbor, num_visited + 1);
+            }
+        }
+        return {num_visited, node};
+    }
+
+    int valid_center(int node, int num_visited) {
+        visited[node] = true;
+        for (int neighbor : adj[node]) {
+            if (!visited[neighbor] && adj[neighbor].size() == 4) {
+                return valid_center(neighbor, num_visited + 1);
+            }
+        }
+        return num_visited;
+    }
+};
+
+UnweightedGraph g;
 
 void solve() {
-    cin >> n >> x >> y;
-    opp = vector<ll>(n);
-    f0r(i, n) {
-        cin >> opp[i];
+    cin >> n >> m;
+
+    g.init(n, m, true);
+    g.init_adj();
+
+    int k = -1;
+    f1r(i, sqrtl(n) -1, sqrtl(n) + 1) {
+        if (i * i == n) k = i;
     }
 
-    sort(opp.begin(), opp.end());
-
-    int win_streak = 0;
-    int cycle_gain = 0;
-    ll ret = 0;
-    ll counter = x; // the amt of elo you have rn
-
-    f0r(i, n) {
-        if (counter < opp[i]) break;
-        win_streak++;
-        counter++;
+    // Nodes with 4 neighbors are the center nodes since they are connected to central cycle, and each node has 2 more incoming/outcoming for their own s cycle
+    vector<int> center_nodes;
+    for (int i = 0; i < n; i++) {
+        if (g.adj[i].size() == 4) {
+            center_nodes.pb(i);
+        } else if (g.adj[i].size() != 2) {
+            cout << "NO" << endl;
+            return;
+        }
     }
 
-    // case where initial is good enough
-    if (x + win_streak >= y) {
-        cout << y - x << endl;
+    if (center_nodes.size() != k) {
+        cout << "NO" << endl;
         return;
     }
 
-    // case of -1
-    if (win_streak - (n - win_streak) <= 0) {
-        cout << -1 << endl;
-        return;
-    }
-
-    cycle_gain = win_streak - (n - win_streak);
-    counter -= (n - win_streak);
-    ret += n; // 1 cycle happened in calculating initial values
-    while (win_streak < n) {
-        if (opp[win_streak] >= y) {
-            break;
-        }
-
-        ll num_cyc = (((opp[win_streak] - counter) - win_streak) + (cycle_gain - 1))/cycle_gain;
-        ret += num_cyc * n + win_streak;
-        counter += num_cyc * cycle_gain + win_streak;
-        while(win_streak < n && counter >= opp[win_streak]) {
-            counter++;
-            win_streak++;
-            ret++;
-        }
-
-        cycle_gain = win_streak - (n - win_streak);
-        if (counter >= y) {
-            // figured out answer right here
-            cout << ret - (counter - y) << endl;
+    // now do a traversal for each center node and make sure it is a cycle of length k
+    for (int i = 0; i < center_nodes.size(); i++) {
+        pair<int, int> res = g.valid_corner(center_nodes[i], 1);
+        if (res.f != center_nodes.size()) {
+            cout << "NO" << endl;
             return;
         }
 
-        // do remaining losses
-        counter -= n - win_streak;
-        ret += n - win_streak;
+        // if the final node has 4 neighbors OR as part of its neighbor it does not include original starting node
+        if (find(g.adj[res.s].begin(), g.adj[res.s].end(), center_nodes[i]) == g.adj[res.s].end()) {
+            cout << "NO" << endl;
+            return;
+        }
+
+        // reset visited for center_nodes for next check that center nodes make their own cycle of length s
+        g.visited[center_nodes[i]] = false;
     }
 
-    if (win_streak == n) {
-        cout << (y - counter) + ret << endl;
+    if (g.valid_center(center_nodes[0], 1) != center_nodes.size()) {
+        cout << "NO" << endl;
         return;
     }
 
-    // handle case where next opponent has more elo than y
-    ll num_cyc = (((y - counter) - win_streak) + (cycle_gain - 1))/cycle_gain;
-    ret += num_cyc * n;
-    counter += num_cyc * cycle_gain;
-
-    // can win in the very next cycle
-    cout << (y - counter) + ret << endl;
+    cout << "YES" << endl;
 }
