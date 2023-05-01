@@ -46,7 +46,7 @@ template<typename T,typename ...S>constexpr const inline T& _min(const T& m, con
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
 ll q, Q, T, k, l, r, x, y, z;
-ll n, m;
+int n, m;
 
 void solve();
 
@@ -54,114 +54,84 @@ void solve();
 int main() {
     io;
     ll test_cases = 1;
-//    cin >> test_cases;
+    cin >> test_cases;
 
     f0r(test_case, test_cases) {
         solve();
     }
 }
 
-ll get_min(string &s) {
-    vector<bool> visited(m, false);
-    // first bunch 11 together
-    ll c2 = 0; // groups of 2 counters
-    f0r(i, m - 1) {
-        if (s[i] == '1' && s[i + 1] == '1') {
-            visited[i] = true;
-            visited[i + 1] = true;
-            i++;
-            c2++;
-        }
-    }
-
-    ll g1 = 0; // num grouped ones
-
-    // too many 11 grouped together
-    if (c2 >= m/4) {
-        // get rid of some
-        int rmv = c2 - m / 4;
-        f0r(i, m - 1) {
-            if (rmv == 0) {
-                break;
-            }
-
-            if (visited[i]) {
-                visited[i] = false;
-                visited[i + 1] = false;
-                i++;
-                rmv--;
-            }
-        }
-    }
-
-    ll a1 = 0; // number of alone 1s, or non_visited ones
-    // need to group some more 2s, all |11| grouped together, just group some |01|
-    f0r(i, m) {
-        if (visited[i]) {
-            g1++;
-            i++;
-        } else if (s[i] == '1') {
-            a1++;
-        }
-    }
-
-    return a1 + g1;
-}
-
-ll get_max(string &s) {
-    vector<bool> grouped(m, false); // start i, and i + 1 will be grouped together
-    ll c2 = 0;
-    f0r(i, m - 1) {
-        if (s[i] == '0' && s[i + 1] == '0') {
-            c2++;
-            i++;
-            continue;
-        }
-
-        if (s[i] == '0' && s[i + 1] == '1') {
-            c2++;
-            i++;
-            continue;
-        }
-
-        if (s[i] == '1' && s[i + 1] == '0') {
-            c2++;
-            i++;
-            continue;
-        }
-    }
-
-    ll num1 = 0;
-    f0r(i, m) {
-        if (s[i] == '1') {
-            num1++;
-        }
-    }
-
-    // not enough groups, deficit so need to take some |1|1| and group them together, losing a new appt
-    if (c2 < m/4) {
-        return num1 - (m/4 - c2);
-    }
-
-    return num1;
-}
-
 void solve() {
-    cin >> n >> m;
-
-    vector<string> inp(n);
+    cin >> n;
+    vector<int> inp;
+    inp = vector<int>(n);
     f0r(i, n) {
         cin >> inp[i];
     }
 
-    ll rmin = 0; // ret min
-    ll rmax = 0; // ret max
-
+    // calculate the current mex
+    set<int> init;
     f0r(i, n) {
-        string s = inp[i];
-        rmin += get_min(s);
-        rmax += get_max(s);
+        init.insert(inp[i]);
     }
 
-    cout << rmin << " " << rmax << endl;
+    int counter = 0;
+    while (true) {
+        if (init.find(counter) != init.end()) {
+            counter++;
+        } else {
+            break;
+        }
+    }
+    int mex_init = counter;
+
+    // instances of mex_init + 1
+    int l = -1;
+    int r = -1;
+    f0r(i, n) {
+        if (inp[i] == mex_init + 1) {
+            if (l == -1) {
+                l = i;
+            }
+
+            r = i;
+        }
+    }
+    // if l == -1 at end, that means this one is perfect 0 1 2 3
+    if (l == -1) {
+        if (mex_init == n) {
+            cout << "No" << endl;
+            return;
+        } else {
+            cout << "Yes" << endl;
+            return;
+        }
+    }
+
+    // fill it in
+    f1r(i, l, r + 1) {
+        inp[i] = mex_init;
+    }
+
+    // calculate the current mex
+    set<int> aft;
+    f0r(i, n) {
+        aft.insert(inp[i]);
+    }
+
+    counter = 0;
+    while (true) {
+        if (aft.find(counter) != aft.end()) {
+            counter++;
+        } else {
+            break;
+        }
+    }
+    int mex_aft = counter;
+
+    if (mex_aft == mex_init + 1) {
+        cout << "Yes" << endl;
+    } else {
+        cout << "No" << endl;
+    }
 }
