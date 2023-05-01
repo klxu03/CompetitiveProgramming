@@ -46,66 +46,34 @@ template<typename T,typename ...S>constexpr const inline T& _min(const T& m, con
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 
 ll q, Q, T, k, l, r, x, y, z;
-ll n, m;
+ll m;
 
-void solve();
-
-// Problem:
-int main() {
-    io;
-    ll test_cases = 1;
-//    cin >> test_cases;
-
-    f0r(test_case, test_cases) {
-        solve();
+// currently on the ith index, and having m groups left, figure out the max answer
+ll recurse(string &s, int i, int m) {
+    if (i == s.size()) {
+        if (m == 0) return 0;
+        return -1000;
     }
-}
 
-ll get_min(string &s) {
-    vector<bool> visited(m, false);
-    // first bunch 11 together
-    ll c2 = 0; // groups of 2 counters
-    f0r(i, m - 1) {
-        if (s[i] == '1' && s[i + 1] == '1') {
-            visited[i] = true;
-            visited[i + 1] = true;
-            i++;
-            c2++;
+    // case 1: create a group now
+    ll res1 = -1000;
+    if (i < s.size() - 1) {
+        bool add = s[i] == '1' || s[i + 1] == '1';
+        if (add && m > 0) {
+            res1 = 1 + recurse(s, i + 2, m - 1);
+        } else {
+            res1 = recurse(s, i + 2, m - 1);
         }
     }
 
-    ll g1 = 0; // num grouped ones
-
-    // too many 11 grouped together
-    if (c2 >= m/4) {
-        // get rid of some
-        int rmv = c2 - m / 4;
-        f0r(i, m - 1) {
-            if (rmv == 0) {
-                break;
-            }
-
-            if (visited[i]) {
-                visited[i] = false;
-                visited[i + 1] = false;
-                i++;
-                rmv--;
-            }
-        }
+    // case 2: do not create a group now
+    ll res2 = -1000;
+    if (i < s.size()) {
+        res2 = recurse(s, i + 1, m);
+        if (s[i] == '1') res2++;
     }
 
-    ll a1 = 0; // number of alone 1s, or non_visited ones
-    // need to group some more 2s, all |11| grouped together, just group some |01|
-    f0r(i, m) {
-        if (visited[i]) {
-            g1++;
-            i++;
-        } else if (s[i] == '1') {
-            a1++;
-        }
-    }
-
-    return a1 + g1;
+    return max(res1, res2);
 }
 
 ll get_max(string &s) {
@@ -146,22 +114,21 @@ ll get_max(string &s) {
     return num1;
 }
 
-void solve() {
-    cin >> n >> m;
+// Problem:
+int main() {
+    m = 12;
+    f0r(i, 4096) {
+        // convert i into a string
+        string bits = bitset<12>(i).to_string();
+        ll brute = recurse(bits, 0, m/4);
+        ll cf = get_max(bits);
 
-    vector<string> inp(n);
-    f0r(i, n) {
-        cin >> inp[i];
+        if (brute != cf) {
+            DEBUG(brute, cf, bits);
+        }
     }
 
-    ll rmin = 0; // ret min
-    ll rmax = 0; // ret max
-
-    f0r(i, n) {
-        string s = inp[i];
-        rmin += get_min(s);
-        rmax += get_max(s);
-    }
-
-    cout << rmin << " " << rmax << endl;
+//    string bits = "001111111100";
+//    ll brute = recurse(bits, 0, m/4);
+//    DEBUG(brute);
 }
