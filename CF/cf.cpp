@@ -61,77 +61,80 @@ int main() {
     }
 }
 
+bool recurse(ll height, ll width, multiset<pll, greater<pll>> &inp_h, multiset<pll, greater<pll>> &inp_w) {
+    DEBUG(height, width, inp_h, inp_w);
+    if (height == 0 || width == 0) return true;
+
+    if ((*inp_w.begin()).f == width) {
+        pii popped_w = *inp_w.begin();
+        inp_w.erase(inp_w.begin());
+
+        pii popped_h = {popped_w.s, popped_w.f};
+        inp_h.erase(inp_h.find(popped_h));
+
+        bool res = recurse(height - popped_w.s, width, inp_h, inp_w);
+        inp_w.insert(popped_w);
+        inp_h.insert(popped_h);
+        if (res) return true;
+    }
+
+    if ((*inp_h.begin()).f == height) {
+        pii popped_h = *inp_h.begin();
+        inp_h.erase(inp_h.begin());
+
+        pii popped_w = {popped_h.s, popped_h.f};
+        inp_w.erase(inp_w.find(popped_w));
+
+        bool res = recurse(height, width - popped_h.s, inp_h, inp_w);
+        inp_h.insert(popped_h);
+        inp_w.insert(popped_w);
+        if (res) return true;
+    }
+
+    DEBUG("returning false");
+    return false;
+}
+
 void solve() {
     cin >> n;
-    vector<int> inp;
-    inp = vector<int>(n);
+    vector<pll> inp(n);
+
     f0r(i, n) {
-        cin >> inp[i];
+        cin >> inp[i].f >> inp[i].s;
     }
 
-    // calculate the current mex
-    set<int> init;
+    multiset<pll, greater<pll>> inp_h; // sorted greatest height down
+    multiset<pll, greater<pll>> inp_w; // sorted greatest height down
+
+    ll area = 0; // summed area
     f0r(i, n) {
-        init.insert(inp[i]);
+        inp_h.insert(inp[i]);
+        inp_w.insert({inp[i].s, inp[i].f});
+        area += inp[i].f * inp[i].s;
     }
 
-    int counter = 0;
-    while (true) {
-        if (init.find(counter) != init.end()) {
-            counter++;
-        } else {
-            break;
-        }
-    }
-    int mex_init = counter;
+    DEBUG(area, *(inp_h.begin()), *inp_w.begin());
 
-    // instances of mex_init + 1
-    int l = -1;
-    int r = -1;
-    f0r(i, n) {
-        if (inp[i] == mex_init + 1) {
-            if (l == -1) {
-                l = i;
-            }
+    vector<pll> ans;
+    ll height = (*inp_h.begin()).f;
+    ll width = (*inp_w.begin()).f;
 
-            r = i;
-        }
-    }
-    // if l == -1 at end, that means this one is perfect 0 1 2 3
-    if (l == -1) {
-        if (mex_init == n) {
-            cout << "No" << endl;
-            return;
-        } else {
-            cout << "Yes" << endl;
-            return;
-        }
-    }
-
-    // fill it in
-    f1r(i, l, r + 1) {
-        inp[i] = mex_init;
-    }
-
-    // calculate the current mex
-    set<int> aft;
-    f0r(i, n) {
-        aft.insert(inp[i]);
-    }
-
-    counter = 0;
-    while (true) {
-        if (aft.find(counter) != aft.end()) {
-            counter++;
-        } else {
-            break;
-        }
-    }
-    int mex_aft = counter;
-
-    if (mex_aft == mex_init + 1) {
-        cout << "Yes" << endl;
+    if (n == 1) {
+        ans.pb({height, width}); // only one rectangle, obvious
     } else {
-        cout << "No" << endl;
+        if (area % height == 0) {
+            bool res = recurse(height, area/height, inp_h, inp_w);
+            if (res) ans.pb({height, area/height});
+        }
+
+        if (area % width == 0) {
+            bool res = recurse(area/width, width, inp_h, inp_w);
+            if (res) ans.pb({area/width, width});
+        }
+    }
+
+    cout << ans.size() << endl;
+    f0r(i, ans.size()) {
+        cout << ans[i].f << " " << ans[i].s << endl;
     }
 }
