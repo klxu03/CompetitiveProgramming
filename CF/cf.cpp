@@ -7,7 +7,7 @@ using namespace std;
 #define f0r(a, b) for (long long a = 0; a < b; a++)
 #define f1r(a, b, c) for (long long a = b; a < c; a++)
 #define r0f(a, b) for (long long a = b - 1; a >= 0; a--)
-#define r1f(a, b, c) for (long long a = b; a >= c; a--)
+#define r1f(a, b, c) for (long long a = c - 1; a >= b; a--)
 #define isOdd & 1
 #define qpow2(exponent) 1 << exponent
 /* 2^exponent, because every time shifting bit to the leftBound you are essentially multiplying function by two */
@@ -55,6 +55,7 @@ int main() {
     io;
     ll test_cases = 1;
     cin >> test_cases;
+    DEBUG(test_cases);
 
     f0r(test_case, test_cases) {
         solve();
@@ -63,47 +64,84 @@ int main() {
 
 void solve() {
     cin >> n;
-    vector<ll> inp(n);
+    vector<int> a(n);
+    vector<int> b(n);
+
     f0r(i, n) {
-        cin >> inp[i];
+        cin >> a[i];
     }
 
-    // store value, and then its index
-    vector<pair<ll, int>> pref(n);
-    pref[0] = {inp[0], 0};
-    f1r(i, 1, n) {
-        if (inp[i] + i > pref[i - 1].f) {
-            pref[i] = {inp[i] + i, i};
+    f0r(i, n) {
+        cin >> b[i];
+    }
+
+    cin >> m;
+    map<int, int> x; // the map that includes the razors you have
+    f0r(i, m) {
+        int ind;
+        cin >> ind;
+        x[ind]++;
+    }
+    DEBUG(a, b, x);
+
+    map<int, int> m;
+    deque<int> dq;
+
+    set<int> s; // set of currently active razors
+    f0r(i, n) {
+        DEBUG(i, m);
+        if (b[i] > a[i]) {
+            cout << "NO" << endl;
+            return;
+        }
+
+        if (dq.empty()) {
+            if (a[i] > b[i]) {
+                dq.pb(b[i]);
+                s.insert(b[i]);
+                m[b[i]]++;
+            }
+
+            continue;
+        }
+
+        int curr = dq.back();
+        if (a[i] > b[i]) {
+            while (!dq.empty() && b[i] > dq.back()) {
+                s.erase(dq.back());
+                dq.pop_back();
+            }
+            // a razor has to be used here, let's see if it's been used before
+            if (dq.empty() || b[i] < dq.back()) {
+                dq.pb(b[i]);
+                s.insert(b[i]);
+                m[b[i]]++;
+            }
+//            if (s.count(b[i]) == 0) {
+//                dq.pb(b[i]);
+//                s.insert(b[i]);
+//                m[b[i]]++;
+//            }
         } else {
-            pref[i] = pref[i - 1];
+            if (b[i] == curr) continue;
+            while (!dq.empty() && b[i] > dq.back()) {
+                s.erase(dq.back());
+                dq.pop_back();
+            }
+        }
+
+        DEBUG(dq, s);
+    }
+    DEBUG(m);
+    DEBUG(x);
+
+    for (auto p : m) {
+        DEBUG(p);
+        if (p.s > x[p.f]) {
+            cout << "NO" << endl;
+            return;
         }
     }
-    vector<pair<ll, int>> suff(n);
-    suff[n - 1] = {inp[n - 1], n - 1};
-    r1f(i, n - 2, 0) {
-        if (inp[i] + (n - 1) - i > suff[i + 1].f) {
-            suff[i] = {inp[i] + (n - 1) - i, i};
-        } else {
-            suff[i] = suff[i + 1];
-        }
-    }
-    DEBUG(pref);
-    DEBUG(suff);
 
-    // go through, select each point as a mid
-    ll ret = -1;
-    vector<ll> ans;
-    f1r(i, 1, n - 1) {
-        pair<ll, int> left = pref[i - 1];
-        pair<ll, int> right = suff[i + 1];
-
-        ll curr = inp[i] + inp[left.s] + inp[right.s];
-        DEBUG("init sum", curr);
-        curr -= (right.s - left.s);
-        ans.pb(curr);
-        ret = max(ret, curr);
-    }
-    DEBUG(ans);
-
-    cout << ret << endl;
+    cout << "YES" << endl;
 }
