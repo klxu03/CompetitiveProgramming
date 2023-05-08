@@ -68,14 +68,66 @@ void solve() {
     f0r(i, n) {
         cin >> inp[i];
     }
+    DEBUG(n, m, inp);
+    ll ret = 0;
+
+    if (n == 1) {
+        cout << 0 << endl;
+        return;
+    }
+
+    if (inp[m] > 0 && m > 0) {
+        inp[m] = -inp[m];
+        ret++;
+    }
 
     vector<ll> pref(n);
     pref[0] = inp[0];
     f1r(i, 1, n) {
         pref[i] = pref[i - 1] + inp[i];
     }
+    DEBUG(pref);
 
     // current prefix sum
     ll curr = pref[m];
-//    r1f(i, )
+    ll orig = curr;
+
+    // going left
+    priority_queue<ll> pq;
+    r1f(i, m - 1, 0) {
+        while (pref[i] < curr) {
+            // keep flipping pos to negative
+            ll t = pq.top();
+            DEBUG(t);
+            curr -= 2 * t;
+            pq.pop();
+            // don't really need to push a negative number into pq
+//            pq.push(-1 * t);
+            ret++;
+        }
+        pq.push(inp[i]); // changing this value from pos to neg will affect both curr prefix sum and the mth one, so never try to flip yet
+    }
+    DEBUG("left", ret);
+    curr = orig; // undo the prefix changes since they affect everything going to the right and forward as well
+
+    // going right
+    priority_queue<ll, vector<ll>, greater<ll>> pq_r;
+    ll pref_debt = 0;
+    f1r(i, m + 1, n) {
+        pq_r.push(inp[i]); // changing this value won't affect mth prefix sum, but will affect this one so can try to flip it
+        while (pref[i] + pref_debt < curr) {
+            // keep flipping from neg to positive
+            ll t = pq_r.top();
+            DEBUG(t);
+            pref_debt -= 2 * t;
+            pq_r.pop();
+            DEBUG(pq_r.top());
+            // don't really need to push a positive number into pq
+//            pq_r.push(-1 * t);
+            ret++;
+            DEBUG(pref_debt);
+        }
+    }
+
+    cout << ret << endl;
 }
