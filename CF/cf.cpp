@@ -7,7 +7,7 @@ using namespace std;
 #define f0r(a, b) for (long long a = 0; a < b; a++)
 #define f1r(a, b, c) for (long long a = b; a < c; a++)
 #define r0f(a, b) for (long long a = b - 1; a >= 0; a--)
-#define r1f(a, b, c) for (long long a = c - 1; a >= b; a--)
+#define r1f(a, b, c) for (long long a = b; a >= c; a--)
 #define isOdd & 1
 #define qpow2(exponent) 1 << exponent
 /* 2^exponent, because every time shifting bit to the leftBound you are essentially multiplying function by two */
@@ -55,7 +55,6 @@ int main() {
     io;
     ll test_cases = 1;
     cin >> test_cases;
-    DEBUG(test_cases);
 
     f0r(test_case, test_cases) {
         solve();
@@ -63,85 +62,20 @@ int main() {
 }
 
 void solve() {
-    cin >> n;
-    vector<int> a(n);
-    vector<int> b(n);
-
+    cin >> n >> m;
+    m--;
+    vector<ll> inp(n);
     f0r(i, n) {
-        cin >> a[i];
+        cin >> inp[i];
     }
 
-    f0r(i, n) {
-        cin >> b[i];
+    vector<ll> pref(n);
+    pref[0] = inp[0];
+    f1r(i, 1, n) {
+        pref[i] = pref[i - 1] + inp[i];
     }
 
-    cin >> m;
-    map<int, int> x; // the map that includes the razors you have
-    f0r(i, m) {
-        int ind;
-        cin >> ind;
-        x[ind]++;
-    }
-    DEBUG(a, b, x);
-
-    map<int, int> m;
-    deque<int> dq;
-
-    set<int> s; // set of currently active razors
-    f0r(i, n) {
-        DEBUG(i, m);
-        if (b[i] > a[i]) {
-            cout << "NO" << endl;
-            return;
-        }
-
-        if (dq.empty()) {
-            if (a[i] > b[i]) {
-                dq.pb(b[i]);
-                s.insert(b[i]);
-                m[b[i]]++;
-            }
-
-            continue;
-        }
-
-        int curr = dq.back();
-        if (a[i] > b[i]) {
-            while (!dq.empty() && b[i] > dq.back()) {
-                s.erase(dq.back());
-                dq.pop_back();
-            }
-            // a razor has to be used here, let's see if it's been used before
-            if (dq.empty() || b[i] < dq.back()) {
-                dq.pb(b[i]);
-                s.insert(b[i]);
-                m[b[i]]++;
-            }
-//            if (s.count(b[i]) == 0) {
-//                dq.pb(b[i]);
-//                s.insert(b[i]);
-//                m[b[i]]++;
-//            }
-        } else {
-            if (b[i] == curr) continue;
-            while (!dq.empty() && b[i] > dq.back()) {
-                s.erase(dq.back());
-                dq.pop_back();
-            }
-        }
-
-        DEBUG(dq, s);
-    }
-    DEBUG(m);
-    DEBUG(x);
-
-    for (auto p : m) {
-        DEBUG(p);
-        if (p.s > x[p.f]) {
-            cout << "NO" << endl;
-            return;
-        }
-    }
-
-    cout << "YES" << endl;
+    // current prefix sum
+    ll curr = pref[m];
+//    r1f(i, )
 }
