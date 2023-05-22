@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+using ll = long long;
 
 //Safe lowerbound for 1 second is 10^8 operations
 
@@ -8,13 +9,9 @@ using namespace std;
 #define f1r(a, b, c) for (long long a = b; a < c; a++)
 #define r0f(a, b) for (long long a = b - 1; a >= 0; a--)
 #define r1f(a, b, c) for (long long a = b; a >= c; a--)
-#define isOdd & 1
-#define qpow2(exponent) 1 << exponent
-/* 2^exponent, because every time shifting bit to the leftBound you are essentially multiplying function by two */
 #define pb push_back
 #define f first
 #define s second
-using ll = long long;
 
 #define mp make_pair
 #define t third
@@ -44,89 +41,232 @@ template<typename T,typename ...S>constexpr const inline T& _min(const T& m, con
 #define min(...) _min(__VA_ARGS__)
 
 #define io ios_base::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+void usaco(string filename) {
+    io;
+    freopen((filename + ".in").c_str(), "r", stdin);
+    freopen((filename + ".out").c_str(), "w", stdout);
+}
+
+#include <chrono>
+using namespace std::chrono;
+struct timer {
+    high_resolution_clock::time_point begin;
+
+    timer() {}
+    timer(bool b) {
+        if (b) start();
+    }
+
+    void start() {
+        begin = high_resolution_clock::now();
+    }
+
+    void print() {
+        cout << "Time taken: " << duration_cast<duration<double>>(high_resolution_clock::now() - begin).count() << " seconds" << endl;
+    }
+
+    double report() {
+        return duration_cast<duration<double>>(high_resolution_clock::now() - begin).count();
+    }
+};
+// Start of main put tin, end of main put tpr (tgt gives you value not printed)
+#define tin timer __timer__(1);
+#define tpr __timer__.print();
+#define tgt __timer__.report()
 
 ll q, Q, T, k, l, r, x, y, z;
 int n, m;
 
 void solve();
 
-// Problem:
+// Problem URL:
 int main() {
     io;
-    ll test_cases = 1;
-    cin >> test_cases;
+    long long test_cases = 1;
+//    cin >> test_cases;
 
-    f0r(test_case, test_cases) {
+    for (int i = 0; i < test_cases; i++) {
         solve();
     }
 }
 
+vector<vector<ll>> dp;
+vector<vector<ll>> pref;
+
 void solve() {
-    cin >> n >> m;
-    m--;
-    vector<ll> inp(n);
+    cin >> n >> m >> k;
+    dp = vector<vector<ll>>(n, vector<ll>(m, -1));
+    pref = vector<vector<ll>>(n, vector<ll>(m + 1, 0));
+
+    vector<vector<int>> inp(n, vector<int>(m));
     f0r(i, n) {
-        cin >> inp[i];
+        f0r(j, m) {
+            cin >> inp[i][j];
+            pref[i][j + 1] = pref[i][j] + inp[i][j];
+        }
     }
-    DEBUG(n, m, inp);
-    ll ret = 0;
+
+    f0r(i, n) {
+        DEBUG(pref[i]);
+    }
 
     if (n == 1) {
-        cout << 0 << endl;
+        // handle the one row case separately
+        ll ret = 0;
+        f0r(j, m - (k - 1)) {
+            ll sum = pref[0][j + k] - pref[0][j];
+            ret = max(ret, sum);
+        }
+
+        cout << ret << endl;
         return;
     }
 
-    if (inp[m] > 0 && m > 0) {
-        inp[m] = -inp[m];
-        ret++;
+    // handle first row separately
+    f0r(j, m - k + 1) {
+        dp[0][j] = pref[0][j + k] - pref[0][j]; // sum from first row
+        dp[0][j] += pref[1][j + k] - pref[1][j]; // sum from second row
     }
 
-    vector<ll> pref(n);
-    pref[0] = inp[0];
-    f1r(i, 1, n) {
-        pref[i] = pref[i - 1] + inp[i];
-    }
-    DEBUG(pref);
-
-    // current prefix sum
-    ll curr = pref[m];
-    ll orig = curr;
-
-    // going left
-    priority_queue<ll> pq;
-    r1f(i, m - 1, 0) {
-        while (pref[i] < curr) {
-            // keep flipping pos to negative
-            ll t = pq.top();
-            DEBUG(t);
-            curr -= 2 * t;
-            pq.pop();
-            // don't really need to push a negative number into pq
-//            pq.push(-1 * t);
-            ret++;
+    f1r(i, 1, n - 1) {
+        // create general left and right vectors
+        vector<ll> left(m);
+        left[0] = dp[i - 1][0];
+        f1r(j, 1, m) {
+            left[j] = max(left[j - 1], dp[i - 1][j]);
         }
-        pq.push(inp[i]); // changing this value from pos to neg will affect both curr prefix sum and the mth one, so never try to flip yet
-    }
-    DEBUG("left", ret);
-    curr = orig; // undo the prefix changes since they affect everything going to the right and forward as well
 
-    // going right
-    priority_queue<ll, vector<ll>, greater<ll>> pq_r;
-    ll pref_debt = 0;
-    f1r(i, m + 1, n) {
-        pq_r.push(inp[i]); // changing this value won't affect mth prefix sum, but will affect this one so can try to flip it
-        while (pref[i] + pref_debt < curr) {
-            // keep flipping from neg to positive
-            ll t = pq_r.top();
-            DEBUG(t);
-            pref_debt -= 2 * t;
-            pq_r.pop();
-            DEBUG(pq_r.top());
-            // don't really need to push a positive number into pq
-//            pq_r.push(-1 * t);
-            ret++;
-            DEBUG(pref_debt);
+        vector<ll> right(m);
+        right[m - 1] = dp[i - 1][m - 1];
+        r1f(j, m - 2, 0) {
+            right[j] = max(right[j + 1], dp[i - 1][j]);
         }
+
+        if (i == 1) {
+            DEBUG(left, right);
+        }
+
+        // determine dp[i][j]
+        f0r(j, m - (k - 1)) {
+            ll sum = pref[i][j + k] - pref[i][j] + pref[i + 1][j + k] - pref[i + 1][j]; // 2D sum of starting a new leftmost here
+
+            if (i == 1) {
+                DEBUG(i, j);
+                DEBUG(sum);
+            }
+
+            // there is an instance of no left overlap
+            if (j >= k) {
+                dp[i][j] = sum + left[j - k];
+
+                if (i == 1) {
+                    DEBUG("j >= k", left[j - k], dp[i][j]);
+                }
+            }
+
+            DEBUG("left shift j2");
+            // j2 represents left shift
+            f0r(j2, min(k, j + 1)) {
+                ll overlap = pref[i][j + (k - j2)] - pref[i][j];
+                ll new_sum = dp[i - 1][j - j2] + sum - overlap;
+                if (i == 1) {
+                    DEBUG(j2, overlap, new_sum);
+                }
+                dp[i][j] = max(dp[i][j], new_sum);
+            }
+
+            DEBUG("j2 right shift");
+            // j2 represents right shift
+            f1r(j2, 1, k) {
+                ll overlap = pref[i][j + k] - pref[i][j + j2];
+                ll new_sum = dp[i - 1][j + j2] + sum - overlap;
+                if (i == 1) {
+                    DEBUG(j2, overlap, new_sum);
+                }
+                dp[i][j] = max(dp[i][j], new_sum);
+            }
+
+            if (j < m - k) {
+                dp[i][j] = max(dp[i][j], sum + right[j + k]);
+                if (i == 1) {
+                    DEBUG("j < m - k", right[j + k], dp[i][j]);
+                }
+            }
+        }
+    }
+
+    // handle last row separately
+    {
+        int i = n - 1;
+        // create general left and right vectors
+        vector<ll> left(m);
+        left[0] = dp[i - 1][0];
+        f1r(j, 1, m) {
+            left[j] = max(left[j - 1], dp[i - 1][j]);
+        }
+
+        vector<ll> right(m);
+        right[m - 1] = dp[i - 1][m - 1];
+        r1f(j, m - 2, 0) {
+            right[j] = max(right[j + 1], dp[i - 1][j]);
+        }
+
+        // determine dp[i][j]
+        f0r(j, m - (k - 1)) {
+            ll sum = pref[i][j + k] - pref[i][j]; // 1D sum of starting a new leftmost here
+
+            if (i == 1) {
+                DEBUG(i, j);
+                DEBUG(sum);
+            }
+
+            // there is an instance of no left overlap
+            if (j >= k) {
+                dp[i][j] = sum + left[j - k];
+
+                if (i == 1) {
+                    DEBUG("j >= k", left[j - k], dp[i][j]);
+                }
+            }
+
+            DEBUG("left shift j2");
+            // j2 represents left shift
+            f0r(j2, min(k, j + 1)) {
+                ll overlap = pref[i][j + (k - j2)] - pref[i][j];
+                ll new_sum = dp[i - 1][j - j2] + sum - overlap;
+                if (i == 1) {
+                    DEBUG(j2, overlap, new_sum);
+                }
+                dp[i][j] = max(dp[i][j], new_sum);
+            }
+
+            DEBUG("j2 right shift");
+            // j2 represents right shift
+            f1r(j2, 1, k) {
+                ll overlap = pref[i][j + k] - pref[i][j + j2];
+                ll new_sum = dp[i - 1][j + j2] + sum - overlap;
+                if (i == 1) {
+                    DEBUG(j2, overlap, new_sum);
+                }
+                dp[i][j] = max(dp[i][j], new_sum);
+            }
+
+            if (j < m - k) {
+                dp[i][j] = max(dp[i][j], sum + right[j + k]);
+                if (i == 1) {
+                    DEBUG("j < m - k", right[j + k], dp[i][j]);
+                }
+            }
+        }
+    }
+
+    ll ret = 0;
+    f0r(j, m) {
+        ret = max(ret, dp[n - 1][j]);
+    }
+
+    f0r(i, n) {
+        DEBUG(dp[i]);
     }
 
     cout << ret << endl;
