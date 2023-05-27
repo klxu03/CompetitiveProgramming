@@ -90,6 +90,149 @@ int main() {
     }
 }
 
+class UnweightedGraph {
+public:
+    long long nodes; // # of nodes
+    long long edges; // # of edges
+    bool undirected;
+    vector<vector<ll>> adj; // adjacency neighbor vector
+    vector<long long> visited; // visited nodes
+
+    UnweightedGraph() {}
+
+    void init(long long nodes, long long edges, bool undirected) {
+        this->nodes = nodes;
+        this->edges = edges;
+        this->undirected = undirected;
+        adj = vector<vector<ll>>(nodes);
+        visited = vector<long long>(nodes, false);
+    }
+
+    int get(ll node, ll dist) {
+        visited[node] = true;
+        if (dist == 0) return node;
+
+        for (int neighbor : adj[node]) {
+            if (!visited[neighbor]) return get(neighbor, dist - 1);
+        }
+        return -1;
+    }
+
+    // get node from a starting_node and the node that is dist away
+    int get_node(long long start_node, ll start_dist) {
+        if (start_dist == 0) return start_node;
+        fill(visited.begin(), visited.end(), false);
+
+        return get(start_node, start_dist);
+    }
+};
+
+UnweightedGraph g;
+
 void solve() {
     cin >> n;
+    ll res;
+
+    // handle n == 2 case
+    if (n == 2) {
+        cout << "! 1 2 2 1" << endl;
+        cout.flush();
+        cin >> res;
+        return;
+    }
+
+    cout << "+ " << n + 1 << endl;
+    cout.flush();
+    cin >> res;
+    if (res == -2) return;
+
+    cout << "+ " << n + 2 << endl;
+    cout.flush();
+    cin >> res;
+    if (res == -2) return;
+
+    // let's build the graph now
+    g.init(n, -1, true);
+    int s = 0; // start
+    int t = n - 1; // end
+    f0r(i, n/2) {
+        g.adj[s].pb(t);
+        g.adj[t].pb(s);
+        s++;
+        g.adj[t].pb(s);
+        g.adj[s].pb(t);
+        t--;
+    }
+    DEBUG(g.adj);
+    DEBUG("fix this case at the end with 4 self-loop is n = 6, or some weird behavior possiblye n = 7 or right");
+
+    // go ahead and clear the "other" end point, and then manually set its neighbor
+    if (n % 2 == 0) {
+        g.adj[n/2] = {n/2 - 1};
+    }
+    DEBUG("final", g.adj);
+
+    vector<ll> dist0(n, 0); // distance of every node from 0
+    dist0[0] = 0;
+    pii furthest = {0, 0}; // {distance, node number (0 indexed)}
+
+    // get dist0
+    f1r(i, 1, n) {
+        cout << "? " << 1 << " " << i + 1 << endl;
+        cout.flush();
+        cin >> res;
+        if (res == -2) return;
+        dist0[i] = res;
+
+        if (res > furthest.f) {
+            furthest = {res, i};
+        }
+    }
+    DEBUG(dist0);
+    DEBUG(furthest);
+
+    /* this is actually not important */
+    // figure out which possible node i == 0 is
+    // this is based on max distance from one of the ends
+
+    vector<ll> dist(n, 0);
+    dist[0] = dist0[furthest.s];
+    f1r(i, 1, n) {
+        if (i == furthest.s) continue;
+
+        cout << "? " << furthest.s + 1 << " " << i + 1 << endl;
+        cout.flush();
+        cin >> res;
+        if (res == -2) return;
+        dist[i] = res;
+    }
+    DEBUG(dist);
+
+    // ends (1-indexed) being 1 and n/2 + 1
+    vector<int> ret(n * 2);
+
+    int end = 0;
+    DEBUG(end);
+    // assuming end is 1
+    f0r(i, n) {
+        ret[i] = g.get_node(end, dist[i]) + 1;
+    }
+    DEBUG(ret);
+
+    end = n/2;
+    DEBUG(end);
+    f0r(i, n) {
+        ret[i + n] = g.get_node(end, dist[i]) + 1;
+    }
+    DEBUG(ret);
+
+    cout << "! ";
+    f0r(i, 2 * n) {
+        cout << ret[i] << " ";
+    }
+    cout << endl;
+    cout.flush();
+
+    cin >> res;
+    if (res == -2) return;
 }
