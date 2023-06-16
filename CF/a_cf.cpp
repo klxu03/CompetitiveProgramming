@@ -1,3 +1,4 @@
+// 8:05 am
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -90,42 +91,111 @@ int main() {
     }
 }
 
+class UnweightedGraph {
+public:
+    long long nodes; // # of nodes
+    long long edges; // # of edges
+    bool undirected;
+    vector<vector<long long> > adj; // adjacency neighbor vector
+    vector<long long> visited; // visited nodes
+
+    vector<int> indegree;
+
+    UnweightedGraph() {}
+
+    void init(long long nodes, long long edges, bool undirected) {
+        this->nodes = nodes;
+        this->edges = edges;
+        this->undirected = undirected;
+        adj = vector<vector<long long> >(nodes);
+        visited = vector<long long>(nodes, false);
+
+        indegree = vector<int>(nodes, 0);
+    }
+
+    void init_adj() {
+        f0r(i, edges) {
+            ll n1, n2; // n1 for node1
+            cin >> n1 >> n2;
+            adj[n1 - 1].pb(n2 - 1);
+            if(undirected) {
+                adj[n2 - 1].pb(n1 - 1);
+            }
+        }
+    }
+
+    // note that starting_node is unnecessary since indegree 0
+    // create an indegree vector
+    void toposort() {
+        deque<long long> dq;
+
+        for (int i = 0; i < nodes; i++) {
+            if (indegree[i] == 0) {
+                dq.pb(i);
+            }
+        }
+
+        while(!dq.empty()) {
+            long long current = dq.front();
+            dq.pop_front();
+
+            for (long long neighbor : adj[current]) {
+                indegree[neighbor]--;
+
+                if (indegree[neighbor] == 0) {
+                    dq.push_back(neighbor);
+                }
+            }
+        }
+    }
+};
+
+UnweightedGraph g;
+
 void solve() {
     cin >> n;
-    vector<int> inp(n);
-
-    array<int, 3> loc; // locations of {1, n, 2} in that order
-
+    vector<ll> inp(n);
+    set<int> nums;
     f0r(i, n) {
         cin >> inp[i];
-        if (inp[i] == 1) loc[0] = i + 1;
-        if (inp[i] == n) loc[1] = i + 1;
-        if (inp[i] == 2) loc[2] = i + 1;
+        nums.insert(inp[i]);
     }
 
-    // if 9 is to the right of 1 and 2
-    if (loc[1] > loc[0] && loc[1] > loc[2]) {
-        // swap 9 with whichever one is to the right
-        if (loc[0] > loc[2]) {
-            cout << loc[0] << " " << loc[1] << endl;
-        } else {
-            cout << loc[2] << " " << loc[1] << endl;
+    g.init(n, 0, false);
+
+    f0r(i, n) {
+        if (inp[i] < 0) {
+            cout << inp[i] << endl;
+            return;
         }
-
-        return;
     }
 
-    // if 9 is to the left of 1 and 2
-    if (loc[1] < loc[0] && loc[1] < loc[2]) {
-        if (loc[0] < loc[2]) {
-            cout << loc[0] << " " << loc[1] << endl;
-        } else {
-            cout << loc[2] << " " << loc[1] << endl;
+    // case of no negative numbers
+
+    sort(inp.begin(), inp.end(), greater<long long>());
+    cout << inp[0] << endl;
+
+    /*
+    // assume i and j is one of the original starting ones
+    f0r(i, n) {
+        f0r(j, n) {
+            if (i == j) {
+                continue;
+            }
+
+            ll diff = inp[i] - inp[j];
+            if (diff < 0) diff *= -1;
+
+            f0r(k, n) {
+                if (k == i || k == j) continue;
+
+                if (diff == k) {
+                    // create an adj connecting i and j to k. then you can toposort it
+                    g.adj[i].pb(k);
+                    g.adj[j].pb(k);
+                }
+            }
         }
-
-        return;
     }
-
-    // if 9 is in the middle of 1 and 2
-    cout << loc[0] << " " << loc[2] << endl;
+    */
 }

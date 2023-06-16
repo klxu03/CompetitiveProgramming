@@ -42,7 +42,7 @@ add_executable(CompetitiveProgramming
         CF/2000+/flip-cards.cpp
         CF/div2.E/726.1.cpp
         CF/brute.cpp
-        CF/cf.cpp
+        CF/a_cf.cpp
         CF/pacmen.cpp
         CF/template.cpp
         CF/test.cpp
@@ -185,4 +185,4 @@ add_executable(CompetitiveProgramming
         USACO/Silver/S-wormsort.cpp
         USACO/Silver/usaco_jan_22_a.cpp
         USACO/usaco.cpp
-        "USACO Retype.cpp")
+        "USACO Retype.cpp" CF/cf.cpp CF/b_cf.cpp)

@@ -1,3 +1,5 @@
+// 8:32
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -90,42 +92,65 @@ int main() {
     }
 }
 
+vector<int> inp;
+
 void solve() {
     cin >> n;
-    vector<int> inp(n);
 
-    array<int, 3> loc; // locations of {1, n, 2} in that order
+    inp = vector<int>(n);
 
+    int loc_1 = -1; // location of 1
+    int loc_2 = -1;
     f0r(i, n) {
         cin >> inp[i];
-        if (inp[i] == 1) loc[0] = i + 1;
-        if (inp[i] == n) loc[1] = i + 1;
-        if (inp[i] == 2) loc[2] = i + 1;
+
+        if (inp[i] == 1) loc_1 = i;
+        if (inp[i] == 2) loc_2 = i;
     }
 
-    // if 9 is to the right of 1 and 2
-    if (loc[1] > loc[0] && loc[1] > loc[2]) {
-        // swap 9 with whichever one is to the right
-        if (loc[0] > loc[2]) {
-            cout << loc[0] << " " << loc[1] << endl;
-        } else {
-            cout << loc[2] << " " << loc[1] << endl;
-        }
-
+    // 1 is already on edge
+    if (loc_1 == 0) {
+        cout << loc_2 + 1 << " " << n << endl;
         return;
     }
 
-    // if 9 is to the left of 1 and 2
-    if (loc[1] < loc[0] && loc[1] < loc[2]) {
-        if (loc[0] < loc[2]) {
-            cout << loc[0] << " " << loc[1] << endl;
-        } else {
-            cout << loc[2] << " " << loc[1] << endl;
-        }
-
+    if (loc_1 == n - 1) {
+        cout << loc_2 + 1 << " " << 0 << endl;
         return;
     }
 
-    // if 9 is in the middle of 1 and 2
-    cout << loc[0] << " " << loc[2] << endl;
+    // 2 is already on edge
+    if (loc_2 == 0) {
+        cout << loc_1 + 1 << " " << n << endl;
+        return;
+    }
+
+    if (loc_2 == n - 1) {
+        cout << loc_1 + 1 << " " << 0 << endl;
+        return;
+    }
+
+    array<int, 3> ret = {-1, -1, -1}; // distance, i and j swap
+    // we send 1 to one of the edges
+    // send 1 to the left edge
+    if (loc_2 > ret[0]) {
+        ret = {loc_2, loc_1 + 1, 1};
+    }
+
+    // 1 to right
+    if (n - 1 - loc_2 > ret[0]) {
+        ret = {n - 1 - loc_2, loc_1 + 1, n};
+    }
+
+    // 2 to left
+    if (loc_1 > ret[0]) {
+        ret = {loc_1, loc_2 + 1, 1};
+    }
+
+    // 2 to right
+    if (n - 1 - loc_1 > ret[0]) {
+        ret = {n - 1 - loc_1, loc_2 + 1, n};
+    }
+
+    cout << ret[1] << " " << ret[2] << endl;
 }
