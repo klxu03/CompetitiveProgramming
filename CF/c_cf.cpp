@@ -91,5 +91,29 @@ int main() {
 }
 
 void solve() {
-    cin >> n;
+    cin >> n >> m;
+
+    if (n == 4) {
+        f1r(start, 1, 5) {
+            for (int i = 0; i * 4 + start <= n * m; i++) {
+                cout << i * 4 + start << " ";
+            }
+            cout << endl;
+        }
+        return;
+    }
+
+    for (int i = 0; i < n; i += 2) {
+        f1r(j, 1, m + 1) {
+            cout << i * m + j << " ";
+        }
+        cout << endl;
+    }
+
+    for (int i = 1; i < n; i += 2) {
+        f1r(j, 1, m + 1) {
+            cout << i * m + j << " ";
+        }
+        cout << endl;
+    }
 }
