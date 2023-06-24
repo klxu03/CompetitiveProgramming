@@ -75,7 +75,7 @@ struct timer {
 #define tgt __timer__.report()
 
 ll q, Q, T, k, l, r, x, y, z;
-int n, m;
+ll n, m;
 
 void solve();
 
