@@ -75,7 +75,7 @@ struct timer {
 #define tgt __timer__.report()
 
 ll q, Q, T, k, l, r, x, y, z;
-int n, m;
+ll n, m;
 
 void solve();
 
@@ -90,6 +90,45 @@ int main() {
     }
 }
 
+class UnweightedGraph {
+public:
+    long long nodes; // # of nodes
+    long long edges; // # of edges
+    bool undirected;
+    vector<vector<long long> > adj; // adjacency neighbor vector
+    vector<long long> visited; // visited nodes
+
+    UnweightedGraph() {}
+
+    void init(long long nodes, long long edges, bool undirected) {
+        this->nodes = nodes;
+        this->edges = edges;
+        this->undirected = undirected;
+        adj = vector<vector<long long> >(nodes);
+        visited = vector<long long>(nodes, false);
+    }
+
+    void init_adj() {
+        f0r(i, edges) {
+            ll n1, n2; // n1 for node1
+            cin >> n1 >> n2;
+            adj[n1 - 1].pb(n2 - 1);
+            if(undirected) {
+                adj[n2 - 1].pb(n1 - 1);
+            }
+        }
+    }
+};
+
 void solve() {
     cin >> n;
+
+    f0r(i, n) {
+        char inp_c;
+        cin >> inp_c;
+
+        if (inp_c == '+') {
+
+        }
+    }
 }
