@@ -90,6 +90,62 @@ int main() {
     }
 }
 
+vector<vector<int>> v;
+vector<vector<bool>> visited;
+
+bool valid(int y, int x) {
+    return y >= 0 && y < n && x >= 0 && x < m;
+}
+
+int floodfill(int y, int x) {
+    int sum = 0;
+    deque<pii> dq;
+    dq.pb({y, x});
+    visited[y][x] = true;
+
+    vector<int> dy = {-1, 1, 0, 0};
+    vector<int> dx = {0, 0, -1, 1};
+
+    while (!dq.empty()) {
+        pii curr = dq.front();
+        dq.pop_front();
+
+        sum += v[curr.f][curr.s];
+
+        f0r(i, 4) {
+            int new_y = curr.f + dy[i];
+            int new_x = curr.s + dx[i];
+
+            if (valid(new_y, new_x) && v[new_y][new_x] > 0 && !visited[new_y][new_x]) {
+                visited[new_y][new_x] = true;
+                dq.pb({new_y, new_x});
+            }
+        }
+    }
+
+    return sum;
+}
+
 void solve() {
-    cin >> n;
+    cin >> n >> m;
+
+    v = vector<vector<int>>(n, vector<int>(m));
+    visited = vector<vector<bool>>(n, vector<bool>(m, false));
+
+    f0r(i, n) {
+        f0r(j, m) {
+            cin >> v[i][j];
+        }
+    }
+
+    int ret = 0;
+    f0r(i, n) {
+        f0r(j, m) {
+            if (!visited[i][j] && v[i][j] != 0) {
+                ret = max(ret, floodfill(i, j));
+            }
+        }
+    }
+
+    cout << ret << endl;
 }
