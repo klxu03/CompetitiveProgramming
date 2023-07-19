@@ -83,69 +83,60 @@ void solve();
 int main() {
     io;
     long long test_cases = 1;
-    cin >> test_cases;
+//    cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
         solve();
     }
 }
 
-vector<vector<int>> v;
-vector<vector<bool>> visited;
-
-bool valid(int y, int x) {
-    return y >= 0 && y < n && x >= 0 && x < m;
-}
-
-int floodfill(int y, int x) {
-    int sum = 0;
-    deque<pii> dq;
-    dq.pb({y, x});
-    visited[y][x] = true;
-
-    vector<int> dy = {-1, 1, 0, 0};
-    vector<int> dx = {0, 0, -1, 1};
-
-    while (!dq.empty()) {
-        pii curr = dq.front();
-        dq.pop_front();
-
-        sum += v[curr.f][curr.s];
-
-        f0r(i, 4) {
-            int new_y = curr.f + dy[i];
-            int new_x = curr.s + dx[i];
-
-            if (valid(new_y, new_x) && v[new_y][new_x] > 0 && !visited[new_y][new_x]) {
-                visited[new_y][new_x] = true;
-                dq.pb({new_y, new_x});
-            }
-        }
-    }
-
-    return sum;
-}
+const ll MOD = 1e9 + 7;
 
 void solve() {
-    cin >> n >> m;
+    cin >> n;
+    cin >> m;
 
-    v = vector<vector<int>>(n, vector<int>(m));
-    visited = vector<vector<bool>>(n, vector<bool>(m, false));
-
+    vector<int> inp(n);
+    vector<int> num_balls(n);
+    vector<int> loc; // loc[1] gives me location of the 2nd ball
     f0r(i, n) {
-        f0r(j, m) {
-            cin >> v[i][j];
+        cin >> inp[i];
+        if (inp[i] == 1) {
+            loc.pb(i);
         }
+        num_balls[i] = loc.size();
     }
 
-    int ret = 0;
-    f0r(i, n) {
-        f0r(j, m) {
-            if (!visited[i][j] && v[i][j] != 0) {
-                ret = max(ret, floodfill(i, j));
+    vector<vector<vector<ll>>> dp(2, vector<vector<ll>>(loc.size() + 1, vector<ll>(m + 1)));
+    dp[0][0][0] = 1;
+    for (int i = 1; i < n + 1; i++) {
+        // first i positions
+        for (int j = max(0, num_balls[i - 1] - 70); j < min(i + 1, num_balls[i - 1] + 70, (int) loc.size() + 1); j++) {
+            f0r(k, m + 1) {
+                dp[i % 2][j][k] = dp[(i + 1) % 2][j][k];
+
+                // i, j - 1, k - cost
+                if (j > 0) {
+                    int cost = abs(loc[j - 1] - i + 1); // 1-indexing because i being 1-indexed
+                    if (k - cost >= 0) {
+                        dp[(i % 2)][j][k] += dp[(i + 1) % 2][j - 1][k - cost];
+                    }
+                }
+
+                dp[i % 2][j][k] %= MOD;
             }
         }
+//        DEBUG(dp[i % 2]);
     }
 
-    cout << ret << endl;
+    ll sum = 0;
+    for (int k = 0; k < m + 1; k++) {
+        if (k % 2 != m % 2) continue;
+
+        sum += dp[n % 2][loc.size()][k];
+    }
+
+    sum %= MOD;
+
+    cout << sum << endl;
 }
