@@ -83,7 +83,7 @@ void solve();
 int main() {
     io;
     long long test_cases = 1;
-    cin >> test_cases;
+//    cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
         solve();
@@ -91,5 +91,88 @@ int main() {
 }
 
 void solve() {
-    cin >> n;
+    int w;
+    cin >> n >> w;
+    vector<vector<int>> inp(n);
+
+    f0r(i, n) {
+        ll size;
+        cin >> size;
+        f0r(j, size) {
+            cin >> x;
+            inp[i].pb(x);
+        }
+    }
+
+    vector<ll> pref(w + 1);
+    const int half_w = w/2;
+    // update just point j, of length x, then add to j and subtract again to j + x
+    f0r(i, n) {
+        if (inp[i].size() == w) {
+            f0r(j, w) {
+                pref[j] += inp[i][j];
+                pref[j + 1] -= inp[i][j];
+            }
+        } else if (inp[i].size() > half_w) {
+            int size = w - inp[i].size() + 1;
+            multiset<int> ms;
+            vector<ll> best(w);
+
+            // left to right, building up the sliding window
+            f0r(j, size) {
+                ms.insert(inp[i][j]);
+                best[j] = *(--ms.end());
+                best[j] = max(best[j], (ll) 0);
+            }
+
+            // maintaining sliding window size for center
+            f1r(j, size, inp[i].size()) {
+                ms.insert(inp[i][j]);
+                ms.erase(ms.find(inp[i][j - size]));
+                best[j] = *(--ms.end());
+            }
+
+            // decreasing sliding window size as very right
+            f1r(j, inp[i].size(), w) {
+                ms.erase(ms.find(inp[i][j - size]));
+                best[j] = *(--ms.end());
+                best[j] = max(best[j], (ll) 0);
+            }
+
+            f0r(j, w) {
+                // ensure that everything is at least 0
+                pref[j] += best[j];
+                pref[j + 1] -= best[j];
+            }
+        } else {
+            ll best = 0;
+            // left
+            f0r(j, inp[i].size() - 1) {
+                best = max(best, (ll) inp[i][j]);
+                pref[j] += best;
+                pref[j + 1] -= best;
+            }
+            best = max(best, (ll) inp[i][inp[i].size() - 1]);
+
+            // center
+            pref[inp[i].size() - 1] += best;
+            pref[w - inp[i].size() + 1] -= best;
+
+            // right
+            best = 0;
+            for (int j = inp[i].size() - 1; j > 0; j--) {
+                best = max(best, (ll) inp[i][j]);
+                int ind = w - ((inp[i].size() - 1) - j) - 1;
+                pref[ind] += best;
+                pref[ind + 1] -= best;
+            }
+        }
+    }
+
+    ll sum = 0;
+    f0r(i, w) {
+        sum += pref[i];
+        cout << sum << " ";
+    }
+    cout << endl;
 }
