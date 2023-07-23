@@ -108,13 +108,9 @@ void solve() {
     const int half_w = w/2;
     // update just point j, of length x, then add to j and subtract again to j + x
     f0r(i, n) {
-        if (inp[i].size() == w) {
-            f0r(j, w) {
-                pref[j] += inp[i][j];
-                pref[j + 1] -= inp[i][j];
-            }
-        } else if (inp[i].size() > half_w) {
-            int size = w - inp[i].size() + 1;
+        if (inp[i].size() > half_w) {
+            int size = w - inp[i].size();
+            DEBUG(size);
             multiset<int> ms;
             vector<ll> best(w);
 
@@ -124,20 +120,27 @@ void solve() {
                 best[j] = *(--ms.end());
                 best[j] = max(best[j], (ll) 0);
             }
+            DEBUG(best);
 
             // maintaining sliding window size for center
             f1r(j, size, inp[i].size()) {
                 ms.insert(inp[i][j]);
-                ms.erase(ms.find(inp[i][j - size]));
                 best[j] = *(--ms.end());
+                ms.erase(ms.find(inp[i][j - size]));
             }
+            DEBUG(best);
+            DEBUG(ms);
 
+            DEBUG(inp[i].size(), w);
             // decreasing sliding window size as very right
             f1r(j, inp[i].size(), w) {
-                ms.erase(ms.find(inp[i][j - size]));
+                DEBUG(j);
+                DEBUG(inp[i][j - size]);
                 best[j] = *(--ms.end());
+                ms.erase(ms.find(inp[i][j - size]));
                 best[j] = max(best[j], (ll) 0);
             }
+            DEBUG(best);
 
             f0r(j, w) {
                 // ensure that everything is at least 0
