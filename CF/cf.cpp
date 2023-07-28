@@ -83,7 +83,7 @@ void solve();
 int main() {
     io;
     long long test_cases = 1;
-     cin >> test_cases;
+//    cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
         solve();
@@ -92,4 +92,76 @@ int main() {
 
 void solve() {
     cin >> n;
+    vector<int> inp(n);
+    vector<bool> visited(n, false);
+
+    f0r(i, n) {
+        cin >> inp[i];
+    }
+
+    int counter = 0;
+    // step 1
+    if (inp[0] >= 1) inp[0] = 2;
+    if (inp[n - 1] >= 1) inp[n - 1] = 2;
+
+    // step 2
+    vector<int> twos;
+    f0r(i, n) {
+        if (inp[i] == 2) twos.pb(i);
+    }
+
+    for (int two : twos) {
+        if (visited[two]) continue;
+
+        counter++;
+        visited[two] = true;
+
+        // first backwards
+        for (int i = two - 1; i >= 0; i--) {
+            visited[i] = true;
+
+            if (inp[i] == 0) {
+                break;
+            }
+        }
+
+        // then forwards
+        f1r(i, two + 1, n) {
+            visited[i] = true;
+
+            if (inp[i] == 0) break;
+        }
+    }
+
+    // step 3
+    f1r(i, 1, n) {
+        if (visited[i]) continue;
+
+        if (inp[i] == 1) {
+            counter++;
+            if (visited[i - 1] == false) {
+                visited[i - 1] = true;
+                f1r(j, i, n) {
+                    if (inp[j] > 0) {
+                        visited[j] = true;
+                    } else {
+                        break;
+                    }
+                }
+            } else {
+                f1r(j, i, n) {
+                    visited[j] = true;
+
+                    if (inp[j] == 0) break;
+                }
+            }
+        }
+    }
+
+    // stpe 4
+    f0r(i, n) {
+        if (!visited[i]) counter++;
+    }
+
+    cout << counter << endl;
 }
