@@ -90,78 +90,129 @@ int main() {
     }
 }
 
+vector<int> inp;
+
+// INT_MAX means that there is no next_greater, pretty fucked
+vector<int> next_greater; // functions similar to a map, next_greater[5] == 4 means the next value (value to left) of the value 5 is index 4, which may have a value of say 8 for example
+vector<int> next_smaller;
+// -1 means there is no prev_greater
+vector<int> prev_greater;
+vector<int> prev_smaller;
+
+// left and right bound inclusive for answer range
+ll divide(int l, int r) {
+    if (l == r) {
+        DEBUG(l, r, "ret 0");
+        return 0;
+    }
+
+    int midd = (l + r)/2;
+    ll left = divide(l, midd);
+    ll right = divide(midd + 1, r);
+    DEBUG(l, midd, r);
+
+    // calculate merge
+    // min is on the left, max can be on left or right
+    ll merge = 0;
+    pii mi = {INT_MAX, -1}; // running min
+    pii ma = {-1, -1}; // running max
+    for (int i = midd; i >= l; i--) {
+        mi = min(mi, {inp[i], i});
+        ma = max(ma, {inp[i], i});
+
+        DEBUG(mi, next_smaller[mi.f]);
+        DEBUG(ma, next_greater[ma.f]);
+
+        // hi is on the left, already proper
+        if (mi.s < ma.s) {
+            merge += min(next_smaller[mi.f], r + 1) - (midd + 1);
+        } else {
+            merge += max(0, min(next_smaller[mi.f], r + 1) - next_greater[ma.f]);
+        }
+    }
+    DEBUG(merge);
+
+    // Merge case when mid | [lo hi]
+    // [2] | [1 4]
+    mi = {inp[midd + 1], midd + 1};
+    ma = {inp[midd + 1], midd + 1};
+    for (int i = midd + 2; i <= r; i++) {
+        mi = min(mi, {inp[i], i});
+        ma = max(ma, {inp[i], i});
+
+        // min is to the right of max
+        if (mi.s > ma.s) continue;
+
+        DEBUG(mi, prev_smaller[mi.f]);
+        DEBUG(ma, prev_greater[ma.f]);
+
+        // inclusive mid, exclusive minus
+        merge += midd - max(prev_greater[ma.f], prev_smaller[mi.f], l - 1);
+    }
+
+    DEBUG(l, midd, r, left, right, merge);
+    return left + right + merge;
+}
+
 void solve() {
     cin >> n;
-    vector<int> inp(n);
-    vector<bool> visited(n, false);
+    inp = vector<int>(n);
+    next_greater = vector<int>(n + 1); // + 1 since 1-index the map
+    prev_greater = vector<int>(n + 1); // + 1 since 1-index the map
+    next_smaller = vector<int>(n + 1); // + 1 since 1-index the map
+    prev_smaller = vector<int>(n + 1); // + 1 since 1-index the map
+
+    ll arr[n];
 
     f0r(i, n) {
         cin >> inp[i];
+        arr[i] = inp[i];
     }
 
-    int counter = 0;
-    // step 1
-    if (inp[0] >= 1) inp[0] = 2;
-    if (inp[n - 1] >= 1) inp[n - 1] = 2;
-
-    // step 2
-    vector<int> twos;
-    f0r(i, n) {
-        if (inp[i] == 2) twos.pb(i);
-    }
-
-    for (int two : twos) {
-        if (visited[two]) continue;
-
-        counter++;
-        visited[two] = true;
-
-        // first backwards
-        for (int i = two - 1; i >= 0; i--) {
-            visited[i] = true;
-
-            if (inp[i] == 0) {
+    // monotonic stack for next_greater
+    deque<pii> dq; // {val, ind}
+    for (int i = n - 1; i >= 0; i--) {
+        while (!dq.empty()) {
+            pii front = dq.front();
+            if (inp[i] < front.f) {
+                next_greater[inp[i]] = front.s;
                 break;
             }
+            dq.pop_front();
         }
 
-        // then forwards
-        f1r(i, two + 1, n) {
-            visited[i] = true;
-
-            if (inp[i] == 0) break;
+        if (dq.empty()) {
+            next_greater[inp[i]] = INT_MAX;
         }
+
+        dq.push_front({inp[i], i});
     }
+    DEBUG(next_greater);
 
-    // step 3
-    f1r(i, 1, n) {
-        if (visited[i]) continue;
-
-        if (inp[i] == 1) {
-            counter++;
-            if (visited[i - 1] == false) {
-                visited[i - 1] = true;
-                f1r(j, i, n) {
-                    if (inp[j] > 0) {
-                        visited[j] = true;
-                    } else {
-                        break;
-                    }
-                }
-            } else {
-                f1r(j, i, n) {
-                    visited[j] = true;
-
-                    if (inp[j] == 0) break;
-                }
-            }
-        }
+    // next_smaller
+    dq.clear();
+    for (int i = n - 1; i >= 0; i--) {
+        while (!dq.empty() && dq.front().f > inp[i]) dq.pop_front();
+        next_smaller[inp[i]] = dq.empty() ? INT_MAX : dq.front().s;
+        dq.push_front({inp[i], i});
     }
+    DEBUG(next_smaller);
 
-    // stpe 4
+    // prev_greater
+    dq.clear();
     f0r(i, n) {
-        if (!visited[i]) counter++;
+        while (!dq.empty() && dq.front().f < inp[i]) dq.pop_front();
+        prev_greater[inp[i]] = dq.empty() ? -1 : dq.front().s;
+        dq.push_front({inp[i], i});
     }
 
-    cout << counter << endl;
+    // prev_smaller
+    dq.clear();
+    f0r(i, n) {
+        while (!dq.empty() && dq.front().f > inp[i]) dq.pop_front();
+        prev_smaller[inp[i]] = dq.empty() ? -1 : dq.front().s;
+        dq.push_front({inp[i], i});
+    }
+
+    cout << divide(0, n - 1) << endl;
 }

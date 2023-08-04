@@ -75,7 +75,7 @@ struct timer {
 #define tgt __timer__.report()
 
 ll q, Q, T, k, l, r, x, y, z;
-int n, m;
+ll n, m;
 
 void solve();
 
@@ -83,7 +83,7 @@ void solve();
 int main() {
     io;
     long long test_cases = 1;
-    cin >> test_cases;
+//    cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
         solve();
@@ -91,29 +91,31 @@ int main() {
 }
 
 void solve() {
-    cin >> n >> m;
+    cin >> n;
+    vector<int> inp(n);
 
-    if (n == 4) {
-        f1r(start, 1, 5) {
-            for (int i = 0; i * 4 + start <= n * m; i++) {
-                cout << i * 4 + start << " ";
+    f0r(i, n) {
+        cin >> inp[i];
+    }
+
+    int ctr = 0;
+    // manual
+    f0r(i, n) {
+        f1r(j, i + 1, n) {
+            pii mi = {INT_MAX, -1};
+            pii ma = {-1, -1};
+
+            for (int k = i; k <= j; k++) {
+                mi = min(mi, {inp[k], k});
+                ma = max(ma, {inp[k], k});
             }
-            cout << endl;
+
+            if (mi.s < ma.s) {
+                ctr++;
+                DEBUG(i, j);
+            }
         }
-        return;
     }
 
-    for (int i = 0; i < n; i += 2) {
-        f1r(j, 1, m + 1) {
-            cout << i * m + j << " ";
-        }
-        cout << endl;
-    }
-
-    for (int i = 1; i < n; i += 2) {
-        f1r(j, 1, m + 1) {
-            cout << i * m + j << " ";
-        }
-        cout << endl;
-    }
+    cout << ctr << endl;
 }
