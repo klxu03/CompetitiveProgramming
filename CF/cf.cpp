@@ -76,6 +76,7 @@ struct timer {
 
 ll q, Q, T, k, l, r, x, y, z;
 ll n, m;
+ll s;
 
 void solve();
 
@@ -90,6 +91,79 @@ int main() {
     }
 }
 
+ll calc_accum(ll start, ll num_accum) {
+    if (num_accum == 0) {
+        return start;
+    }
+
+    if (start % 10 == 0) {
+        return start;
+    }
+
+    if (start % 5 == 0) {
+        return start + 5;
+    }
+
+    if ((start % 10) % 2 == 1) {
+        return calc_accum(start + (start % 10), num_accum - 1);
+    }
+
+    // we have enterred the cycle
+    ll cycles = num_accum / 4;
+//    DEBUG(start, cycles, num_accum);
+
+    for (int i = 0; i < num_accum % 4; i++) {
+        start += (start % 10);
+    }
+
+    return start + ((ll) 20) * cycles;
+}
+
+ll calc(ll start, ll num_accum, ll num_cash) {
+    if (num_accum < 0 || num_cash < 0) {
+        return -1e9;
+    }
+
+    DEBUG(calc_accum(start, num_accum), num_cash);
+    return calc_accum(start, num_accum) * num_cash;
+}
+
 void solve() {
-    cin >> n;
+    cin >> s >> k;
+    DEBUG(s, k);
+
+    ll l = 0;
+    ll r = k;
+    DEBUG(l, r);
+
+    while (l < r) {
+        ll mid = l + (r - l)/2;
+
+        // deriv = f(mid + 4) - f(mid)
+        // if (deriv > 0) means going right is going up, thus l = mid
+
+        ll deriv_4 = calc(s, mid + 4, k - mid - 4);
+        ll deriv = calc(s, mid, k - mid);
+        DEBUG(l, mid, r);
+        DEBUG(deriv_4 - deriv);
+        DEBUG(calc_accum(s, mid));
+
+        if (deriv_4 - deriv > 0) {
+            l = mid + 1;
+        } else {
+            r = mid;
+        }
+    }
+
+    DEBUG(l);
+    ll ans = 0;
+    for (int i = l - 50; i < l + 50; i++) {
+        ans = max(ans, calc(s, i, k - i));
+    }
+
+    for (int i = 0; i <= 100; i++) {
+        ans = max(ans, calc(s, i, k - i));
+    }
+
+    cout << ans << "\n";
 }
