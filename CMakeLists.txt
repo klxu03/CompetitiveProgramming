@@ -185,4 +185,4 @@ add_executable(CompetitiveProgramming
         USACO/Silver/S-wormsort.cpp
         USACO/Silver/usaco_jan_22_a.cpp
         USACO/usaco.cpp
-        "USACO Retype.cpp" CF/cf.cpp CF/b_cf.cpp CF/c_cf.cpp CF/c_cf.cpp)
+        "USACO Retype.cpp" CF/cf.cpp CF/b_cf.cpp CF/c_cf.cpp CF/c_cf.cpp CF/e_cf.cpp)

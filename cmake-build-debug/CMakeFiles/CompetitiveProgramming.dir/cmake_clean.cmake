@@ -83,6 +83,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/CompetitiveProgramming.dir/CF/cf.cpp.o.d"
   "CMakeFiles/CompetitiveProgramming.dir/CF/div2.E/726.1.cpp.o"
   "CMakeFiles/CompetitiveProgramming.dir/CF/div2.E/726.1.cpp.o.d"
+  "CMakeFiles/CompetitiveProgramming.dir/CF/e_cf.cpp.o"
+  "CMakeFiles/CompetitiveProgramming.dir/CF/e_cf.cpp.o.d"
   "CMakeFiles/CompetitiveProgramming.dir/CF/pacmen.cpp.o"
   "CMakeFiles/CompetitiveProgramming.dir/CF/pacmen.cpp.o.d"
   "CMakeFiles/CompetitiveProgramming.dir/CF/template.cpp.o"

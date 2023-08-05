@@ -1137,6 +1137,30 @@ CF/div2.E/726.1.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/CF/div2.E/726.1.cpp.s
 .PHONY : CF/div2.E/726.1.cpp.s
 
+CF/e_cf.o: CF/e_cf.cpp.o
+.PHONY : CF/e_cf.o
+
+# target to build an object file
+CF/e_cf.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/CF/e_cf.cpp.o
+.PHONY : CF/e_cf.cpp.o
+
+CF/e_cf.i: CF/e_cf.cpp.i
+.PHONY : CF/e_cf.i
+
+# target to preprocess a source file
+CF/e_cf.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/CF/e_cf.cpp.i
+.PHONY : CF/e_cf.cpp.i
+
+CF/e_cf.s: CF/e_cf.cpp.s
+.PHONY : CF/e_cf.s
+
+# target to generate assembly for a file
+CF/e_cf.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/CF/e_cf.cpp.s
+.PHONY : CF/e_cf.cpp.s
+
 CF/pacmen.o: CF/pacmen.cpp.o
 .PHONY : CF/pacmen.o
 
@@ -4632,6 +4656,9 @@ help:
 	@echo "... CF/div2.E/726.1.o"
 	@echo "... CF/div2.E/726.1.i"
 	@echo "... CF/div2.E/726.1.s"
+	@echo "... CF/e_cf.o"
+	@echo "... CF/e_cf.i"
+	@echo "... CF/e_cf.s"
 	@echo "... CF/pacmen.o"
 	@echo "... CF/pacmen.i"
 	@echo "... CF/pacmen.s"
