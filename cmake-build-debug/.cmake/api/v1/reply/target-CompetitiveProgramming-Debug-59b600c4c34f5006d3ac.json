@@ -457,13 +457,6 @@
 				110,
 				111
 			]
-		},
-		{
-			"name" : "Header Files",
-			"sourceIndexes" : 
-			[
-				186
-			]
 		}
 	],
 	"sources" : 
@@ -1580,11 +1573,6 @@
 			"compileGroupIndex" : 0,
 			"path" : "CF/e_cf.cpp",
 			"sourceGroupIndex" : 0
-		},
-		{
-			"backtrace" : 1,
-			"path" : "CF/e_cf.h",
-			"sourceGroupIndex" : 2
 		}
 	],
 	"type" : "EXECUTABLE"

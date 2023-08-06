@@ -211,9 +211,6 @@
 		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/e_cf.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/e_cf.h">
-			<Option target="CompetitiveProgramming"/>
-		</Unit>
 		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/pacmen.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
