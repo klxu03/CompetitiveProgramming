@@ -90,6 +90,30 @@ int main() {
     }
 }
 
+class UnweightedGraph {
+public:
+    long long nodes; // # of nodes
+    vector<vector<long long> > adj; // adjacency neighbor vector
+    vector<long long> visited; // visited nodes
+
+    UnweightedGraph() {}
+
+    void init(long long nodes) {
+        this->nodes = nodes;
+        adj = vector<vector<long long> >(nodes);
+        visited = vector<long long>(nodes, false);
+    }
+};
+
+UnweightedGraph g;
+
 void solve() {
     cin >> n;
+    g.init(n);
+
+    f0r(i, n - 1) {
+        int x;
+        cin >> x; x--;
+        g.adj[x].pb(i + 1);
+    }
 }
