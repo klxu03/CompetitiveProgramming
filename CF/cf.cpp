@@ -8,7 +8,7 @@ using ll = long long;
 #define f0r(a, b) for (long long a = 0; a < b; a++)
 #define f1r(a, b, c) for (long long a = b; a < c; a++)
 #define r0f(a, b) for (long long a = b - 1; a >= 0; a--)
-#define r1f(a, b, c) for (long long a = b; a >= c; a--)
+#define r1f(a, b, c) for (long long a = c - 1; a >= b; a--)
 #define pb push_back
 #define f first
 #define s second
@@ -74,8 +74,11 @@ struct timer {
 #define tpr __timer__.print();
 #define tgt __timer__.report()
 
+mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count());
+// rng() gives a better random unsigned 32 bit number
+
 ll q, Q, T, k, l, r, x, y, z;
-ll n, m;
+int n, m;
 
 void solve();
 
@@ -90,30 +93,6 @@ int main() {
     }
 }
 
-class UnweightedGraph {
-public:
-    long long nodes; // # of nodes
-    vector<vector<long long> > adj; // adjacency neighbor vector
-    vector<long long> visited; // visited nodes
-
-    UnweightedGraph() {}
-
-    void init(long long nodes) {
-        this->nodes = nodes;
-        adj = vector<vector<long long> >(nodes);
-        visited = vector<long long>(nodes, false);
-    }
-};
-
-UnweightedGraph g;
-
 void solve() {
     cin >> n;
-    g.init(n);
-
-    f0r(i, n - 1) {
-        int x;
-        cin >> x; x--;
-        g.adj[x].pb(i + 1);
-    }
 }
