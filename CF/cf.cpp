@@ -94,5 +94,10 @@ int main() {
 }
 
 void solve() {
-    cin >> n;
+    cin >> n >> k;
+    vector<ll> inp(n);
+
+    f0r(i, n) {
+        cin >> inp[i];
+    }
 }
