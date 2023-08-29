@@ -86,84 +86,28 @@ void solve();
 int main() {
     io;
     long long test_cases = 1;
-//    cin >> test_cases;
+    cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
         solve();
     }
 }
 
-int second_max;
-int curr;
-
-void handle_left() {
-    int l = 1;
-    int r = second_max - 1;
-
-    while (l < r) {
-        int mid = l + (r - l)/2;
-
-        cout << "? " << mid << " " << second_max << endl;
-        cin >> curr;
-
-        if (curr != second_max) {
-            r = mid;
-        } else {
-            l = mid + 1;
-        }
-    }
-
-    cout << "? " << l << " " << second_max << endl;
-    cin >> curr;
-    if (curr != second_max) l--; //overshot one, added too much
-
-    cout << "! " << l << endl;
-}
-
-void handle_right() {
-    int l = second_max + 1;
-    int r = n;
-    DEBUG(l, r);
-
-    while (l < r) {
-        int mid = l + (r - l + 1)/2;
-        DEBUG(mid);
-
-        cout << "? " << second_max << " " << mid << endl;
-        cin >> curr;
-
-        if (curr == second_max) {
-            r = mid - 1;
-        } else {
-            l = mid;
-        }
-    }
-
-    cout << "? " << second_max << " " << l << endl;
-    cin >> curr;
-    if (curr != second_max) l++; // overshot one, subtracted too much
-
-    cout << "! " << l << endl;
-}
-
 void solve() {
-    cin >> n;
-    cout << "? " << 1 << " " << n << endl;
+    ll max_a, max_b;
+    cin >> max_a >> max_b;
+    DEBUG(max_a, max_b);
 
-    cin >> second_max;
+    ll ret = 0;
+    for (ll z = 1; z < 1e5; z++) {
+        ll b = (max_a - z)/z;
+        b = min(b, max_b);
+        if (b < z + 1) break;
+//        DEBUG(z, b, max_a, max_b);
 
-    bool on_left = false;
-    if (second_max > 1) {
-        cout << "? " << 1 << " " << second_max << endl;
-        cin >> curr;
-
-        if (curr == second_max) on_left = true;
+        ret += b - (z + 1) + 1;
+//        DEBUG(ret);
     }
-    DEBUG(on_left);
 
-    if (on_left) {
-        handle_left();
-    } else {
-        handle_right();
-    }
+    cout << ret << endl;
 }
