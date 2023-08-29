@@ -78,7 +78,7 @@ mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 // rng() gives a better random unsigned 32 bit number
 
 ll q, Q, T, k, l, r, x, y, z;
-int n, m;
+ll n, m;
 
 void solve();
 
@@ -94,20 +94,17 @@ int main() {
 }
 
 void solve() {
-    ll max_a, max_b;
-    cin >> max_a >> max_b;
-    DEBUG(max_a, max_b);
+    cin >> n >> k;
 
-    ll ret = 0;
-    for (ll z = 1; z < 1e5; z++) {
-        ll b = (max_a - z)/z;
-        b = min(b, max_b);
-        if (b < z + 1) break;
-//        DEBUG(z, b, max_a, max_b);
+    int diff = (n - k);
 
-        ret += b - (z + 1) + 1;
-//        DEBUG(ret);
+    for (int i = 1; i < (k - diff); i++) {
+        cout << i << " ";
     }
 
-    cout << ret << endl;
+    for (int i = k; i >= (k - diff); i--) {
+        cout << i << " ";
+    }
+
+    cout << endl;
 }
