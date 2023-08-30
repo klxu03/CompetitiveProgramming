@@ -82,6 +82,62 @@ int n, m;
 
 void solve();
 
+class Graph {
+public:
+    vector<vector<int>> adj;
+    vector<int> par;
+    vector<int> depth;
+    vector<int> indeg;
+    vector<int> child;
+    vector<bool> visited;
+
+    vector<int> leaves;
+
+    Graph() {}
+
+    void init_edges() {
+        f0r(i, n - 1) {
+            int u, v;
+            cin >> u >> v;
+            u--; v--;
+
+            adj[u].pb(v);
+            adj[v].pb(u);
+        }
+    }
+
+    void init() {
+        adj = vector<vector<int>>(n);
+        par = vector<int>(n);
+        depth = vector<int>(n);
+        indeg = vector<int>(n);
+        child = vector<int>(n);
+        visited = vector<bool>(n);
+
+        init_edges();
+    }
+
+    // d is current depth
+    int dfs(int node, int d) {
+        int ret = 1;
+        depth[node] = d;
+
+        for (int neigh: adj[node]) {
+            if (visited[neigh]) continue;
+
+            par[neigh] = node;
+            indeg[node]++;
+            visited[neigh] = true;
+            ret += dfs(neigh, d + 1);
+        }
+
+        if (ret == 1) leaves.pb(node);
+
+        child[node] = ret;
+        return ret;
+    }
+};
+
 // Problem URL:
 int main() {
     io;
@@ -93,90 +149,33 @@ int main() {
     }
 }
 
-class Graph {
-public:
-    int nodes;
-    vector<vector<int>> adj;
-    vector<int> par; // parent of this node
-    vector<int> leaves; // [ids]
-    vector<int> depth;
-
-    Graph() {}
-
-    void init(int nodes) {
-        this->nodes = nodes;
-        par = vector<int>(nodes);
-        depth = vector<int>(nodes);
-    }
-
-    void bfs() {
-        deque<pii> dq;
-        vector<bool> visited(nodes);
-        dq.push_back({0, 1});
-        visited[0] = true;
-        par[0] = -1;
-
-        while (!dq.empty()) {
-            auto [curr, dist] = dq.front();
-            DEBUG(curr, dist);
-            dq.pop_front();
-
-            for (int neigh : adj[curr]) {
-                if (!visited[neigh]) {
-                    dq.push_back({neigh, dist + 1});
-                    visited[neigh] = true;
-                    par[neigh] = curr;
-                    depth[neigh] = dist + 1;
-                }
-            }
-
-            // is a leaf
-            if (adj[curr].size() == 1) {
-                leaves.pb(curr);
-            }
-        }
-    }
-};
-
 void solve() {
     cin >> n >> k;
 
-    vector<vector<int>> adj(n);
-    f0r(i, n - 1) {
-        int a, b;
-        cin >> a >> b;
-        a--; b--;
-
-        adj[a].pb(b);
-        adj[b].pb(a);
-    }
-
     Graph g;
-    g.init(n);
-    g.adj = adj;
-    g.bfs();
-    DEBUG("bfs finished", g.leaves);
+    g.init();
+    g.visited[0] = true;
+    g.dfs(0, 0);
 
-    // ll next_gain, branch_len, num_occupied, node;
-    multiset<array<ll, 4>> ms;
+    multiset<array<int, 2>> ms;
     for (int leaf : g.leaves) {
-        DEBUG(leaf);
-        ms.insert({g.depth[leaf] - 1, g.depth[leaf], 0, leaf});
+        int next_gain = g.depth[leaf] - (g.child[leaf] - 1);
+        ms.insert({next_gain, leaf});
     }
-    DEBUG(ms);
 
     ll ret = 0;
     f0r(i, k) {
-        array<ll, 4> curr = *(ms.rbegin());
-        ms.erase(--ms.end());
+        array<int, 2> curr = *(ms.rbegin());
+        ms.erase(ms.find(curr));
 
         ret += curr[0];
+        int next_node = g.par[curr[1]];
+        int next_gain = g.depth[next_node] - (g.child[next_node] - 1);
+        g.indeg[next_node]--;
 
-        ll next_gain = curr[1] - (curr[2] + 1) - (curr[2] + 1);
-        if (curr[2] + 1 < curr[1]) {
-            ms.insert({next_gain, curr[1], curr[2] + 1, g.par[curr[3]]});
+        if (g.indeg[next_node] == 0) { // only add next node to contention if all of its children has been turned into industries
+            ms.insert({next_gain, next_node});
         }
-        DEBUG(ms);
     }
 
     cout << ret << endl;
