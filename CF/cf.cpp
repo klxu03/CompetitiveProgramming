@@ -78,7 +78,7 @@ mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 // rng() gives a better random unsigned 32 bit number
 
 ll q, Q, T, k, l, r, x, y, z;
-ll n, m;
+int n, m;
 
 void solve();
 
@@ -94,17 +94,83 @@ int main() {
 }
 
 void solve() {
-    cin >> n >> k;
+    cin >> n;
 
-    int diff = (n - k);
-
-    for (int i = 1; i < (k - diff); i++) {
-        cout << i << " ";
+    vector<int> inp(2 * n);
+    f0r(i, 2 * n) {
+        cin >> inp[i];
     }
 
-    for (int i = k; i >= (k - diff); i--) {
-        cout << i << " ";
+    sort(inp.begin(), inp.end());
+    reverse(inp.begin(), inp.end());
+
+    int ind_to_remove = -1;
+
+    for (int i = 1; i < 2 * n; i++) {
+        DEBUG(i);
+        // try erasing this value and using it at first
+        int prev_max = inp[0];
+        multiset<int> ms;
+        f0r(j, 2 * n) {
+            ms.insert(inp[j]);
+        }
+
+        ms.erase(ms.find(inp[i]));
+        ms.erase(ms.find(*ms.rbegin()));
+
+        DEBUG("abt to enter while");
+        DEBUG(ms);
+        while (ms.size() > 0) {
+            int new_max = *(ms.rbegin());
+            ms.erase(ms.find(new_max));
+            int curr = prev_max - new_max;
+            DEBUG(curr);
+
+            if (!ms.contains(curr)) {
+                break;
+            }
+            prev_max = new_max;
+            ms.erase(ms.find(curr));
+            DEBUG(ms);
+        }
+
+        if (ms.size() == 0) {
+            ind_to_remove = i;
+            break;
+        }
     }
 
-    cout << endl;
+    DEBUG(ind_to_remove);
+
+    if (ind_to_remove == -1) {
+        cout << "NO" << endl;
+        return;
+    }
+
+    cout << "YES" << endl;
+
+    int prev_max = inp[0];
+    multiset<int> ms;
+    f0r(i, 2 * n) {
+        ms.insert(inp[i]);
+    }
+
+    cout << inp[0] + inp[ind_to_remove] << endl;
+    cout << inp[0] << " " << inp[ind_to_remove] << endl;
+
+    ms.erase(ms.find(inp[ind_to_remove]));
+    ms.erase(ms.find(*ms.rbegin()));
+
+    while (ms.size() > 1) {
+        int new_max = *(ms.rbegin());
+        int curr = prev_max - new_max;
+        cout << new_max << " " << curr << endl;
+
+        if (!ms.contains(curr)) {
+            break;
+        }
+        prev_max = new_max;
+        ms.erase(ms.find(new_max));
+        ms.erase(ms.find(curr));
+    }
 }
