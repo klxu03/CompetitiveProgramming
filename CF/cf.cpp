@@ -86,91 +86,98 @@ void solve();
 int main() {
     io;
     long long test_cases = 1;
-    cin >> test_cases;
+//    cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
         solve();
     }
 }
 
-void solve() {
-    cin >> n;
+class Graph {
+public:
+    int nodes;
+    vector<vector<int>> adj;
+    vector<int> par; // parent of this node
+    vector<int> leaves; // [ids]
+    vector<int> depth;
 
-    vector<int> inp(2 * n);
-    f0r(i, 2 * n) {
-        cin >> inp[i];
+    Graph() {}
+
+    void init(int nodes) {
+        this->nodes = nodes;
+        par = vector<int>(nodes);
+        depth = vector<int>(nodes);
     }
 
-    sort(inp.begin(), inp.end());
-    reverse(inp.begin(), inp.end());
+    void bfs() {
+        deque<pii> dq;
+        vector<bool> visited(nodes);
+        dq.push_back({0, 1});
+        visited[0] = true;
+        par[0] = -1;
 
-    int ind_to_remove = -1;
+        while (!dq.empty()) {
+            auto [curr, dist] = dq.front();
+            DEBUG(curr, dist);
+            dq.pop_front();
 
-    for (int i = 1; i < 2 * n; i++) {
-        DEBUG(i);
-        // try erasing this value and using it at first
-        int prev_max = inp[0];
-        multiset<int> ms;
-        f0r(j, 2 * n) {
-            ms.insert(inp[j]);
-        }
-
-        ms.erase(ms.find(inp[i]));
-        ms.erase(ms.find(*ms.rbegin()));
-
-        DEBUG("abt to enter while");
-        DEBUG(ms);
-        while (ms.size() > 0) {
-            int new_max = *(ms.rbegin());
-            ms.erase(ms.find(new_max));
-            int curr = prev_max - new_max;
-            DEBUG(curr);
-
-            if (!ms.contains(curr)) {
-                break;
+            for (int neigh : adj[curr]) {
+                if (!visited[neigh]) {
+                    dq.push_back({neigh, dist + 1});
+                    visited[neigh] = true;
+                    par[neigh] = curr;
+                    depth[neigh] = dist + 1;
+                }
             }
-            prev_max = new_max;
-            ms.erase(ms.find(curr));
-            DEBUG(ms);
-        }
 
-        if (ms.size() == 0) {
-            ind_to_remove = i;
-            break;
+            // is a leaf
+            if (adj[curr].size() == 1) {
+                leaves.pb(curr);
+            }
         }
     }
+};
 
-    DEBUG(ind_to_remove);
+void solve() {
+    cin >> n >> k;
 
-    if (ind_to_remove == -1) {
-        cout << "NO" << endl;
-        return;
+    vector<vector<int>> adj(n);
+    f0r(i, n - 1) {
+        int a, b;
+        cin >> a >> b;
+        a--; b--;
+
+        adj[a].pb(b);
+        adj[b].pb(a);
     }
 
-    cout << "YES" << endl;
+    Graph g;
+    g.init(n);
+    g.adj = adj;
+    g.bfs();
+    DEBUG("bfs finished", g.leaves);
 
-    int prev_max = inp[0];
-    multiset<int> ms;
-    f0r(i, 2 * n) {
-        ms.insert(inp[i]);
+    // ll next_gain, branch_len, num_occupied, node;
+    multiset<array<ll, 4>> ms;
+    for (int leaf : g.leaves) {
+        DEBUG(leaf);
+        ms.insert({g.depth[leaf] - 1, g.depth[leaf], 0, leaf});
     }
+    DEBUG(ms);
 
-    cout << inp[0] + inp[ind_to_remove] << endl;
-    cout << inp[0] << " " << inp[ind_to_remove] << endl;
+    ll ret = 0;
+    f0r(i, k) {
+        array<ll, 4> curr = *(ms.rbegin());
+        ms.erase(--ms.end());
 
-    ms.erase(ms.find(inp[ind_to_remove]));
-    ms.erase(ms.find(*ms.rbegin()));
+        ret += curr[0];
 
-    while (ms.size() > 1) {
-        int new_max = *(ms.rbegin());
-        int curr = prev_max - new_max;
-        cout << new_max << " " << curr << endl;
-
-        if (!ms.contains(curr)) {
-            break;
+        ll next_gain = curr[1] - (curr[2] + 1) - (curr[2] + 1);
+        if (curr[2] + 1 < curr[1]) {
+            ms.insert({next_gain, curr[1], curr[2] + 1, g.par[curr[3]]});
         }
-        prev_max = new_max;
-        ms.erase(ms.find(new_max));
-        ms.erase(ms.find(curr));
+        DEBUG(ms);
     }
+
+    cout << ret << endl;
 }
