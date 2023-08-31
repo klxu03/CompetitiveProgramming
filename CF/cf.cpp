@@ -82,67 +82,11 @@ int n, m;
 
 void solve();
 
-class Graph {
-public:
-    vector<vector<int>> adj;
-    vector<int> par;
-    vector<int> depth;
-    vector<int> indeg;
-    vector<int> child;
-    vector<bool> visited;
-
-    vector<int> leaves;
-
-    Graph() {}
-
-    void init_edges() {
-        f0r(i, n - 1) {
-            int u, v;
-            cin >> u >> v;
-            u--; v--;
-
-            adj[u].pb(v);
-            adj[v].pb(u);
-        }
-    }
-
-    void init() {
-        adj = vector<vector<int>>(n);
-        par = vector<int>(n);
-        depth = vector<int>(n);
-        indeg = vector<int>(n);
-        child = vector<int>(n);
-        visited = vector<bool>(n);
-
-        init_edges();
-    }
-
-    // d is current depth
-    int dfs(int node, int d) {
-        int ret = 1;
-        depth[node] = d;
-
-        for (int neigh: adj[node]) {
-            if (visited[neigh]) continue;
-
-            par[neigh] = node;
-            indeg[node]++;
-            visited[neigh] = true;
-            ret += dfs(neigh, d + 1);
-        }
-
-        if (ret == 1) leaves.pb(node);
-
-        child[node] = ret;
-        return ret;
-    }
-};
-
 // Problem URL:
 int main() {
     io;
     long long test_cases = 1;
-//    cin >> test_cases;
+    cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
         solve();
@@ -150,33 +94,100 @@ int main() {
 }
 
 void solve() {
-    cin >> n >> k;
+    ll nr, ng, nb;
+    cin >> nr >> ng >> nb;
 
-    Graph g;
-    g.init();
-    g.visited[0] = true;
-    g.dfs(0, 0);
+    set<ll> r, g, b;
+    vector<int> vr(nr), vg(ng), vb(nb);
+    f0r(i, nr) {
+       cin >> vr[i];
+       r.insert(vr[i]);
+    }
+    f0r(i, ng) {
+        cin >> vg[i];
+        g.insert(vg[i]);
+    }
+    f0r(i, nb) {
+        cin >> vb[i];
+        b.insert(vb[i]);
+    }
+    r.insert(INT_MAX); r.insert(INT_MIN);
+    g.insert(INT_MAX); g.insert(INT_MIN);
+    b.insert(INT_MAX); b.insert(INT_MIN);
 
-    multiset<array<int, 2>> ms;
-    for (int leaf : g.leaves) {
-        int next_gain = g.depth[leaf] - (g.child[leaf] - 1);
-        ms.insert({next_gain, leaf});
+    sort(vr.begin(), vr.end());
+    sort(vg.begin(), vg.end());
+    sort(vb.begin(), vb.end());
+
+    DEBUG(vr);
+    DEBUG(vg);
+    DEBUG(vb);
+
+    __int128 ret = LLONG_MAX;
+    for (int el : vr) {
+        // gg be lower first
+        auto gg = g.upper_bound(el);
+        --gg;
+        auto bb = b.lower_bound(el);
+
+        __int128 dist_g = el - *gg;
+        __int128 dist_b = *bb - el;
+        __int128 dist = *bb - *gg;
+        ret = min(ret, dist_g * dist_g + dist_b * dist_b + dist * dist);
+
+        // bb lower now
+        gg = g.lower_bound(el);
+        bb = b.upper_bound(el);
+        --bb;
+
+        dist_g = *gg - el;
+        dist_b = el - *bb;
+        dist = *gg - *bb;
+        ret = min(ret, dist_g * dist_g + dist_b * dist_b + dist * dist);
     }
 
-    ll ret = 0;
-    f0r(i, k) {
-        array<int, 2> curr = *(ms.rbegin());
-        ms.erase(ms.find(curr));
+    for (int el : vg) {
+        // rr lower first
+        auto rr = r.upper_bound(el);
+        --rr;
+        auto bb = b.lower_bound(el);
 
-        ret += curr[0];
-        int next_node = g.par[curr[1]];
-        int next_gain = g.depth[next_node] - (g.child[next_node] - 1);
-        g.indeg[next_node]--;
+        __int128 dist_r = el - *rr;
+        __int128 dist_b = *bb - el;
+        __int128 dist = *bb - *rr;
+        ret = min(ret, dist_r * dist_r + dist_b * dist_b + dist * dist);
 
-        if (g.indeg[next_node] == 0) { // only add next node to contention if all of its children has been turned into industries
-            ms.insert({next_gain, next_node});
-        }
+        // bb lower now
+        rr = r.lower_bound(el);
+        bb = b.upper_bound(el);
+        --bb;
+        dist_r = el - *rr;
+        dist_b = *bb - el;
+        dist = *bb - *rr;
+        ret = min(ret, dist_r * dist_r + dist_b * dist_b + dist * dist);
     }
 
-    cout << ret << endl;
+    for (int el : vb) {
+        // rr lower first
+        auto rr = r.upper_bound(el);
+        --rr;
+        auto gg = g.lower_bound(el);
+
+        __int128 dist_r = *rr - el;
+        __int128 dist_g = *gg - el;
+        __int128 dist = *rr - *gg;
+        ret = min(ret, dist_r * dist_r + dist_g * dist_g + dist * dist);
+
+        // gg lower now
+        rr = r.lower_bound(el);
+        gg = g.upper_bound(el);
+        --gg;
+
+        dist_r = *rr - el;
+        dist_g = *gg - el;
+        dist = *rr - *gg;
+        ret = min(ret, dist_r * dist_r + dist_g * dist_g + dist * dist);
+    }
+
+    cout << ((ll) ret) << endl;
 }
