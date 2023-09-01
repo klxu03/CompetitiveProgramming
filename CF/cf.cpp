@@ -94,5 +94,62 @@ int main() {
 }
 
 void solve() {
-    cin >> n;
+    string inp;
+    cin >> inp;
+
+    // {size, result}
+    set<array<int, 2>> s;
+    int sz = 0;
+    int curr = 0;
+
+    vector<int> peek(inp.size());
+    int peek_curr = 0;
+    for (int i = inp.size() - 1; i >= 0; i--) {
+        if (inp[i] == '1') peek_curr = 1;
+        if (inp[i] == '0') peek_curr = 0;
+
+        peek[i] = peek_curr;
+    }
+
+    f0r(i, inp.size()) {
+        if (inp[i] == '+') {
+            sz++;
+            curr++;
+        } else if (inp[i] == '-') {
+            sz--;
+            curr--;
+        }
+
+        if (inp[i] == '0') {
+            if (sz < 2) {
+                cout << "NO" << endl;
+                return;
+            }
+
+            if (curr == 0) {
+                cout << "NO" << endl;
+                return;
+            }
+            s.insert({sz, 0});
+        } else if (inp[i] == '1') {
+            if (!s.empty()) {
+                if ((*s.rbegin())[1] == 0) {
+                    cout << "NO" << endl;
+                    return;
+                }
+            }
+            s.insert({sz, 1});
+            curr = 0;
+        }
+
+        if (!s.empty()) {
+            if ((*s.rbegin())[0] > sz) {
+                s.erase(s.find(*s.rbegin()));
+            }
+        }
+
+        if (curr < 0) curr = 0;
+    }
+
+    cout << "YES" << endl;
 }
