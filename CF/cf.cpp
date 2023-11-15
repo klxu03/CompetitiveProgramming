@@ -82,11 +82,57 @@ int n, m;
 
 void solve();
 
+// Graph DSU hybrid
+class Graph {
+    public: 
+    int nodes;
+
+    vector<int> c;
+    vector<set<int>> intersects; // the intersection of edges at each component c
+
+    Graph() {}
+
+    void init(int n) {
+        nodes = n;
+        c = vector<int>(n, -1);
+        intersects.resize(n);
+    }
+
+    int get(int x) {
+        return c[x] < 0 ? x : c[x] = get(c[x]);
+    }
+
+    bool same_set(int a, int b) {
+        return get(a) == get(b);
+    }
+
+    int size(int x) {
+        return -c[get(x)];
+    }
+
+    bool unite(int x, int y) {
+        x = get(x);
+        y = get(y);
+
+        if (x == y) return false;
+
+        if (size(x) < size(y)) {
+            DEBUG("swapping in unite, which shouldn't happen");
+            swap(x, y);
+        } 
+
+        c[x] += c[y];
+        c[y] = x;
+
+        return true;
+    }
+};
+
 // Problem URL:
 int main() {
     io;
     long long test_cases = 1;
-    cin >> test_cases;
+    // cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
         solve();
@@ -94,62 +140,117 @@ int main() {
 }
 
 void solve() {
-    string inp;
-    cin >> inp;
+    cin >> n >> m;
 
-    // {size, result}
-    set<array<int, 2>> s;
-    int sz = 0;
-    int curr = 0;
+    Graph g;
+    g.init(n);
 
-    vector<int> peek(inp.size());
-    int peek_curr = 0;
-    for (int i = inp.size() - 1; i >= 0; i--) {
-        if (inp[i] == '1') peek_curr = 1;
-        if (inp[i] == '0') peek_curr = 0;
+    f0r(i, m) {
+        cin >> l >> r;
+        l--, r--;
 
-        peek[i] = peek_curr;
+        g.intersects[l].insert(r);
+        g.intersects[r].insert(l);
+    }
+    DEBUG(g.intersects);
+
+    set<int> groups;
+    f0r(i, n) {
+        groups.insert(i);
     }
 
-    f0r(i, inp.size()) {
-        if (inp[i] == '+') {
-            sz++;
-            curr++;
-        } else if (inp[i] == '-') {
-            sz--;
-            curr--;
-        }
+    int counter = 0;
+    while (groups.size() > 0) {
+        vector<bool> interacted(n, false);
+        for (auto group : groups) {
+            auto x = g.get(group);
+            if (interacted[x]) continue; // already interacted with this group 
+            DEBUG(group, x);
 
-        if (inp[i] == '0') {
-            if (sz < 2) {
-                cout << "NO" << endl;
-                return;
+            // group already reached the end, found isolated component
+            if (n - g.size(x) == g.intersects[x].size()) {
+                continue;
             }
 
-            if (curr == 0) {
-                cout << "NO" << endl;
-                return;
-            }
-            s.insert({sz, 0});
-        } else if (inp[i] == '1') {
-            if (!s.empty()) {
-                if ((*s.rbegin())[1] == 0) {
-                    cout << "NO" << endl;
-                    return;
+            f0r(i, n) {
+                if (g.same_set(i, x)) continue; // already in same set
+                DEBUG(i, x);
+
+                if (g.intersects[x].find(i) != g.intersects[x].end()) continue; // in the no-edge list
+
+                // need to unite these boys
+
+                // sm gets added into bg
+                auto sm = g.get(i);
+                auto bg = g.get(x);
+
+                if (g.size(sm) > g.size(bg)) {
+                    swap(sm, bg);
+                } 
+
+                DEBUG("uniting", sm, bg);
+
+                // intersect
+                vector<int> intersect_to_drop;
+                for (auto intersect : g.intersects[bg]) {
+                    // they successfully intersect, so do not erase
+                    if (g.intersects[sm].find(intersect) != g.intersects[sm].end()) continue;
+
+                    DEBUG("did not find intersect in sm intersects", intersect, g.intersects[sm]);
+                    intersect_to_drop.pb(intersect);
+                    // g.intersects[bg].erase(intersect);
                 }
+                for (auto intersect : intersect_to_drop) {
+                    g.intersects[bg].erase(intersect);
+                }
+                DEBUG("intersected");
+
+                // union
+                g.unite(bg, sm);
+                DEBUG("unioned");
+                x = g.get(x); // update x
+                interacted[x] = true;
             }
-            s.insert({sz, 1});
-            curr = 0;
         }
 
-        if (!s.empty()) {
-            if ((*s.rbegin())[0] > sz) {
-                s.erase(s.find(*s.rbegin()));
+        vector<int> to_drop; // prune out some groups in groups to process in the next layer
+        for (auto group : groups) {
+            // not a root node
+            if (g.get(group) != group) {
+                to_drop.pb(group);
+                continue;
+            }
+
+            // group already reached the end, found isolated component
+            if (n - g.size(group) == g.intersects[group].size()) {
+                to_drop.pb(group);
             }
         }
+        for (auto drop : to_drop) {
+            groups.erase(drop);
+        }
 
-        if (curr < 0) curr = 0;
+        DEBUG(groups);
+        DEBUG(g.c);
+        DEBUG(g.intersects);
+
+        counter++;
+        if (counter > 5*n) {
+            cout << "Counter exceeded 5n" << endl;
+            return;
+        }
     }
 
-    cout << "YES" << endl;
+    vector<int> ret;
+    f0r(i, n) {
+        if (g.c[i] < 0) {
+            ret.pb(-g.c[i]);
+        } 
+    }
+
+    cout << ret.size() << endl;
+    sort(ret.begin(), ret.end());
+    for(auto inst : ret) {
+        cout << inst << " ";
+    }
 }
