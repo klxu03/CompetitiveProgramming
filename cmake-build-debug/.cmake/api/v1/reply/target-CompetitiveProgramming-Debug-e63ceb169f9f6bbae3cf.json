@@ -234,7 +234,8 @@
 				182,
 				183,
 				184,
-				185
+				185,
+				186
 			]
 		}
 	],
@@ -449,7 +450,8 @@
 				182,
 				183,
 				184,
-				185
+				185,
+				186
 			]
 		},
 		{
@@ -1575,6 +1577,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "CF/e_cf.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "USACO/Gold/G-moonetwork.cpp",
 			"sourceGroupIndex" : 0
 		}
 	],
