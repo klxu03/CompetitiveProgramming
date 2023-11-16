@@ -1,4 +1,4 @@
-"/Users/kevinxu-mac/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.222/CLion.app/Contents/bin/cmake/mac/bin/cmake" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=/Users/kevinxu-mac/Library/Application Support/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.222/CLion.app/Contents/bin/ninja/mac/ninja" -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12 -G Ninja -S /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming -B /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug
+/Users/kevinxu-mac/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Users/kevinxu-mac/Applications/CLion.app/Contents/bin/ninja/mac/ninja -DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12 -G Ninja -S /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming -B /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug
 -- The C compiler identification is AppleClang 12.0.5.12050022
 -- The CXX compiler identification is GNU 12.2.0
 -- Detecting C compiler ABI info
