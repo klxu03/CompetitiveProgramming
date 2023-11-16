@@ -96,15 +96,15 @@ int main() {
 void solve() {
     cin >> n;
 
-    vector<array<int, 2>> inp(n);
-    map<array<int, 2>, ll> cost; // cost to get to each node in the MST, it is -1 if already visited
+    vector<array<ll, 2>> inp(n);
+    map<array<ll, 2>, ll> cost; // cost to get to each node in the MST, it is -1 if already visited
     f0r(i, n) {
         cin >> inp[i][0] >> inp[i][1];
         cost[{inp[i][0], inp[i][1]}] = LLONG_MAX; // cost to see each node is infinite
     }
 
     sort(inp.begin(), inp.end());
-    set<array<int, 3>> s; // {cost, x coord, y coord}
+    set<array<ll, 3>> s; // {cost, x coord, y coord}
     s.insert({0, inp[0][0], inp[0][1]});
 
     while (!s.empty()) {
@@ -115,13 +115,50 @@ void solve() {
         cost[{cur[1], cur[2]}] = -1; // visit this node
 
         // add next nodes
-        auto it = lower_bound(inp.begin(), inp.end(), array<int, 2>{cur[1], cur[2]});
+        auto it = lower_bound(inp.begin(), inp.end(), array<ll, 2>{cur[1], cur[2] + 1});
+        if (it == inp.end()) continue; // reached the end
+        int ind = it - inp.begin();
         if ((*it)[0] - cur[1] >= 50) {
             // only add the ones that are x50 away
+            array<ll, 3> min_cost = {LLONG_MAX, -1, -1};
+            for (int i = ind; i < n; i++) {
+                if (inp[ind][0] > (*it)[0]) {
+                    break;
+                }
+
+                ll dx = inp[ind][0] - cur[1];
+                ll dy = inp[ind][1] - cur[2];
+                ll curr_cost = dx * dx + dy * dy;
+                min_cost = min(min_cost, {curr_cost, inp[ind][0], inp[ind][1]});
+            }
+
+            if (cost[{min_cost[1], min_cost[2]}] == 0) {
+                cost[{min_cost[1], min_cost[2]}] = min_cost[0];
+            } else {
+                cost[{min_cost[1], min_cost[2]}] = min(cost[{min_cost[1], min_cost[2]}], min_cost[0]);
+            }
+            
+            if (cost[{min_cost[1], min_cost[2]}] != -1) {
+                s.insert(min_cost);
+            }
         } else {
             // need to do that 500 run through and update the map cost values, and the set s inserting in new redundantly newly better node values to visit next
+            ind--; // ind now points to the element cur
+            for (int i = ind; i >= 0; i--) {
+                // we are more than x50 backwards
+                if (inp[ind][0] - inp[i][0] > 50) { 
+                    break;
+                }
+            }
+
+            for (int i = ind; i < n; i++) {
+                // we are more than x50 forwards
+                if (inp[i][0] - inp[ind][0] > 50) { 
+                    break;
+                }
+                DEBUG(i, inp[i]);
+            }
+            DEBUG(ind, inp[ind]); 
         }
     }
-
-    DEBUG(inp);
 }
