@@ -107,11 +107,16 @@ void solve() {
     set<array<ll, 3>> s; // {cost, x coord, y coord}
     s.insert({0, inp[0][0], inp[0][1]});
 
+    ll ret = 0;
+
     while (!s.empty()) {
         auto cur = *s.begin(); // cost, x, y
         s.erase(s.begin());
 
         if (cost[{cur[1], cur[2]}] == -1) continue; // already visited
+        
+        ret += cur[0];
+        DEBUG(cur, ret);
         cost[{cur[1], cur[2]}] = -1; // visit this node
 
         // add next nodes
@@ -149,6 +154,20 @@ void solve() {
                 if (inp[ind][0] - inp[i][0] > 50) { 
                     break;
                 }
+
+                if (cost[{inp[i][0], inp[i][1]}] == -1) continue; // already visited
+
+                ll dx = inp[ind][0] - inp[i][0];
+                ll dy = inp[ind][1] - inp[i][1];
+                ll curr_cost = dx * dx + dy * dy;
+
+                // before we had a smaller cost, so do not add
+                if (cost[{inp[i][0], inp[i][1]}] <= curr_cost && cost[{inp[i][0], inp[i][1]}] != 0) {
+                    continue;
+                } 
+
+                cost[{inp[i][0], inp[i][1]}] = curr_cost;
+                s.insert({curr_cost, inp[i][0], inp[i][1]});
             }
 
             for (int i = ind; i < n; i++) {
@@ -156,9 +175,23 @@ void solve() {
                 if (inp[i][0] - inp[ind][0] > 50) { 
                     break;
                 }
-                DEBUG(i, inp[i]);
+
+                if (cost[{inp[i][0], inp[i][1]}] == -1) continue; // already visited
+
+                ll dx = inp[ind][0] - inp[i][0];
+                ll dy = inp[ind][1] - inp[i][1];
+                ll curr_cost = dx * dx + dy * dy;
+
+                // before we had a smaller cost, so do not add
+                if (cost[{inp[i][0], inp[i][1]}] <= curr_cost && cost[{inp[i][0], inp[i][1]}] != 0) {
+                    continue;
+                } 
+
+                cost[{inp[i][0], inp[i][1]}] = curr_cost;
+                s.insert({curr_cost, inp[i][0], inp[i][1]});
             }
-            DEBUG(ind, inp[ind]); 
         }
     }
+
+    cout << ret << endl;
 }
