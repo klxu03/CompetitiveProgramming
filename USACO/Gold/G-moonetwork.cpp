@@ -95,4 +95,33 @@ int main() {
 
 void solve() {
     cin >> n;
+
+    vector<array<int, 2>> inp(n);
+    map<array<int, 2>, ll> cost; // cost to get to each node in the MST, it is -1 if already visited
+    f0r(i, n) {
+        cin >> inp[i][0] >> inp[i][1];
+        cost[{inp[i][0], inp[i][1]}] = LLONG_MAX; // cost to see each node is infinite
+    }
+
+    sort(inp.begin(), inp.end());
+    set<array<int, 3>> s; // {cost, x coord, y coord}
+    s.insert({0, inp[0][0], inp[0][1]});
+
+    while (!s.empty()) {
+        auto cur = *s.begin(); // cost, x, y
+        s.erase(s.begin());
+
+        if (cost[{cur[1], cur[2]}] == -1) continue; // already visited
+        cost[{cur[1], cur[2]}] = -1; // visit this node
+
+        // add next nodes
+        auto it = lower_bound(inp.begin(), inp.end(), array<int, 2>{cur[1], cur[2]});
+        if ((*it)[0] - cur[1] >= 50) {
+            // only add the ones that are x50 away
+        } else {
+            // need to do that 500 run through and update the map cost values, and the set s inserting in new redundantly newly better node values to visit next
+        }
+    }
+
+    DEBUG(inp);
 }
