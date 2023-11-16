@@ -126,7 +126,7 @@ void solve() {
 
         // add next nodes
         auto it = lower_bound(inp.begin(), inp.end(), array<ll, 2>{cur[1] + 1, cur[2]}); // iterator of the next node at least x1 away
-        int ind = find(inp.begin(), inp.end(), array<ll, 2>{cur[1], cur[2]}) - inp.begin(); // ind of current node we are analyzing
+        int ind = lower_bound(inp.begin(), inp.end(), array<ll, 2>{cur[1], cur[2]}) - inp.begin(); // ind of current node we are analyzing
 
         // need to do that 500 run through and update the map cost values, and the set s inserting in new redundantly newly better node values to visit next
         for (int i = ind - 1; i >= 0; i--) {
