@@ -82,9 +82,10 @@ ll n, m;
 
 void solve();
 
-// Problem URL:
+// Problem URL: http://usaco.org/index.php?page=viewproblem2&cpid=1211
 int main() {
     io;
+    // usaco("1");
     long long test_cases = 1;
     // cin >> test_cases;
 
@@ -103,7 +104,11 @@ void solve() {
         cost[{inp[i][0], inp[i][1]}] = LLONG_MAX; // cost to see each node is infinite
     }
 
+    // n++;
+    // inp.pb({10000, 5});
+
     sort(inp.begin(), inp.end());
+    DEBUG(inp);
     set<array<ll, 3>> s; // {cost, x coord, y coord}
     s.insert({0, inp[0][0], inp[0][1]});
 
@@ -120,78 +125,82 @@ void solve() {
         cost[{cur[1], cur[2]}] = -1; // visit this node
 
         // add next nodes
-        auto it = lower_bound(inp.begin(), inp.end(), array<ll, 2>{cur[1], cur[2] + 1});
+        auto it = lower_bound(inp.begin(), inp.end(), array<ll, 2>{cur[1] + 1, cur[2]}); // iterator of the next node at least x1 away
+        int ind = find(inp.begin(), inp.end(), array<ll, 2>{cur[1], cur[2]}) - inp.begin(); // ind of current node we are analyzing
+
+        // need to do that 500 run through and update the map cost values, and the set s inserting in new redundantly newly better node values to visit next
+        for (int i = ind - 1; i >= 0; i--) {
+            // we are more than x50 backwards
+            if (inp[ind][0] - inp[i][0] > 50) { 
+                break;
+            }
+
+            if (cost[{inp[i][0], inp[i][1]}] == -1) continue; // already visited
+
+            ll dx = inp[ind][0] - inp[i][0];
+            ll dy = inp[ind][1] - inp[i][1];
+            ll curr_cost = dx * dx + dy * dy;
+
+            // before we had a smaller cost, so do not add
+            if (cost[{inp[i][0], inp[i][1]}] <= curr_cost) {
+                continue;
+            } 
+
+            cost[{inp[i][0], inp[i][1]}] = curr_cost;
+            s.insert({curr_cost, inp[i][0], inp[i][1]});
+        }
+
+        for (int i = ind + 1; i < n; i++) {
+            // we are more than x50 forwards
+            if (inp[i][0] - inp[ind][0] > 50) { 
+                break;
+            }
+
+            if (cost[{inp[i][0], inp[i][1]}] == -1) continue; // already visited
+
+            ll dx = inp[i][0] - inp[ind][0];
+            ll dy = inp[i][1] - inp[ind][1];
+            ll curr_cost = dx * dx + dy * dy;
+
+            // before we had a smaller cost, so do not add
+            if (cost[{inp[i][0], inp[i][1]}] <= curr_cost) {
+                continue;
+            } 
+
+            cost[{inp[i][0], inp[i][1]}] = curr_cost;
+            s.insert({curr_cost, inp[i][0], inp[i][1]});
+        }
+
         if (it == inp.end()) continue; // reached the end
-        int ind = it - inp.begin();
-        if ((*it)[0] - cur[1] >= 50) {
+        ind = it - inp.begin(); // index of the next node at least x1 away
+
+        if ((*it)[0] - cur[1] > 50) { // it is farrrr away, at least x50 away
+            DEBUG("too big", *it, cur, ind, inp[ind]);
             // only add the ones that are x50 away
             array<ll, 3> min_cost = {LLONG_MAX, -1, -1};
+
+            // iterate through the different y's with the same x value
             for (int i = ind; i < n; i++) {
-                if (inp[ind][0] > (*it)[0]) {
+                if (inp[i][0] > (*it)[0]) {
                     break;
                 }
 
-                ll dx = inp[ind][0] - cur[1];
-                ll dy = inp[ind][1] - cur[2];
+                ll dx = inp[i][0] - cur[1];
+                ll dy = inp[i][1] - cur[2];
                 ll curr_cost = dx * dx + dy * dy;
-                min_cost = min(min_cost, {curr_cost, inp[ind][0], inp[ind][1]});
+                DEBUG(dx, dy, curr_cost);
+                min_cost = min(min_cost, {curr_cost, inp[i][0], inp[i][1]});
             }
+            DEBUG(min_cost);
 
-            if (cost[{min_cost[1], min_cost[2]}] == 0) {
-                cost[{min_cost[1], min_cost[2]}] = min_cost[0];
-            } else {
-                cost[{min_cost[1], min_cost[2]}] = min(cost[{min_cost[1], min_cost[2]}], min_cost[0]);
-            }
+            cost[{min_cost[1], min_cost[2]}] = min(cost[{min_cost[1], min_cost[2]}], min_cost[0]);
             
             if (cost[{min_cost[1], min_cost[2]}] != -1) {
                 s.insert(min_cost);
             }
-        } else {
-            // need to do that 500 run through and update the map cost values, and the set s inserting in new redundantly newly better node values to visit next
-            ind--; // ind now points to the element cur
-            for (int i = ind; i >= 0; i--) {
-                // we are more than x50 backwards
-                if (inp[ind][0] - inp[i][0] > 50) { 
-                    break;
-                }
-
-                if (cost[{inp[i][0], inp[i][1]}] == -1) continue; // already visited
-
-                ll dx = inp[ind][0] - inp[i][0];
-                ll dy = inp[ind][1] - inp[i][1];
-                ll curr_cost = dx * dx + dy * dy;
-
-                // before we had a smaller cost, so do not add
-                if (cost[{inp[i][0], inp[i][1]}] <= curr_cost && cost[{inp[i][0], inp[i][1]}] != 0) {
-                    continue;
-                } 
-
-                cost[{inp[i][0], inp[i][1]}] = curr_cost;
-                s.insert({curr_cost, inp[i][0], inp[i][1]});
-            }
-
-            for (int i = ind; i < n; i++) {
-                // we are more than x50 forwards
-                if (inp[i][0] - inp[ind][0] > 50) { 
-                    break;
-                }
-
-                if (cost[{inp[i][0], inp[i][1]}] == -1) continue; // already visited
-
-                ll dx = inp[ind][0] - inp[i][0];
-                ll dy = inp[ind][1] - inp[i][1];
-                ll curr_cost = dx * dx + dy * dy;
-
-                // before we had a smaller cost, so do not add
-                if (cost[{inp[i][0], inp[i][1]}] <= curr_cost && cost[{inp[i][0], inp[i][1]}] != 0) {
-                    continue;
-                } 
-
-                cost[{inp[i][0], inp[i][1]}] = curr_cost;
-                s.insert({curr_cost, inp[i][0], inp[i][1]});
-            }
-        }
+        } 
     }
 
-    cout << ret << endl;
+    std::cout << ret << endl;
+    DEBUG(true, ret == 33399824247, ret);
 }
