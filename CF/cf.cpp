@@ -82,175 +82,137 @@ int n, m;
 
 void solve();
 
-// Graph DSU hybrid
-class Graph {
-    public: 
-    int nodes;
-
-    vector<int> c;
-    vector<set<int>> intersects; // the intersection of edges at each component c
-
-    Graph() {}
-
-    void init(int n) {
-        nodes = n;
-        c = vector<int>(n, -1);
-        intersects.resize(n);
-    }
-
-    int get(int x) {
-        return c[x] < 0 ? x : c[x] = get(c[x]);
-    }
-
-    bool same_set(int a, int b) {
-        return get(a) == get(b);
-    }
-
-    int size(int x) {
-        return -c[get(x)];
-    }
-
-    bool unite(int x, int y) {
-        x = get(x);
-        y = get(y);
-
-        if (x == y) return false;
-
-        if (size(x) < size(y)) {
-            DEBUG("swapping in unite, which shouldn't happen");
-            swap(x, y);
-        } 
-
-        c[x] += c[y];
-        c[y] = x;
-
-        return true;
-    }
-};
-
 // Problem URL:
 int main() {
     io;
     long long test_cases = 1;
-    // cin >> test_cases;
+     cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
         solve();
     }
 }
 
+vector<vector<int>> adj;
+vector<vector<int>> from;
+map<int, int> d;
+
+void bfs(vector<int> &dist) {
+    deque<int> dq;
+    dq.pb(0);
+    dist[0] = 0;
+
+    while (!dq.empty()) {
+        int curr = dq.front();
+        dq.pop_front();
+
+        for (int i : adj[curr]) {
+            if (dist[i] == INT_MAX) {
+                dist[i] = dist[curr] + 1;
+                dq.push_back(i);
+            }
+        }
+    }
+}
+
+// do layer 1
+void layer1(vector<int> &dp) {
+    set<pair<int, int>> s; // dist, node id
+    for (int i = 0; i < n; i++) {
+        s.insert({dp[i], i});
+    }
+
+    while (!s.empty()) {
+        auto curr = *s.begin();
+        s.erase(s.begin());
+        if (d[curr.f] > d[dp[curr.s]]) continue; // out of date
+
+        for (int i : from[curr.s]) {
+            // i -> curr since push DP
+            if (d[i] >= d[curr.s]) continue; // do not do action 2
+
+            if (curr.f < dp[i]) {
+                dp[i] = curr.f;
+                s.insert({curr.f, i});
+            }
+        }
+    }
+}
+
+// try to get the best 1-score based on 0-score of adj nodes
+void layer2(vector<vector<int>>& dp) {
+    for (int i = 0; i < n; i++) {
+        for (int neigh : adj[i]) {
+            // i -> neigh
+            if (d[i] >= d[neigh]) {
+                dp[1][neigh] = min(dp[1][neigh], dp[0][i]);
+            }
+        }
+    }
+}
+
+void layer3(vector<vector<int>> &dp) {
+    set<pair<int, int>> s; // 1-score, node id
+    for (int i = 0; i < n; i++) {
+        s.insert({dp[1][i], i});
+    }
+
+    while (!s.empty()) {
+        auto curr = *s.begin();
+        DEBUG(curr);
+        s.erase(s.begin());
+        if (curr.f > dp[1][curr.s]) continue; // out of date
+
+        for (int i : from[curr.s]) {
+            // i -> curr since push DP
+            DEBUG(i, curr.s);
+            if (d[i] < d[curr.s]) { // action 1
+                if (curr.f < dp[1][i]) {
+                    dp[1][i] = curr.f;
+                    s.insert({curr.f, i});
+                }
+            } else { //action 2
+                if (dp[0][curr.s] < dp[1][i]) {
+                    dp[1][i] = dp[0][curr.s];
+                    s.insert({dp[0][curr.s], i});
+                }
+            }
+        }
+    }
+}
+
 void solve() {
     cin >> n >> m;
 
-    Graph g;
-    g.init(n);
-
+    adj = vector<vector<int>>(n);
+    from = vector<vector<int>>(n);
+    d.clear();
     f0r(i, m) {
-        cin >> l >> r;
-        l--, r--;
+        int x, y;
+        cin >> x >> y;
+        x--; y--;
 
-        g.intersects[l].insert(r);
-        g.intersects[r].insert(l);
+        adj[x].pb(y);  
+        from[y].pb(x);  
     }
-    DEBUG(g.intersects);
-
-    set<int> groups;
+    
+    vector<vector<int>> dp(2, vector<int>(n, INT_MAX)); // dp[0] is 0-score, dp[1] is 1-score
+    bfs(dp[0]);
     f0r(i, n) {
-        groups.insert(i);
+        d[i] = dp[0][i];
     }
 
-    int counter = 0;
-    while (groups.size() > 0) {
-        vector<bool> interacted(n, false);
-        for (auto group : groups) {
-            auto x = g.get(group);
-            if (interacted[x]) continue; // already interacted with this group 
-            DEBUG(group, x);
+    DEBUG("bfs", dp[0]);
+    layer1(dp[0]);
+    DEBUG("l1", dp[0]);
+    layer2(dp);
+    DEBUG("l2", dp[1]);
+    dp[1][0] = 0;
+    layer3(dp);
+    DEBUG("l3", dp);
 
-            // group already reached the end, found isolated component
-            if (n - g.size(x) == g.intersects[x].size()) {
-                continue;
-            }
-
-            f0r(i, n) {
-                if (g.same_set(i, x)) continue; // already in same set
-                DEBUG(i, x);
-
-                if (g.intersects[x].find(i) != g.intersects[x].end()) continue; // in the no-edge list
-
-                // need to unite these boys
-
-                // sm gets added into bg
-                auto sm = g.get(i);
-                auto bg = g.get(x);
-
-                if (g.size(sm) > g.size(bg)) {
-                    swap(sm, bg);
-                } 
-
-                DEBUG("uniting", sm, bg);
-
-                // intersect
-                vector<int> intersect_to_drop;
-                for (auto intersect : g.intersects[bg]) {
-                    // they successfully intersect, so do not erase
-                    if (g.intersects[sm].find(intersect) != g.intersects[sm].end()) continue;
-
-                    DEBUG("did not find intersect in sm intersects", intersect, g.intersects[sm]);
-                    intersect_to_drop.pb(intersect);
-                    // g.intersects[bg].erase(intersect);
-                }
-                for (auto intersect : intersect_to_drop) {
-                    g.intersects[bg].erase(intersect);
-                }
-                DEBUG("intersected");
-
-                // union
-                g.unite(bg, sm);
-                DEBUG("unioned");
-                x = g.get(x); // update x
-                interacted[x] = true;
-            }
-        }
-
-        vector<int> to_drop; // prune out some groups in groups to process in the next layer
-        for (auto group : groups) {
-            // not a root node
-            if (g.get(group) != group) {
-                to_drop.pb(group);
-                continue;
-            }
-
-            // group already reached the end, found isolated component
-            if (n - g.size(group) == g.intersects[group].size()) {
-                to_drop.pb(group);
-            }
-        }
-        for (auto drop : to_drop) {
-            groups.erase(drop);
-        }
-
-        DEBUG(groups);
-        DEBUG(g.c);
-        DEBUG(g.intersects);
-
-        counter++;
-        if (counter > 5*n) {
-            cout << "Counter exceeded 5n" << endl;
-            return;
-        }
-    }
-
-    vector<int> ret;
     f0r(i, n) {
-        if (g.c[i] < 0) {
-            ret.pb(-g.c[i]);
-        } 
+        cout << min(dp[0][i], dp[1][i]) << " ";
     }
-
-    cout << ret.size() << endl;
-    sort(ret.begin(), ret.end());
-    for(auto inst : ret) {
-        cout << inst << " ";
-    }
+    cout << endl;
 }
