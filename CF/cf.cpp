@@ -80,139 +80,123 @@ mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 ll q, Q, T, k, l, r, x, y, z;
 int n, m;
 
+const ll B = 20;
+
 void solve();
 
 // Problem URL:
 int main() {
     io;
     long long test_cases = 1;
-     cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
         solve();
     }
 }
 
-vector<vector<int>> adj;
-vector<vector<int>> from;
-map<int, int> d;
-
-void bfs(vector<int> &dist) {
-    deque<int> dq;
-    dq.pb(0);
-    dist[0] = 0;
-
-    while (!dq.empty()) {
-        int curr = dq.front();
-        dq.pop_front();
-
-        for (int i : adj[curr]) {
-            if (dist[i] == INT_MAX) {
-                dist[i] = dist[curr] + 1;
-                dq.push_back(i);
-            }
-        }
-    }
-}
-
-// do layer 1
-void layer1(vector<int> &dp) {
-    set<pair<int, int>> s; // dist, node id
-    for (int i = 0; i < n; i++) {
-        s.insert({dp[i], i});
-    }
-
-    while (!s.empty()) {
-        auto curr = *s.begin();
-        s.erase(s.begin());
-        if (d[curr.f] > d[dp[curr.s]]) continue; // out of date
-
-        for (int i : from[curr.s]) {
-            // i -> curr since push DP
-            if (d[i] >= d[curr.s]) continue; // do not do action 2
-
-            if (curr.f < dp[i]) {
-                dp[i] = curr.f;
-                s.insert({curr.f, i});
-            }
-        }
-    }
-}
-
-// try to get the best 1-score based on 0-score of adj nodes
-void layer2(vector<vector<int>>& dp) {
-    for (int i = 0; i < n; i++) {
-        for (int neigh : adj[i]) {
-            // i -> neigh
-            if (d[i] >= d[neigh]) {
-                dp[1][neigh] = min(dp[1][neigh], dp[0][i]);
-            }
-        }
-    }
-}
-
-void layer3(vector<vector<int>> &dp) {
-    set<pair<int, int>> s; // 1-score, node id
-    for (int i = 0; i < n; i++) {
-        s.insert({dp[1][i], i});
-    }
-
-    while (!s.empty()) {
-        auto curr = *s.begin();
-        DEBUG(curr);
-        s.erase(s.begin());
-        if (curr.f > dp[1][curr.s]) continue; // out of date
-
-        for (int i : from[curr.s]) {
-            // i -> curr since push DP
-            DEBUG(i, curr.s);
-            if (d[i] < d[curr.s]) { // action 1
-                if (curr.f < dp[1][i]) {
-                    dp[1][i] = curr.f;
-                    s.insert({curr.f, i});
-                }
-            } else { //action 2
-                if (dp[0][curr.s] < dp[1][i]) {
-                    dp[1][i] = dp[0][curr.s];
-                    s.insert({dp[0][curr.s], i});
-                }
-            }
-        }
-    }
-}
-
 void solve() {
-    cin >> n >> m;
+    cin >> n >> q;
+    vector<vector<ll>> sum(B + 1);
 
-    adj = vector<vector<int>>(n);
-    from = vector<vector<int>>(n);
-    d.clear();
-    f0r(i, m) {
-        int x, y;
-        cin >> x >> y;
-        x--; y--;
-
-        adj[x].pb(y);  
-        from[y].pb(x);  
-    }
-    
-    vector<vector<int>> dp(2, vector<int>(n, INT_MAX)); // dp[0] is 0-score, dp[1] is 1-score
-    bfs(dp[0]);
-    f0r(i, n) {
-        d[i] = dp[0][i];
+    f0r(i, B + 1) {
+        sum[B - i].resize((1LL << i));
     }
 
-    DEBUG("bfs", dp[0]);
-    layer1(dp[0]);
-    DEBUG("l1", dp[0]);
-    layer2(dp);
-    DEBUG("l2", dp[1]);
-    dp[1][0] = 0;
-    layer3(dp);
-    DEBUG("l3", dp);
+    vector<vector<ll>> count = sum;
+
+    vector<ll> inp(n);
+    f0r(i, n) cin >> inp[i];
 
     f0r(i, n) {
-        cout << min(dp[0][i], dp[1][i]) << " ";
+        ll x = inp[i];
+        ll m = 0;
+
+        for (int bit = B - 1; bit >= 0; bit--) {
+            if (x & (1LL << bit)) {
+                m = 2 * m + 1;
+                continue;
+            } 
+
+            sum[bit + 1][m] -= (x % (1LL << bit));
+            count[bit + 1][m]++;
+
+            m = 2 * m;
+        }
     }
-    cout << endl;
+
+    vector<ll> cost((1LL << B));
+
+    for (int bit = B - 1; bit >= 0; bit--) {
+        ll s = (1LL << (B - bit - 1));
+        ll k = B - bit - 1;
+
+        for (int i = 0; i < k; i++) {
+            f0r(j, (1LL << k)) {
+                if (j & (1LL << i)) {
+                    continue;
+                }
+
+                sum[bit + 1][j] += sum[bit + 1][j + (1LL << i)];
+                count[bit + 1][j] += count[bit + 1][j + (1LL << i)];
+            }
+        }
+
+        for (ll i = (1LL << bit); i < (1LL << (bit + 1)); i++) {
+            for (ll j = 0; j < (1LL << k); j++) {
+                ll mask = (j << (bit + 1)) + i;
+                cost[mask] += sum[bit + 1][j] + count[bit + 1][j] * i;
+                // DEBUG(i, j, mask);
+            }
+        }
+    }
+
+    for (int i = (1LL << B) - 2; i >= 0; i--) {
+        cost[i] = min(cost[i], cost[i + 1]);
+    }
+
+    ll s = 0;
+    f0r(i, n) {
+        s += inp[i];
+    }
+
+    f0r(i, q) {
+        ll t;
+        cin >> t;
+
+        ll c = n * (1LL << B) - s;
+        DEBUG(c, t);
+
+        if (c <= t) {
+            // big case
+            t += s;
+            ll ans = 0;
+            for (ll i = 60; i >= 0; i--) {
+                DEBUG(ans, t);
+                __int128_t x = (1LL << i);
+                x *= n;
+
+                if (x <= t) {
+                    t -= x;
+                    ans += (1LL << i);
+                }
+            }
+
+            cout << ans << "\n";
+        } else {
+            ll l = 0;
+            ll r = (1LL << B);
+
+            while (l < r) {
+                ll m = (l + r) / 2;
+
+                if (cost[m] <= t) {
+                    l = m + 1;
+                } else {
+                    r = m;
+                }
+            }
+
+            cout << l - 1 << "\n";
+        }
+    }
 }
