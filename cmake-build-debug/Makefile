@@ -48,19 +48,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /home/kevthedev/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.222/bin/cmake/linux/x64/bin/cmake
+CMAKE_COMMAND = /Users/kevinxu-mac/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake
 
 # The command to remove a file.
-RM = /home/kevthedev/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.222/bin/cmake/linux/x64/bin/cmake -E rm -f
+RM = /Users/kevinxu-mac/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/kevthedev/compsci/CompetitiveProgramming
+CMAKE_SOURCE_DIR = /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug
+CMAKE_BINARY_DIR = /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /home/kevthedev/compsci/CompetitiveProgramming/cmake-build-de
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/home/kevthedev/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.222/bin/cmake/linux/x64/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+	/Users/kevinxu-mac/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -78,7 +78,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/home/kevthedev/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/231.8109.222/bin/cmake/linux/x64/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/Users/kevinxu-mac/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/CMakeFiles /home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/CMakeFiles /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -1160,6 +1160,30 @@ CF/e_cf.s: CF/e_cf.cpp.s
 CF/e_cf.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/CF/e_cf.cpp.s
 .PHONY : CF/e_cf.cpp.s
+
+CF/icpc.o: CF/icpc.cpp.o
+.PHONY : CF/icpc.o
+
+# target to build an object file
+CF/icpc.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/CF/icpc.cpp.o
+.PHONY : CF/icpc.cpp.o
+
+CF/icpc.i: CF/icpc.cpp.i
+.PHONY : CF/icpc.i
+
+# target to preprocess a source file
+CF/icpc.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/CF/icpc.cpp.i
+.PHONY : CF/icpc.cpp.i
+
+CF/icpc.s: CF/icpc.cpp.s
+.PHONY : CF/icpc.s
+
+# target to generate assembly for a file
+CF/icpc.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/CF/icpc.cpp.s
+.PHONY : CF/icpc.cpp.s
 
 CF/pacmen.o: CF/pacmen.cpp.o
 .PHONY : CF/pacmen.o
@@ -3849,6 +3873,30 @@ USACO/Gold/G-lasers.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/USACO/Gold/G-lasers.cpp.s
 .PHONY : USACO/Gold/G-lasers.cpp.s
 
+USACO/Gold/G-moonetwork.o: USACO/Gold/G-moonetwork.cpp.o
+.PHONY : USACO/Gold/G-moonetwork.o
+
+# target to build an object file
+USACO/Gold/G-moonetwork.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/USACO/Gold/G-moonetwork.cpp.o
+.PHONY : USACO/Gold/G-moonetwork.cpp.o
+
+USACO/Gold/G-moonetwork.i: USACO/Gold/G-moonetwork.cpp.i
+.PHONY : USACO/Gold/G-moonetwork.i
+
+# target to preprocess a source file
+USACO/Gold/G-moonetwork.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/USACO/Gold/G-moonetwork.cpp.i
+.PHONY : USACO/Gold/G-moonetwork.cpp.i
+
+USACO/Gold/G-moonetwork.s: USACO/Gold/G-moonetwork.cpp.s
+.PHONY : USACO/Gold/G-moonetwork.s
+
+# target to generate assembly for a file
+USACO/Gold/G-moonetwork.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/USACO/Gold/G-moonetwork.cpp.s
+.PHONY : USACO/Gold/G-moonetwork.cpp.s
+
 USACO/Gold/G-mootube.o: USACO/Gold/G-mootube.cpp.o
 .PHONY : USACO/Gold/G-mootube.o
 
@@ -4659,6 +4707,9 @@ help:
 	@echo "... CF/e_cf.o"
 	@echo "... CF/e_cf.i"
 	@echo "... CF/e_cf.s"
+	@echo "... CF/icpc.o"
+	@echo "... CF/icpc.i"
+	@echo "... CF/icpc.s"
 	@echo "... CF/pacmen.o"
 	@echo "... CF/pacmen.i"
 	@echo "... CF/pacmen.s"
@@ -4995,6 +5046,9 @@ help:
 	@echo "... USACO/Gold/G-lasers.o"
 	@echo "... USACO/Gold/G-lasers.i"
 	@echo "... USACO/Gold/G-lasers.s"
+	@echo "... USACO/Gold/G-moonetwork.o"
+	@echo "... USACO/Gold/G-moonetwork.i"
+	@echo "... USACO/Gold/G-moonetwork.s"
 	@echo "... USACO/Gold/G-mootube.o"
 	@echo "... USACO/Gold/G-mootube.i"
 	@echo "... USACO/Gold/G-mootube.s"

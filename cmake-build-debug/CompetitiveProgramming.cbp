@@ -8,642 +8,658 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug"/>
+				<Option working_dir="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="CompetitiveProgramming">
-				<Option output="/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/CompetitiveProgramming" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug"/>
+				<Option output="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/CompetitiveProgramming" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/include/c++/9"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
-					<Add directory="/usr/include/c++/9/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin20/12/../../../../../../include/c++/12"/>
+					<Add directory="/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin20/12/../../../../../../include/c++/12/x86_64-apple-darwin20"/>
+					<Add directory="/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin20/12/../../../../../../include/c++/12/backward"/>
+					<Add directory="/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin20/12/include"/>
+					<Add directory="/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin20/12/include-fixed"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk/System/Library/Frameworks"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 CompetitiveProgramming"/>
-					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 CompetitiveProgramming"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="CompetitiveProgramming/fast">
-				<Option output="/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/CompetitiveProgramming" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug"/>
+				<Option output="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/CompetitiveProgramming" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/usr/include/c++/9"/>
-					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
-					<Add directory="/usr/include/c++/9/backward"/>
-					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin20/12/../../../../../../include/c++/12"/>
+					<Add directory="/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin20/12/../../../../../../include/c++/12/x86_64-apple-darwin20"/>
+					<Add directory="/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin20/12/../../../../../../include/c++/12/backward"/>
+					<Add directory="/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin20/12/include"/>
+					<Add directory="/usr/local/Cellar/gcc/12.2.0/bin/../lib/gcc/current/gcc/x86_64-apple-darwin20/12/include-fixed"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/SDKs/MacOSX11.sdk/System/Library/Frameworks"/>
 					<Add directory="/usr/local/include"/>
-					<Add directory="/usr/include/x86_64-linux-gnu"/>
-					<Add directory="/usr/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/12.0.5/include"/>
+					<Add directory="/Library/Developer/CommandLineTools/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 CompetitiveProgramming/fast"/>
-					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 CompetitiveProgramming/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug"/>
+				<Option working_dir="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug"/>
+				<Option working_dir="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j16 -f &quot;/home/kevthedev/compsci/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Qualifications/2022/A.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Qualifications/2022/A.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Qualifications/2022/B.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Qualifications/2022/B.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Qualifications/2022/C.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Qualifications/2022/C.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Qualifications/2022/D-stress_test.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Qualifications/2022/D-stress_test.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Qualifications/2022/D.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Qualifications/2022/D.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Qualifications/2022/E.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Qualifications/2022/E.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2021a/A.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2021a/A.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022a/A.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022a/A.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022a/B.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022a/B.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022a/C.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022a/C.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022a/C_after.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022a/C_after.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022b/A.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022b/A.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022b/B.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022b/B.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022b/C.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022b/C.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022b/C_final.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022b/C_final.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022b/template.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022b/template.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022c/A.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022c/A.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022c/A_2.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022c/A_2.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022c/B.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022c/B.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022c/C.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022c/C.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022c/template.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Google/CodeJam/Round1/2022c/template.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Meta/Hackercup/Qualification/2022/A.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Meta/Hackercup/Qualification/2022/A.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Meta/Hackercup/Qualification/2022/B1.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Meta/Hackercup/Qualification/2022/B1.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Meta/Hackercup/Qualification/2022/B2.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Meta/Hackercup/Qualification/2022/B2.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Meta/Hackercup/Qualification/2022/C1.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Meta/Hackercup/Qualification/2022/C1.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Meta/Hackercup/Round1/2022/A1.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Meta/Hackercup/Round1/2022/A1.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Meta/Hackercup/Round1/2022/A2.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Meta/Hackercup/Round1/2022/A2.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Meta/Hackercup/Round1/2022/B1.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Meta/Hackercup/Round1/2022/B1.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Meta/Hackercup/Round1/2022/test_case_generator.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Meta/Hackercup/Round1/2022/test_case_generator.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Meta/Hackercup/Round2/2022/A1.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Meta/Hackercup/Round2/2022/A1.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Meta/Hackercup/Round2/2022/In Contest/A1.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Meta/Hackercup/Round2/2022/In Contest/A1.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Meta/Hackercup/Round2/2022/In Contest/B.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Meta/Hackercup/Round2/2022/In Contest/B.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/Meta/Hackercup/Round2/2022/template.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/Meta/Hackercup/Round2/2022/template.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/BigTech/microsoft-grid.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/BigTech/microsoft-grid.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/2000+/aaparsa.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/2000+/aaparsa.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/2000+/flip-cards.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/2000+/flip-cards.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/a_cf.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/a_cf.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/b_cf.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/b_cf.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/brute.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/brute.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/c_cf.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/c_cf.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/cf.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/cf.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/div2.E/726.1.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/div2.E/726.1.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/e_cf.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/e_cf.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/pacmen.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/icpc.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/template.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/pacmen.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CF/test.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/template.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/array-division.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CF/test.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/building-roads.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/array-division.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/building-teams.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/building-roads.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/coin-combinations-1.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/building-teams.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/coin-combinations-2.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/coin-combinations-1.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/common-divisors.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/coin-combinations-2.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/counting-divisors.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/common-divisors.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/counting-rooms-bfs.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/counting-divisors.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/counting-rooms.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/counting-rooms-bfs.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/dice-combinations.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/counting-rooms.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/divisor-analysis.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/dice-combinations.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/exponentiation-2.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/divisor-analysis.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/exponentiation.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/exponentiation-2.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/flight-routes-check.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/exponentiation.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/forest-queries.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/flight-routes-check.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/game-routes.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/forest-queries.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/graph-girth.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/game-routes.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/investigation.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/graph-girth.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/labyrinth.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/investigation.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/max-sub-sum.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/labyrinth.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/message-route.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/max-sub-sum.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/movie-festival-2.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/message-route.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/movie-festival.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/movie-festival-2.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/range-update-queries.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/movie-festival.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/range-xor-queries.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/range-update-queries.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/room-allocation.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/range-xor-queries.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/shortest-routes-1.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/room-allocation.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/static-range-sum.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/shortest-routes-1.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/subarrays-sums-1.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/static-range-sum.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/sum-2.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/subarrays-sums-1.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/sum-3.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/sum-2.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/task-deadlines.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/sum-3.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/towers.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/task-deadlines.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CSES/traffic-lights.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/towers.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Fun/erdos.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CSES/traffic-lights.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Fun/erdos.in">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Fun/erdos.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Fun/sudoku.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Fun/erdos.in">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Fun/test.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Fun/sudoku.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2020-NAQ/A.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Fun/test.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2020-NAQ/C.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2020-NAQ/A.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2020-NAQ/D.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2020-NAQ/C.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2020-NAQ/F.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2020-NAQ/D.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2020-NAQ/H.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2020-NAQ/F.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2020-NERC Regionals/A.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2020-NAQ/H.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2020-NERC Regionals/B.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2020-NERC Regionals/A.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2020-NERC Regionals/D.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2020-NERC Regionals/B.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2020-NERC Regionals/I.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2020-NERC Regionals/D.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2020-NERC Regionals/M.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2020-NERC Regionals/I.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2021-NAC/D.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2020-NERC Regionals/M.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2021-NAC/F.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2021-NAC/D.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2021-NAC/M.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2021-NAC/F.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2021-SCA Regionals/F.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2021-NAC/M.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022-NAQ/A.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2021-SCA Regionals/F.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022-NAQ/C.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/A.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022-NAQ/D.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/C.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022-NAQ/E.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/D.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022-NAQ/F.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/E.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022-NAQ/G.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/F.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022-NAQ/G2.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/G.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022-NAQ/G3.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/G2.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022-NAQ/H.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/G3.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022-NAQ/K.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/H.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022-NAQ/template.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/K.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022/C.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/template.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022/C2.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022/C.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022/D.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022/C2.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022/M.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022/D.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/2022/prime_sieve.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022/M.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/Practice/A.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022/prime_sieve.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/Practice/C.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/Practice/A.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/Practice/G.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/Practice/C.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/Practice/H.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/Practice/G.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/Practice/knapsack/BookShopSol.cp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/Practice/H.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/Practice/knapsack/CoinCombosII.cp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/Practice/knapsack/BookShopSol.cp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/Practice/knapsack/stdin_Template.cp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/Practice/knapsack/CoinCombosII.cp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/Practice/knapsack/stdin_Template.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/Practice/knapsack/stdin_Template.cp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/Practice/quantum-superposition.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/Practice/knapsack/stdin_Template.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/ICPC/Practice/template.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/Practice/quantum-superposition.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/easy/2432.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/Practice/template.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/easy/2441.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/easy/2432.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/easy/2443.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/easy/2441.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/easy/2455.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/easy/2443.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/easy/2460.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/easy/2455.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/easy/653.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/easy/2460.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/find-pivot-index.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/easy/653.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/hard/2435.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/find-pivot-index.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/hard/2444.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/hard/2435.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/hard/2458.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/hard/2444.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/hard/827.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/hard/2458.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/leetcode.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/hard/827.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/medium/2433.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/leetcode.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/medium/2434.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/medium/2433.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/medium/2442.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/medium/2434.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/medium/2456.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/medium/2442.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/medium/2457.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/medium/2456.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/medium/2461.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/medium/2457.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/medium/2462.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/medium/2461.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Leetcode/medium/valid-sudoku.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/medium/2462.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Templates/CF Template.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Leetcode/medium/valid-sudoku.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Templates/Math Template.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Templates/CF Template.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Templates/USACO Template.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Templates/Math Template.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Templates/hash.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Templates/USACO Template.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Templates/sum.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Templates/hash.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/Templates/xor.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Templates/sum.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO Retype.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/Templates/xor.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-angry.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO Retype.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-cardgame.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-angry.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-cbarn2.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-cardgame.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-cownav.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-cbarn2.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-fcolor.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-cownav.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-feast.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-fcolor.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-fencedin.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-feast.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-hps.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-fencedin.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-lasers.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-hps.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-mootube.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-lasers.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-shortcut.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-moonetwork.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-snowboots.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-mootube.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-split.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-shortcut.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-talent.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-snowboots.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-time.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-split.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/G-timeline.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-talent.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/S-ccski.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-time.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/compare-out.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/G-timeline.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Gold/time-testing.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/S-ccski.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-convention2.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/compare-out.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-countcross.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Gold/time-testing.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-diamond.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-convention2.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-div7.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-countcross.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-fenceplan.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-diamond.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-moocast.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-div7.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-mountains.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-fenceplan.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-paintbarn.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-moocast.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-perimeter.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-mountains.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-rental.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-paintbarn.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-revegetate.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-perimeter.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-snowboots.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-rental.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-where.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-revegetate.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/S-wormsort.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-snowboots.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/failed/S-diamonds.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-where.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/Silver/usaco_jan_22_a.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/S-wormsort.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/USACO/usaco.cpp">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/failed/S-diamonds.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/home/kevthedev/compsci/CompetitiveProgramming/CMakeLists.txt">
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/Silver/usaco_jan_22_a.cpp">
+			<Option target="CompetitiveProgramming"/>
+		</Unit>
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/USACO/usaco.cpp">
+			<Option target="CompetitiveProgramming"/>
+		</Unit>
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>
