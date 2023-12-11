@@ -78,125 +78,71 @@ mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 // rng() gives a better random unsigned 32 bit number
 
 ll q, Q, T, k, l, r, x, y, z;
-int n, m;
+int n, m, c;
 
-const ll B = 20;
+vector<int> seen;
 
-void solve();
+void solve(int test_case);
 
 // Problem URL:
 int main() {
     io;
     long long test_cases = 1;
+    cin >> test_cases;
+
+    seen = vector<int>(1e6 + 1, -1);
 
     for (int i = 0; i < test_cases; i++) {
-        solve();
+        solve(i);
     }
 }
 
-void solve() {
-    cin >> n >> q;
-    vector<vector<ll>> sum(B + 1);
+void solve(int test_case) {
+    cin >> n >> c;
+    set<int> s_inp;
 
-    f0r(i, B + 1) {
-        sum[B - i].resize((1LL << i));
-    }
-
-    vector<vector<ll>> count = sum;
-
-    vector<ll> inp(n);
-    f0r(i, n) cin >> inp[i];
+    vector<int> prefix(c + 1, 0); // prefix[0] is bottom, and num of 0s. since nums cannot be 0 it is okay as a bottom value
 
     f0r(i, n) {
-        ll x = inp[i];
-        ll m = 0;
-
-        for (int bit = B - 1; bit >= 0; bit--) {
-            if (x & (1LL << bit)) {
-                m = 2 * m + 1;
-                continue;
-            } 
-
-            sum[bit + 1][m] -= (x % (1LL << bit));
-            count[bit + 1][m]++;
-
-            m = 2 * m;
-        }
+        int inp;
+        cin >> inp;
+        s_inp.insert(inp);
     }
 
-    vector<ll> cost((1LL << B));
+    n = s_inp.size();
 
-    for (int bit = B - 1; bit >= 0; bit--) {
-        ll s = (1LL << (B - bit - 1));
-        ll k = B - bit - 1;
+    vector<int> inp; // unique and sorted
+    for (auto s : s_inp) {
+        inp.pb(s);
+        seen[s] = test_case;
+        prefix[s]++;
+    }
 
-        for (int i = 0; i < k; i++) {
-            f0r(j, (1LL << k)) {
-                if (j & (1LL << i)) {
-                    continue;
-                }
+    for (int i = 0; i < c + 1; i++) {
+        prefix[i] += prefix[i - 1];
+    }
 
-                sum[bit + 1][j] += sum[bit + 1][j + (1LL << i)];
-                count[bit + 1][j] += count[bit + 1][j + (1LL << i)];
+    if (inp[0] > 1) {
+        cout << "No" << endl;
+        return;
+    }
+
+    for (int i = 1; i < n - 1; i++) {
+        // i is the smaller element
+        for (int res = 2; res <= c/inp[i]; res++) {
+            if (seen[res] == test_case) continue;
+            // res doesn't exist, make sure there is no nums in this range to break
+
+            int left = res * inp[i];
+            int right = (res + 1) * inp[i] - 1;
+            right = min(c, right);
+
+            if (prefix[right] - prefix[left - 1] > 0) {
+                cout << "No" << endl;
+                return;
             }
         }
-
-        for (ll i = (1LL << bit); i < (1LL << (bit + 1)); i++) {
-            for (ll j = 0; j < (1LL << k); j++) {
-                ll mask = (j << (bit + 1)) + i;
-                cost[mask] += sum[bit + 1][j] + count[bit + 1][j] * i;
-                // DEBUG(i, j, mask);
-            }
-        }
     }
 
-    for (int i = (1LL << B) - 2; i >= 0; i--) {
-        cost[i] = min(cost[i], cost[i + 1]);
-    }
-
-    ll s = 0;
-    f0r(i, n) {
-        s += inp[i];
-    }
-
-    f0r(i, q) {
-        ll t;
-        cin >> t;
-
-        ll c = n * (1LL << B) - s;
-        DEBUG(c, t);
-
-        if (c <= t) {
-            // big case
-            t += s;
-            ll ans = 0;
-            for (ll i = 60; i >= 0; i--) {
-                DEBUG(ans, t);
-                __int128_t x = (1LL << i);
-                x *= n;
-
-                if (x <= t) {
-                    t -= x;
-                    ans += (1LL << i);
-                }
-            }
-
-            cout << ans << "\n";
-        } else {
-            ll l = 0;
-            ll r = (1LL << B);
-
-            while (l < r) {
-                ll m = (l + r) / 2;
-
-                if (cost[m] <= t) {
-                    l = m + 1;
-                } else {
-                    r = m;
-                }
-            }
-
-            cout << l - 1 << "\n";
-        }
-    }
+    cout << "Yes" << endl;
 }
