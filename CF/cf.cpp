@@ -78,71 +78,21 @@ mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 // rng() gives a better random unsigned 32 bit number
 
 ll q, Q, T, k, l, r, x, y, z;
-int n, m, c;
+int n, m;
 
-vector<int> seen;
-
-void solve(int test_case);
+void solve();
 
 // Problem URL:
 int main() {
     io;
     long long test_cases = 1;
-    cin >> test_cases;
-
-    seen = vector<int>(1e6 + 1, -1);
+     cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
-        solve(i);
+        solve();
     }
 }
 
-void solve(int test_case) {
-    cin >> n >> c;
-    set<int> s_inp;
-
-    vector<int> prefix(c + 1, 0); // prefix[0] is bottom, and num of 0s. since nums cannot be 0 it is okay as a bottom value
-
-    f0r(i, n) {
-        int inp;
-        cin >> inp;
-        s_inp.insert(inp);
-    }
-
-    n = s_inp.size();
-
-    vector<int> inp; // unique and sorted
-    for (auto s : s_inp) {
-        inp.pb(s);
-        seen[s] = test_case;
-        prefix[s]++;
-    }
-
-    for (int i = 0; i < c + 1; i++) {
-        prefix[i] += prefix[i - 1];
-    }
-
-    if (inp[0] > 1) {
-        cout << "No" << endl;
-        return;
-    }
-
-    for (int i = 1; i < n - 1; i++) {
-        // i is the smaller element
-        for (int res = 2; res <= c/inp[i]; res++) {
-            if (seen[res] == test_case) continue;
-            // res doesn't exist, make sure there is no nums in this range to break
-
-            int left = res * inp[i];
-            int right = (res + 1) * inp[i] - 1;
-            right = min(c, right);
-
-            if (prefix[right] - prefix[left - 1] > 0) {
-                cout << "No" << endl;
-                return;
-            }
-        }
-    }
-
-    cout << "Yes" << endl;
+void solve() {
+    cin >> n;
 }
