@@ -95,4 +95,63 @@ int main() {
 
 void solve() {
     cin >> n;
+    vector<ll> inp(n);
+    vector<ll> next_real_num(n); // index of the next real num
+
+    int prev_real_num = 0;
+    ll tot_sum = 0;
+    f0r(i, n) {
+        cin >> inp[i];
+
+        tot_sum += inp[i];
+        if (inp[i] > 1) {
+            next_real_num[prev_real_num] = i;
+            prev_real_num = i;
+        }
+    }
+
+    vector<ll> pref(n);
+    pref[0] = inp[0];
+    for (int i = 1; i < n; i++) {
+        pref[i] = pref[i - 1] + inp[i];
+    }
+
+    ll ret = 1;
+    int begin_1s = 0;
+    int end_1s = 0;
+    for (int i = 0; i < n; i++) {
+        if (begin_1s == i && inp[i] == 1) {
+            begin_1s++;
+        }
+
+        ret *= inp[i];
+    }
+
+    for (int i = n - 1; i >= 0; i--) {
+        if (inp[i] != 1) {
+            break;
+        }
+
+        end_1s++;
+    }
+
+    if (begin_1s == n) {
+        cout << 1 << " " << 1 << endl;
+        return;
+    }
+
+    pii best = {begin_1s + 1, n - end_1s};
+
+    for (int i = 0; i < n; i++) {
+        // i marks the starting index, never start at a 1
+        if (inp[i] == 1) continue;
+        for (int size = 1; size <= 30; size++) {
+            // jump up to size forward real nums, with next_real_num jumping
+            // size = 1 means we are combining with 1 number, so 2 total
+
+            // calculate how many we've jumped, subtract the prefix sum in that area from tot_sum and add the product from jumping this much
+        }
+    }
+
+    cout << best.f << " " << best.s << endl;
 }
