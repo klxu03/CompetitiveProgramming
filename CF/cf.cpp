@@ -96,7 +96,7 @@ int main() {
 void solve() {
     cin >> n;
     vector<ll> inp(n);
-    vector<ll> next_real_num(n); // index of the next real num
+    vector<ll> next_real_num(n, -1); // index of the next real num
 
     int prev_real_num = 0;
     ll tot_sum = 0;
@@ -116,7 +116,7 @@ void solve() {
         pref[i] = pref[i - 1] + inp[i];
     }
 
-    ll ret = 1;
+    ll best = 1;
     int begin_1s = 0;
     int end_1s = 0;
     for (int i = 0; i < n; i++) {
@@ -124,7 +124,7 @@ void solve() {
             begin_1s++;
         }
 
-        ret *= inp[i];
+        best *= inp[i];
     }
 
     for (int i = n - 1; i >= 0; i--) {
@@ -135,23 +135,48 @@ void solve() {
         end_1s++;
     }
 
+    best += begin_1s + end_1s;
+
     if (begin_1s == n) {
         cout << 1 << " " << 1 << endl;
         return;
     }
 
-    pii best = {begin_1s + 1, n - end_1s};
+    pii best_pair = {begin_1s + 1, n - end_1s};
+    DEBUG(best, best_pair);
 
     for (int i = 0; i < n; i++) {
         // i marks the starting index, never start at a 1
         if (inp[i] == 1) continue;
-        for (int size = 1; size <= 30; size++) {
+        for (int size = 0; size <= 30; size++) {
             // jump up to size forward real nums, with next_real_num jumping
             // size = 1 means we are combining with 1 number, so 2 total
 
             // calculate how many we've jumped, subtract the prefix sum in that area from tot_sum and add the product from jumping this much
+            int curr = i;
+            ll prod = inp[i];
+            for (int jump = 0; jump < size; jump++) {
+                int next = next_real_num[curr];
+                if (next == -1) {
+                    break;
+                }
+
+                prod *= inp[next];
+                curr = next; 
+            }
+
+            ll new_sum = prod + tot_sum - pref[curr];
+            // lower half of prefix sum
+            if (i > 0) {
+                new_sum -= pref[i - 1];
+            }
+
+            if (new_sum > best) {
+                best = new_sum;
+                best_pair = {i + 1, curr + 1};
+            }
         }
     }
 
-    cout << best.f << " " << best.s << endl;
+    cout << best_pair.f << " " << best_pair.s << endl;
 }
