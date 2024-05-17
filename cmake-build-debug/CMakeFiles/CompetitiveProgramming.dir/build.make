@@ -1581,19 +1581,19 @@ CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/K.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/K.cpp.s"
 	/usr/local/Cellar/gcc/12.2.0/bin/g++-12 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/K.cpp -o CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/K.cpp.s
 
-CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.o: CMakeFiles/CompetitiveProgramming.dir/flags.make
-CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.o: /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/template.cpp
-CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.o: CMakeFiles/CompetitiveProgramming.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_109) "Building CXX object CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.o"
-	/usr/local/Cellar/gcc/12.2.0/bin/g++-12 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.o -MF CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.o.d -o CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.o -c /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/template.cpp
+CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.o: CMakeFiles/CompetitiveProgramming.dir/flags.make
+CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.o: /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2023-NAQ/template.cpp
+CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.o: CMakeFiles/CompetitiveProgramming.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_109) "Building CXX object CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.o"
+	/usr/local/Cellar/gcc/12.2.0/bin/g++-12 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.o -MF CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.o.d -o CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.o -c /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2023-NAQ/template.cpp
 
-CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.i"
-	/usr/local/Cellar/gcc/12.2.0/bin/g++-12 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/template.cpp > CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.i
+CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.i"
+	/usr/local/Cellar/gcc/12.2.0/bin/g++-12 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2023-NAQ/template.cpp > CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.i
 
-CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.s"
-	/usr/local/Cellar/gcc/12.2.0/bin/g++-12 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/template.cpp -o CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.s
+CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.s"
+	/usr/local/Cellar/gcc/12.2.0/bin/g++-12 $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2023-NAQ/template.cpp -o CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.s
 
 CMakeFiles/CompetitiveProgramming.dir/ICPC/Practice/knapsack/stdin_Template.cpp.o: CMakeFiles/CompetitiveProgramming.dir/flags.make
 CMakeFiles/CompetitiveProgramming.dir/ICPC/Practice/knapsack/stdin_Template.cpp.o: /Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/Practice/knapsack/stdin_Template.cpp
@@ -2769,7 +2769,7 @@ CompetitiveProgramming_OBJECTS = \
 "CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/G3.cpp.o" \
 "CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/H.cpp.o" \
 "CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/K.cpp.o" \
-"CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.o" \
+"CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.o" \
 "CMakeFiles/CompetitiveProgramming.dir/ICPC/Practice/knapsack/stdin_Template.cpp.o" \
 "CMakeFiles/CompetitiveProgramming.dir/ICPC/Practice/A.cpp.o" \
 "CMakeFiles/CompetitiveProgramming.dir/ICPC/Practice/C.cpp.o" \
@@ -2958,7 +2958,7 @@ CompetitiveProgramming: CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/G2.c
 CompetitiveProgramming: CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/G3.cpp.o
 CompetitiveProgramming: CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/H.cpp.o
 CompetitiveProgramming: CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/K.cpp.o
-CompetitiveProgramming: CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.o
+CompetitiveProgramming: CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.o
 CompetitiveProgramming: CMakeFiles/CompetitiveProgramming.dir/ICPC/Practice/knapsack/stdin_Template.cpp.o
 CompetitiveProgramming: CMakeFiles/CompetitiveProgramming.dir/ICPC/Practice/A.cpp.o
 CompetitiveProgramming: CMakeFiles/CompetitiveProgramming.dir/ICPC/Practice/C.cpp.o

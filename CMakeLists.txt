@@ -112,7 +112,7 @@ add_executable(CompetitiveProgramming
         ICPC/2022-NAQ/G3.cpp
         ICPC/2022-NAQ/H.cpp
         ICPC/2022-NAQ/K.cpp
-        ICPC/2022-NAQ/template.cpp
+        ICPC/2023-NAQ/template.cpp
         ICPC/Practice/knapsack/BookShopSol.cp
         ICPC/Practice/knapsack/CoinCombosII.cp
         ICPC/Practice/knapsack/stdin_Template.cp

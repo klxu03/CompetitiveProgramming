@@ -2721,30 +2721,6 @@ ICPC/2022-NAQ/K.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/K.cpp.s
 .PHONY : ICPC/2022-NAQ/K.cpp.s
 
-ICPC/2022-NAQ/template.o: ICPC/2022-NAQ/template.cpp.o
-.PHONY : ICPC/2022-NAQ/template.o
-
-# target to build an object file
-ICPC/2022-NAQ/template.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.o
-.PHONY : ICPC/2022-NAQ/template.cpp.o
-
-ICPC/2022-NAQ/template.i: ICPC/2022-NAQ/template.cpp.i
-.PHONY : ICPC/2022-NAQ/template.i
-
-# target to preprocess a source file
-ICPC/2022-NAQ/template.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.i
-.PHONY : ICPC/2022-NAQ/template.cpp.i
-
-ICPC/2022-NAQ/template.s: ICPC/2022-NAQ/template.cpp.s
-.PHONY : ICPC/2022-NAQ/template.s
-
-# target to generate assembly for a file
-ICPC/2022-NAQ/template.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/ICPC/2022-NAQ/template.cpp.s
-.PHONY : ICPC/2022-NAQ/template.cpp.s
-
 ICPC/2022/C.o: ICPC/2022/C.cpp.o
 .PHONY : ICPC/2022/C.o
 
@@ -2864,6 +2840,30 @@ ICPC/2022/prime_sieve.s: ICPC/2022/prime_sieve.cpp.s
 ICPC/2022/prime_sieve.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/ICPC/2022/prime_sieve.cpp.s
 .PHONY : ICPC/2022/prime_sieve.cpp.s
+
+ICPC/2023-NAQ/template.o: ICPC/2023-NAQ/template.cpp.o
+.PHONY : ICPC/2023-NAQ/template.o
+
+# target to build an object file
+ICPC/2023-NAQ/template.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.o
+.PHONY : ICPC/2023-NAQ/template.cpp.o
+
+ICPC/2023-NAQ/template.i: ICPC/2023-NAQ/template.cpp.i
+.PHONY : ICPC/2023-NAQ/template.i
+
+# target to preprocess a source file
+ICPC/2023-NAQ/template.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.i
+.PHONY : ICPC/2023-NAQ/template.cpp.i
+
+ICPC/2023-NAQ/template.s: ICPC/2023-NAQ/template.cpp.s
+.PHONY : ICPC/2023-NAQ/template.s
+
+# target to generate assembly for a file
+ICPC/2023-NAQ/template.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/CompetitiveProgramming.dir/build.make CMakeFiles/CompetitiveProgramming.dir/ICPC/2023-NAQ/template.cpp.s
+.PHONY : ICPC/2023-NAQ/template.cpp.s
 
 ICPC/Practice/A.o: ICPC/Practice/A.cpp.o
 .PHONY : ICPC/Practice/A.o
@@ -4902,9 +4902,6 @@ help:
 	@echo "... ICPC/2022-NAQ/K.o"
 	@echo "... ICPC/2022-NAQ/K.i"
 	@echo "... ICPC/2022-NAQ/K.s"
-	@echo "... ICPC/2022-NAQ/template.o"
-	@echo "... ICPC/2022-NAQ/template.i"
-	@echo "... ICPC/2022-NAQ/template.s"
 	@echo "... ICPC/2022/C.o"
 	@echo "... ICPC/2022/C.i"
 	@echo "... ICPC/2022/C.s"
@@ -4920,6 +4917,9 @@ help:
 	@echo "... ICPC/2022/prime_sieve.o"
 	@echo "... ICPC/2022/prime_sieve.i"
 	@echo "... ICPC/2022/prime_sieve.s"
+	@echo "... ICPC/2023-NAQ/template.o"
+	@echo "... ICPC/2023-NAQ/template.i"
+	@echo "... ICPC/2023-NAQ/template.s"
 	@echo "... ICPC/Practice/A.o"
 	@echo "... ICPC/Practice/A.i"
 	@echo "... ICPC/Practice/A.s"

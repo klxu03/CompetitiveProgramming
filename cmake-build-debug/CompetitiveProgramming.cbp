@@ -419,9 +419,6 @@
 		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/K.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
-		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022-NAQ/template.cpp">
-			<Option target="CompetitiveProgramming"/>
-		</Unit>
 		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022/C.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
@@ -435,6 +432,9 @@
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
 		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2022/prime_sieve.cpp">
+			<Option target="CompetitiveProgramming"/>
+		</Unit>
+		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/2023-NAQ/template.cpp">
 			<Option target="CompetitiveProgramming"/>
 		</Unit>
 		<Unit filename="/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/ICPC/Practice/A.cpp">

@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 
 using namespace std;
+using ll = long long;
 
 //Safe lowerbound for 1 second is 10^8 operations
 
@@ -11,7 +12,6 @@ using namespace std;
 #define pb push_back
 #define f first
 #define s second
-using ll = long long;
 
 #define mp make_pair
 #define t third
@@ -30,7 +30,7 @@ template<typename C, typename T = decay<decltype(*begin(declval<C>()))>, typenam
 ostream& operator << (ostream &os, const C &c) {bool f = true; os << "["; for (const auto &x : c) {if (!f) os << ", "; f = false; os << x;} return os << "]";}
 template<typename T> void debug(string s, T x) {cerr << "\033[1;35m" << s << "\033[0;32m = \033[33m" << x << "\033[0m\n";}
 template<typename T, typename... Args> void debug(string s, T x, Args... args) {for (int i=0, b=0; i<(int)s.size(); i++) if (s[i] == '(' || s[i] == '{') b++; else
-if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
+        if (s[i] == ')' || s[i] == '}') b--; else if (s[i] == ',' && b == 0) {cerr << "\033[1;35m" << s.substr(0, i) << "\033[0;32m = \033[33m" << x << "\033[31m | "; debug(s.substr(s.find_first_not_of(' ', i + 1)), args...); break;}}
 
 /* Variartic Macros and Functions so max(a, b, c, d, ... z) works out of box */
 template<typename T> constexpr const inline T& _max(const T& x, const T& y) {return x<y?y:x;}
@@ -47,49 +47,77 @@ void usaco(string filename) {
     freopen((filename + ".out").c_str(), "w", stdout);
 }
 
-#include <chrono> 
-using namespace std::chrono; 
+#include <chrono>
+using namespace std::chrono;
 struct timer {
-  high_resolution_clock::time_point begin;
+    high_resolution_clock::time_point begin;
 
-  timer() {}
-  timer(bool b) {
-    if (b) start();
-  }
+    timer() {}
+    timer(bool b) {
+        if (b) start();
+    }
 
-  void start() {
-    begin = high_resolution_clock::now();
-  }
+    void start() {
+        begin = high_resolution_clock::now();
+    }
 
-  void print() {
-    cout << "Time taken: " << duration_cast<duration<double>>(high_resolution_clock::now() - begin).count() << " seconds" << endl;
-  }
+    void print() {
+        cout << "Time taken: " << duration_cast<duration<double>>(high_resolution_clock::now() - begin).count() << " seconds" << endl;
+    }
 
-  double report() {
-    return duration_cast<duration<double>>(high_resolution_clock::now() - begin).count();
-  }
+    double report() {
+        return duration_cast<duration<double>>(high_resolution_clock::now() - begin).count();
+    }
 };
 // Start of main put tin, end of main put tpr (tgt gives you value not printed)
 #define tin timer __timer__(1);
 #define tpr __timer__.print();
 #define tgt __timer__.report()
 
+mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count());
+// rng() gives a better random unsigned 32 bit number
+
 ll q, Q, T, k, l, r, x, y, z;
-int n, m;
+int n, m, a, b;
 
-void solve(); 
+void solve();
 
-// Problem URL: 
+// Problem URL:
 int main() {
-	io;
-	long long test_cases = 1;
-	// cin >> test_cases;
-	
+    io;
+    long long test_cases = 1;
+
     for (int i = 0; i < test_cases; i++) {
-		solve();
+        solve();
     }
 }
 
 void solve() {
-	cin >> n;
+    cin >> n >> a >> b;
+    set<int> inps;
+
+    f0r(i, n - 1) {
+        int inp;
+        cin >> inp;
+        inps.insert(inp);
+    }
+
+    vector<int> ret;
+    if (inps.find(a) == inps.end()) {
+        ret.push_back(a);
+    }
+
+    if (inps.find(b) == inps.end()) {
+        ret.push_back(b);
+    }
+
+    if (ret.size() == 0) {
+        for (int i = a; i <= b; i++) {
+            cout << i << endl;
+        }
+    } else if (ret.size() == 1) {
+        cout << ret[0] << endl;
+    } else {
+        cout << -1 << endl;
+    }
 }
