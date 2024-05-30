@@ -39,7 +39,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "CompetitiveProgramming::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-CompetitiveProgramming-Debug-67d162730f099a4f3669.json",
+					"jsonFile" : "target-CompetitiveProgramming-Debug-86040248484e5d5b4467.json",
 					"name" : "CompetitiveProgramming",
 					"projectIndex" : 0
 				}
@@ -49,12 +49,12 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming/cmake-build-debug",
-		"source" : "/Users/kevinxu-mac/Documents/Computer-Science/CompetitiveProgramming"
+		"build" : "/home/kevthatdevs/code/cp/CompetitiveProgramming/cmake-build-debug",
+		"source" : "/home/kevthatdevs/code/cp/CompetitiveProgramming"
 	},
 	"version" : 
 	{
 		"major" : 2,
-		"minor" : 4
+		"minor" : 6
 	}
 }
