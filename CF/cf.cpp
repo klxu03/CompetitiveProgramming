@@ -82,17 +82,230 @@ int n, m;
 
 void solve();
 
-// Problem URL:
+// Problem URL: https://cses.fi/problemset/task/1735
 int main() {
     io;
     long long test_cases = 1;
-    cin >> test_cases;
+//    cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
         solve();
     }
 }
 
+class SegTreeNode {
+public:
+    ll sum;
+    int left; // left range inclusive
+    int right; // right range inclusive
+
+    ll lazy_add; // lazy marker on adding
+    ll lazy_set; // lazy marker on setting a value
+
+    SegTreeNode* left_node;
+    SegTreeNode* right_node;
+
+    SegTreeNode() {
+        this->lazy_add = 0;
+        this->lazy_set = -1;
+
+        this->left_node = nullptr;
+        this->right_node = nullptr;
+    }
+
+    /**
+     * Make the inp vector of size power of 2 by filling in dummy values
+     */
+    static void __make_inp_power_of_2(vector<ll>& inp, ll dummy) {
+        int sz_lg = __lg(inp.size());
+        int sz = 1;
+        for (int i = 0; i < sz_lg; i++) {
+            sz <<= 1;
+        }
+
+        if (sz < inp.size()) {
+            sz <<= 1;
+        }
+
+        int leftover = sz - inp.size(); // amt of 0s to append to the end
+        for (int i = 0; i < leftover; i++) {
+            inp.push_back(dummy);
+        }
+    }
+
+    /**
+     * Initialize the entire SegTree with this current node as the root (of the subtree) based on inp vector of values
+     */
+    void init(vector<ll>& inp, int left, int right) {
+        this->left = left;
+        this->right = right;
+
+        if (left == right) {
+            this->sum = inp[left];
+            return;
+        }
+
+        int mid = (left + right)/2;
+        this->left_node = new SegTreeNode();
+        this->right_node = new SegTreeNode;
+        this->left_node->init(inp, left, mid);
+        this->right_node->init(inp, mid + 1, right);
+        this->sum = this->left_node->sum + this->right_node->sum;
+    }
+
+    /**
+     * Evaluate lazy prop for this node
+     */
+    void eval_lazy() {
+        int range = (this->right - this->left + 1);
+        if (this->lazy_set > -1) {
+            this->sum = this->lazy_set * range;
+
+            if (this->left_node != nullptr) {
+                this->left_node->lazy_set = this->lazy_set;
+            }
+
+            if (this->right_node != nullptr) {
+                this->right_node->lazy_set = this->lazy_set;
+            }
+
+            this->lazy_set = -1;
+        }
+
+        if (this->lazy_add > 0) {
+            this->sum += this->lazy_add * range;
+
+            if (this->left_node != nullptr) {
+                this->left_node->lazy_add += this->lazy_add;
+            }
+
+            if (this->right_node != nullptr) {
+                this->right_node->lazy_add += this->lazy_add;
+            }
+
+            this->lazy_add = 0;
+        }
+    }
+
+    /**
+     * Query the sum of the left and right range
+     * TODO: Fancy templating where I pass Case1 Case2 etc. as maybe functions to run
+     */
+    ll query(int left, int right) {
+        eval_lazy();
+
+        if (this->left >= left && this->right <= right) {
+            // Case 1
+            return this->sum;
+        } else if (this->right < left || this->left > right) {
+            // Case 2
+            return 0;
+        }
+
+        ll ret = 0;
+        if (this->left_node != nullptr) {
+            // Case 3 Left
+            ret += this->left_node->query(left, right);
+        }
+        if (this->right_node != nullptr) {
+            // Case 3 Right
+            ret += this->right_node->query(left, right);
+        }
+
+        return ret;
+    }
+
+    void add(int left, int right, int val) {
+        DEBUG(this->sum, this->left, this->right, this->lazy_add);
+        eval_lazy();
+        DEBUG("eval_lazy1");
+
+        if (this->left >= left && this->right <= right) {
+            DEBUG("case 1");
+            this->lazy_add += val;
+            DEBUG(this->sum, this->left, this->right, this->lazy_add);
+            eval_lazy();
+            DEBUG("eval_lazy2");
+            return;
+        } else if (this->right < left || this->left > right) {
+            DEBUG("case 2");
+            return;
+        }
+        DEBUG("case 3");
+
+        if (this->left_node != nullptr) {
+            this->left_node->add(left, right, val);
+        }
+        if (this->right_node != nullptr) {
+            this->right_node->add(left, right, val);
+        }
+    }
+
+    void set(int left, int right, int val) {
+        eval_lazy();
+
+        if (this->left >= left && this->right <= right) {
+            this->lazy_set = val;
+            eval_lazy();
+            return;
+        } else if (this->right < left || this->left > right) {
+            return;
+        }
+
+        if (this->left_node != nullptr) {
+            this->left_node->set(left, right, val);
+        }
+        if (this->right_node != nullptr) {
+            this->right_node->set(left, right, val);
+        }
+    }
+
+    void debug_leaves() const {
+        if (this->left == this->right) {
+            DEBUG(this->left, this->right, this->sum);
+        }
+
+        if (this->left_node != nullptr) {
+            this->left_node->debug_leaves();
+        }
+
+        if (this->right_node != nullptr) {
+            this->right_node->debug_leaves();
+        }
+    }
+};
+
 void solve() {
-    cin >> n;
+    cin >> n >> q;
+    vector<ll> inp(n);
+
+    f0r(i, n) {
+        cin >> inp[i];
+    }
+
+    SegTreeNode root;
+    root.init(inp, 0, n - 1);
+
+    f0r(i, q) {
+        // process q queries
+        int q_case, a, b, x;
+        cin >> q_case >> a >> b;
+        a--; b--;
+        DEBUG(q_case, a, b);
+
+        switch(q_case) {
+            case 1:
+                cin >> x;
+                root.add(a, b, x);
+                root.debug_leaves();
+                break;
+            case 2:
+                cin >> x;
+                root.set(a, b, x);
+                break;
+            default:
+                // case == 3
+                cout << root.query(a, b) << "\n";
+        }
+    }
 }
