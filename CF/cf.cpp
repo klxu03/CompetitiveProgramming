@@ -69,224 +69,198 @@ struct timer {
         return duration_cast<duration<double>>(high_resolution_clock::now() - begin).count();
     }
 };
-// Start of main put tin, end of main put tpr (tgt gives you value not printed)
-#define tin timer __timer__(1);
-#define tpr __timer__.print();
-#define tgt __timer__.report()
 
 mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 // rng() gives a better random unsigned 32 bit number
 
-ll q, Q, T, k, l, r, x, y, z;
-int n, m;
-
 void solve();
 
-// Problem URL: https://cses.fi/problemset/task/1735
+// Problem URL:
 int main() {
     io;
 //    usaco("f_cf");
     long long test_cases = 1;
-//    cin >> test_cases;
+    cin >> test_cases;
 
     for (int i = 0; i < test_cases; i++) {
         solve();
     }
 }
 
-class SegTreeNode {
+class FindingBridges {
 public:
-    ll sum;
-    int left; // left range inclusive
-    int right; // right range inclusive
+    set<pii> bridges;
+    set<int> bridge_nodes;
+    void IS_BRIDGE(int v,int to) {
+        bridges.insert({v, to});
+        bridge_nodes.insert(v);
+        bridge_nodes.insert(to);
+    } // some function to process the found bridge
 
-    ll lazy_add; // lazy marker on adding
-    ll lazy_set; // lazy marker on setting a value
+    int n; // number of nodes
+    int m; // num edges
+    vector<vector<int>> adj; // adjacency list of graph
+    int num_visited;
 
-    SegTreeNode* left_node;
-    SegTreeNode* right_node;
+    vector<bool> visited;
+    vector<int> tin, low;
+    int timer;
 
-    SegTreeNode() {
-        this->lazy_add = 0;
-        this->lazy_set = -1;
+    vector<int> from;
+    FindingBridges(int n) {
+        this->n = n;
+        num_visited = 0;
+        adj = vector<vector<int>>(n);
+//        visited = vector<bool>(n, false);
+//        tin = vector<int>(n, -1);
+//        low = vector<int>(n, -1);
 
-        this->left_node = nullptr;
-        this->right_node = nullptr;
+        from = vector<int>(n, -1);
     }
 
-    /**
-     * Make the inp vector of size power of 2 by filling in dummy values
-     */
-    static void __make_inp_power_of_2(vector<ll>& inp, ll dummy) {
-        int sz_lg = __lg(inp.size());
-        int sz = 1;
-        for (int i = 0; i < sz_lg; i++) {
-            sz <<= 1;
-        }
-
-        if (sz < inp.size()) {
-            sz <<= 1;
-        }
-
-        int leftover = sz - inp.size(); // amt of 0s to append to the end
-        for (int i = 0; i < leftover; i++) {
-            inp.push_back(dummy);
+    void init_adj() {
+        f0r(i, m) {
+            int a, b;
+            cin >> a >> b;
+            a--; b--;
+            adj[a].pb(b);
+            adj[b].pb(a);
         }
     }
 
-    /**
-     * Initialize the entire SegTree with this current node as the root (of the subtree) based on inp vector of values
-     */
-    void init(vector<ll>& inp, int left, int right) {
-        this->left = left;
-        this->right = right;
-
-        if (left == right) {
-            this->sum = inp[left];
-            return;
-        }
-
-        int mid = (left + right)/2;
-        this->left_node = new SegTreeNode();
-        this->right_node = new SegTreeNode;
-        this->left_node->init(inp, left, mid);
-        this->right_node->init(inp, mid + 1, right);
-        this->sum = this->left_node->sum + this->right_node->sum;
-    }
-
-    /**
-     * Evaluate lazy prop for this node
-     */
-    void eval_lazy() {
-        int range = (this->right - this->left + 1);
-        if (this->lazy_set > -1) {
-            this->sum = this->lazy_set * range;
-
-            if (this->left_node != nullptr) {
-                this->left_node->lazy_set = this->lazy_set;
-                this->left_node->lazy_add = 0;
+    void dfs(int v, int p = -1) {
+        visited[v] = true;
+        num_visited++;
+        tin[v] = low[v] = timer++;
+        bool parent_skipped = false;
+        for (int to : adj[v]) {
+            if (to == p && !parent_skipped) {
+                parent_skipped = true;
+                continue;
             }
-
-            if (this->right_node != nullptr) {
-                this->right_node->lazy_set = this->lazy_set;
-                this->right_node->lazy_add = 0;
+            if (visited[to]) {
+                low[v] = min(low[v], tin[to]);
+            } else {
+                dfs(to, v);
+                low[v] = min(low[v], low[to]);
+                if (low[to] > tin[v]) {
+                    IS_BRIDGE(v, to);
+                }
             }
-
-            this->lazy_set = -1;
         }
+    }
 
-        if (this->lazy_add > 0) {
-            this->sum += this->lazy_add * range;
+    void find_bridges() {
+        timer = 0;
+        visited.assign(n, false);
+        tin.assign(n, -1);
+        low.assign(n, -1);
+        for (int i = 0; i < n; ++i) {
+            if (!visited[i])
+                dfs(i);
+        }
+    }
 
-            if (this->left_node != nullptr) {
-                this->left_node->lazy_add += this->lazy_add;
+    int bfs(int start) {
+        // see how many nodes you can visit without crossing any bridge
+        // return the number of nodes visited
+
+        int ret = 0;
+
+        deque<int> q;
+        q.push_back(start);
+        set<int> visited;
+        visited.insert(start);
+        from[start] = -1;
+
+        while (!q.empty()) {
+            int node = q.front();
+            q.pop_front();
+            ret++;
+
+            for (int to : adj[node]) {
+                if (visited.count(to) || bridges.count({node, to}) || bridges.count({to, node})) {
+                    continue;
+                }
+
+                visited.insert(to);
+                from[to] = node;
+                q.push_back(to);
             }
-
-            if (this->right_node != nullptr) {
-                this->right_node->lazy_add += this->lazy_add;
-            }
-
-            this->lazy_add = 0;
-        }
-    }
-
-    /**
-     * Query the sum of the left and right range
-     * TODO: Fancy templating where I pass Case1 Case2 etc. as maybe functions to run
-     */
-    ll query(int left, int right) {
-        eval_lazy();
-
-        if (this->left >= left && this->right <= right) {
-            // Case 1
-            return this->sum;
-        } else if (this->right < left || this->left > right) {
-            // Case 2
-            return 0;
         }
 
-        return this->left_node->query(left, right) + this->right_node->query(left, right);
-    }
-
-    void add(int left, int right, int val) {
-        eval_lazy();
-
-        if (this->left >= left && this->right <= right) {
-            this->lazy_add += val;
-            eval_lazy();
-            return;
-        } else if (this->right < left || this->left > right) {
-            return;
-        }
-
-        this->left_node->add(left, right, val);
-        this->right_node->add(left, right, val);
-
-        this->sum = this->left_node->sum + this->right_node->sum;
-    }
-
-    void set(int left, int right, int val) {
-        eval_lazy();
-
-        if (this->left >= left && this->right <= right) {
-            this->lazy_set = val;
-            this->lazy_add = 0;
-            eval_lazy();
-            return;
-        } else if (this->right < left || this->left > right) {
-            return;
-        }
-
-        this->left_node->set(left, right, val);
-        this->right_node->set(left, right, val);
-
-        this->sum = this->left_node->sum + this->right_node->sum;
-    }
-
-    void debug_leaves() const {
-        if (this->left == this->right) {
-            DEBUG(this->left, this->right, this->sum);
-        }
-
-        if (this->left_node != nullptr) {
-            this->left_node->debug_leaves();
-        }
-
-        if (this->right_node != nullptr) {
-            this->right_node->debug_leaves();
-        }
+        return ret;
     }
 };
 
-void solve() {
-    cin >> n >> q;
-    vector<ll> inp(n);
+int splitIntoTwoGroups(const std::vector<int>& nums) {
+    int n = nums.size();
+    int totalSum = std::accumulate(nums.begin(), nums.end(), 0);
+    int halfSum = totalSum / 2;
 
-    f0r(i, n) {
-        cin >> inp[i];
-    }
+    std::vector<std::vector<bool>> dp(n + 1, std::vector<bool>(halfSum + 1, false));
+    dp[0][0] = true;
 
-    SegTreeNode root;
-    root.init(inp, 0, n - 1);
-
-    f0r(i, q) {
-        // process q queries
-        int q_case, a, b, x;
-        cin >> q_case >> a >> b;
-        a--; b--;
-
-        switch(q_case) {
-            case 1:
-                cin >> x;
-                root.add(a, b, x);
-                break;
-            case 2:
-                cin >> x;
-                root.set(a, b, x);
-                break;
-            default:
-                // case == 3
-                cout << root.query(a, b) << "\n";
+    for (int i = 1; i <= n; ++i) {
+        for (int j = halfSum; j >= nums[i - 1]; --j) {
+            dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i - 1]];
+        }
+        for (int j = 0; j <= halfSum; ++j) {
+            dp[i][j] = dp[i][j] || dp[i - 1][j];
         }
     }
+
+    int group1Sum = 0;
+    for (int j = halfSum; j >= 0; --j) {
+        if (dp[n][j]) {
+            group1Sum = j;
+            break;
+        }
+    }
+
+    std::vector<int> group1, group2;
+    int w = group1Sum;
+    for (int i = n; i > 0; --i) {
+        if (!dp[i - 1][w]) {
+            group1.push_back(nums[i - 1]);
+            w -= nums[i - 1];
+        } else {
+            group2.push_back(nums[i - 1]);
+        }
+    }
+
+    int group2Sum = totalSum - group1Sum;
+
+    for (int num : group1) {
+//        std::cout << num << " ";
+    }
+
+    for (int num : group2) {
+//        std::cout << num << " ";
+    }
+
+    return group1Sum;
+}
+
+void solve() {
+    int n, m;
+    cin >> n >> m;
+
+    FindingBridges fb(n);
+    fb.m = m;
+    fb.init_adj();
+
+    fb.find_bridges();
+
+    DEBUG(fb.bridges);
+
+    vector<int> val;
+    for (auto p : fb.bridge_nodes) {
+        val.pb(fb.bfs(p));
+//        DEBUG(fb.bfs(p));
+    }
+
+    int best = splitIntoTwoGroups(val);
+
+    cout << ((n - best) * (n - best - 1) + best * (best - 1)) / 2 << "\n";
 }
