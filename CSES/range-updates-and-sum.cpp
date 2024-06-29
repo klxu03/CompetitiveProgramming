@@ -101,6 +101,7 @@ public:
     int right; // right range inclusive
 
     ll lazy_add; // lazy marker on adding
+    bool should_lazy_add;
     ll lazy_set; // lazy marker on setting a value
 
     SegTreeNode* left_node;
@@ -108,6 +109,7 @@ public:
 
     SegTreeNode() {
         this->lazy_add = 0;
+        this->should_lazy_add = false;
         this->lazy_set = -1;
 
         this->left_node = nullptr;
@@ -175,18 +177,21 @@ public:
             this->lazy_set = -1;
         }
 
-        if (this->lazy_add > 0) {
+        if (should_lazy_add) {
             this->sum += this->lazy_add * range;
 
             if (this->left_node != nullptr) {
                 this->left_node->lazy_add += this->lazy_add;
+                this->left_node->should_lazy_add = true;
             }
 
             if (this->right_node != nullptr) {
                 this->right_node->lazy_add += this->lazy_add;
+                this->right_node->should_lazy_add = true;
             }
 
             this->lazy_add = 0;
+            should_lazy_add = false;
         }
     }
 
@@ -198,13 +203,14 @@ public:
         eval_lazy();
 
         if (this->left >= left && this->right <= right) {
-            // Case 1
+            // Case 1 subset
             return this->sum;
         } else if (this->right < left || this->left > right) {
-            // Case 2
+            // Case 2 outside
             return 0;
         }
 
+        // Case 3 partially inside and partially outside
         return this->left_node->query(left, right) + this->right_node->query(left, right);
     }
 
@@ -213,12 +219,14 @@ public:
 
         if (this->left >= left && this->right <= right) {
             this->lazy_add += val;
+            should_lazy_add = true;
             eval_lazy();
             return;
         } else if (this->right < left || this->left > right) {
             return;
         }
 
+        should_lazy_add = true;
         this->left_node->add(left, right, val);
         this->right_node->add(left, right, val);
 
