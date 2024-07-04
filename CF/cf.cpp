@@ -96,4 +96,70 @@ int main() {
 
 void solve() {
     cin >> n;
+    vector<int> inp(n);
+
+    f0r(i, n) {
+        cin >> inp[i];
+    }
+    sort(inp.begin(), inp.end());
+
+    vector<int> num_cakes;
+    set<int> uniq;
+    f0r(i, n) {
+        if (uniq.count(inp[i]) == 0) {
+            uniq.insert(inp[i]);
+            num_cakes.pb(0);
+        }
+
+        num_cakes.back()++;
+    }
+
+    const int sz = num_cakes.size();
+    long long MAXX = 15;
+    vector<vector<ll>> dp(sz + 1, vector<ll>(sz + 1, MAXX));
+    // dp[i][j] is the min number of turns for Bob to completely eaten j cakes before the i-th turn
+    // Alice is trying to eat the (i + j)th cake right now, so Bob now has the opportunity to have eaten all of the (i + j)th cake before the i-th turn
+    // need dp[i - 1][j - 1] + num_cakes[i + j] < dp[i - 1][j] to replace
+
+    for (int i = 0; i < sz + 1; i++) {
+        dp[i][0] = 0;
+    }
+
+    for (int i = 1; i < sz + 1; i++) {
+        // we are currently on time i
+        for (int j = 1; j < sz + 1; j++) {
+            // Bob is going to have eaten j cakes now
+
+            dp[i][j] = dp[i - 1][j];
+
+            if (dp[i - 1][j - 1] == MAXX) break;
+            if (j > i) break;
+            if (i + j > sz) break;
+
+            if (dp[i - 1][j - 1] + num_cakes[i + j - 1] > i) break;
+            DEBUG(num_cakes[i + j - 1]);
+            DEBUG(i, j);
+
+            // Alice is going to have eaten the (i + j)th cake now, new opp at (i + j - 1) to eat before
+            dp[i][j] = min(dp[i][j], dp[i - 1][j - 1] + num_cakes[i + j - 1]);
+        }
+    }
+
+    DEBUG(num_cakes);
+    f0r(i, sz + 1) {
+        DEBUG(i, dp[i]);
+    }
+
+    int max_j = -1;
+    for (int i = 0; i < sz + 1; i++) {
+        for (int j = 0; j < sz + 1; j++) {
+            if (dp[i][j] < MAXX) {
+                max_j = max(max_j, j);
+            }
+        }
+    }
+
+    DEBUG(sz, max_j);
+
+    cout << sz - max_j << endl;
 }
