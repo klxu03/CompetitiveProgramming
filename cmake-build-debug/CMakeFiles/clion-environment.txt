@@ -1,4 +1,4 @@
-ToolSet: 1.0 (local)Ninja: 1.12.0@/home/kevthatdevs/.local/share/JetBrains/Toolbox/apps/clion/bin/ninja/linux/x64/ninja
+ToolSet: 1.0 (local)Ninja: 1.12.0@/Users/kevinxu-mac/Applications/CLion Nova.app/Contents/bin/ninja/mac/aarch64/ninja
 Options: 
 
-Options:
+Options:-DCMAKE_CXX_COMPILER=/usr/local/Cellar/gcc/12.2.0/bin/g++-12

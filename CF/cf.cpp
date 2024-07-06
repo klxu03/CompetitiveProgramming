@@ -24,6 +24,7 @@ using ll = long long;
 #else
 #define DEBUG(...) 6
 #endif
+//#define DEBUG(...) 6
 
 template<typename T, typename S> ostream& operator << (ostream &os, const pair<T, S> &p) {return os << "(" << p.first << ", " << p.second << ")";}
 template<typename C, typename T = decay<decltype(*begin(declval<C>()))>, typename enable_if<!is_same<C, string>::value>::type* = nullptr>
@@ -79,30 +80,11 @@ mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 
 ll q, Q, T, k, l, r, x, y, z;
 int n, m;
+ll MAXX;
 
-void solve();
+int solve(vector<int>& inp);
 
-// Problem URL:
-int main() {
-    io;
-//    usaco("f_cf");
-    long long test_cases = 1;
-    cin >> test_cases;
-
-    for (int i = 0; i < test_cases; i++) {
-        solve();
-    }
-}
-
-void solve() {
-    cin >> n;
-    vector<int> inp(n);
-
-    f0r(i, n) {
-        cin >> inp[i];
-    }
-    sort(inp.begin(), inp.end());
-
+int brute_solve(vector<int>& inp) {
     vector<int> num_cakes;
     set<int> uniq;
     f0r(i, n) {
@@ -115,7 +97,113 @@ void solve() {
     }
 
     const int sz = num_cakes.size();
-    long long MAXX = 15;
+    int ret = INT_MAX;
+    vector<int> optimal;
+    for (ll tc = 0; tc < (1 << sz); tc++) {
+        vector<int> use(sz, 0); // 1 means Bob eats this cake
+        int ind = 0;
+        for (int i = (1 << (sz - 1)); i > 0; i >>= 1) {
+            if ((tc & i) != 0) {
+                use[ind] = 1;
+            }
+
+            ind++;
+        }
+
+        // check if this is allowed
+        int alice_ate = 0;
+        int bob_ate = 0;
+        bool valid = true;
+
+        for (int i = 0; i < sz; i++) {
+            if (use[i]) {
+                bob_ate += num_cakes[i];
+            } else {
+                alice_ate++;
+            }
+
+            if (bob_ate > alice_ate) {
+                valid = false;
+            }
+        }
+
+        if (!valid) continue;
+
+        if (alice_ate < ret) {
+            ret = alice_ate;
+            optimal = use;
+        }
+    }
+
+    DEBUG(num_cakes);
+    DEBUG(optimal);
+
+    return ret;
+}
+
+/*
+// Problem URL:
+int main() {
+    io;
+//    usaco("f_cf");
+    long long test_cases = 1;
+    cin >> test_cases;
+
+    for (int i = 0; i < test_cases; i++) {
+        cin >> n;
+        vector<int> inp(n);
+
+        f0r(i, n) {
+            cin >> inp[i];
+        }
+        sort(inp.begin(), inp.end());
+
+        brute_solve(inp);
+        solve(inp);
+    }
+}
+*/
+
+int main() {
+    n = 23;
+    MAXX = 99;
+    for (int i = 0; i < 1; i++) {
+        vector<int> inp(n);
+
+        for (int j = 0; j < n; j++) {
+            inp[j] = rng() % 7;
+        }
+        sort(inp.begin(), inp.end());
+
+        inp = {0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 4, 4, 5, 5, 5, 5, 5, 6};
+
+        int brute_solve_ret = brute_solve(inp);
+        int solve_ret = solve(inp);
+        if (brute_solve_ret != solve_ret) {
+            cout << "FAILED: " << endl;
+            for (int j = 0; j < n; j++) {
+                cout << inp[j] << ", ";
+            }
+            cout << endl;
+            cout << "Got: " << solve_ret << " | Expected: " << brute_solve_ret << endl;
+            return -1;
+        }
+    }
+}
+
+int solve(vector<int>& inp) {
+    vector<int> num_cakes;
+    set<int> uniq;
+    f0r(i, n) {
+        if (uniq.count(inp[i]) == 0) {
+            uniq.insert(inp[i]);
+            num_cakes.pb(0);
+        }
+
+        num_cakes.back()++;
+    }
+
+    const int sz = num_cakes.size();
     vector<vector<ll>> dp(sz + 1, vector<ll>(sz + 1, MAXX));
     // dp[i][j] is the min number of turns for Bob to completely eaten j cakes before the i-th turn
     // Alice is trying to eat the (i + j)th cake right now, so Bob now has the opportunity to have eaten all of the (i + j)th cake before the i-th turn
@@ -130,12 +218,13 @@ void solve() {
         for (int j = 1; j < sz + 1; j++) {
             // Bob is going to have eaten j cakes now
 
-            dp[i][j] = dp[i - 1][j];
-
             if (dp[i - 1][j - 1] == MAXX) break;
             if (j > i) break;
             if (i + j > sz) break;
 
+            dp[i][j] = dp[i - 1][j];
+
+//            if (j == i) break;
             if (dp[i - 1][j - 1] + num_cakes[i + j - 1] > i) break;
             DEBUG(num_cakes[i + j - 1]);
             DEBUG(i, j);
@@ -145,21 +234,65 @@ void solve() {
         }
     }
 
+    // now u gotta do the right-half to add
+    vector<vector<int>> cost(sz + 1, vector<int>(sz + 1, 0)); // cost[i][j] means that Alice is eating ith cake, j is max num cakes Bob can have
+
+    multiset<int> ms; // multiset of cake sizes
+    // Alice eating the sz-th cake, Bob can't eat any
+    for (int i = sz - 1; i >= 0; i--) {
+        ms.insert(num_cakes[i]); // Bob newly has the option to eat this cake
+
+        auto it = ms.begin();
+        int counter = 0;
+        int sum = 0;
+        // Bob can eat up to j total cakes
+        DEBUG(i, ms);
+        for (int j = 1; j < sz + 1; j++) {
+            if (it != ms.end() && sum + *it <= j) {
+                sum += *it;
+                it++;
+                counter++;
+
+                DEBUG(sum, j, counter);
+            }
+
+            cost[i][j] = counter;
+        }
+    }
+
     DEBUG(num_cakes);
     f0r(i, sz + 1) {
         DEBUG(i, dp[i]);
     }
+    DEBUG(num_cakes);
+    f0r(i, sz + 1) {
+        DEBUG(i, cost[i]);
+    }
 
-    int max_j = -1;
+    DEBUG(num_cakes);
+    int max_j = -1; // j that can be eaten + cost[i][j]
     for (int i = 0; i < sz + 1; i++) {
         for (int j = 0; j < sz + 1; j++) {
             if (dp[i][j] < MAXX) {
+                int leftover_j = i - dp[i][j];
+
                 max_j = max(max_j, j);
+                if (max_j < j) {
+                    DEBUG("update", max_j, j);
+                }
+
+                int alice_eat = i + j;
+                if (alice_eat > sz) continue;
+                if (max_j < j + cost[alice_eat][leftover_j]) {
+                    DEBUG("update", max_j, j + cost[alice_eat][leftover_j], i, j, alice_eat, leftover_j);
+                }
+                max_j = max(max_j, j + cost[alice_eat][leftover_j]);
             }
         }
     }
 
     DEBUG(sz, max_j);
 
-    cout << sz - max_j << endl;
+//    cout << sz - max_j << endl;
+    return sz - max_j;
 }
