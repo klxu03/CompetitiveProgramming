@@ -24,7 +24,7 @@ using ll = long long;
 #else
 #define DEBUG(...) 6
 #endif
-//#define DEBUG(...) 6
+#define DEBUG(...) 6
 
 template<typename T, typename S> ostream& operator << (ostream &os, const pair<T, S> &p) {return os << "(" << p.first << ", " << p.second << ")";}
 template<typename C, typename T = decay<decltype(*begin(declval<C>()))>, typename enable_if<!is_same<C, string>::value>::type* = nullptr>
@@ -141,41 +141,42 @@ int brute_solve(vector<int>& inp) {
     return ret;
 }
 
-/*
 // Problem URL:
 int main() {
     io;
 //    usaco("f_cf");
     long long test_cases = 1;
     cin >> test_cases;
+    MAXX = INT_MAX;
 
     for (int i = 0; i < test_cases; i++) {
         cin >> n;
         vector<int> inp(n);
 
-        f0r(i, n) {
-            cin >> inp[i];
+        f0r(j, n) {
+            cin >> inp[j];
         }
         sort(inp.begin(), inp.end());
+        DEBUG(inp);
 
-        brute_solve(inp);
         solve(inp);
     }
 }
-*/
 
+/*
 int main() {
-    n = 23;
-    MAXX = 99;
-    for (int i = 0; i < 1; i++) {
+    n = 90;
+    MAXX = LLONG_MAX;
+    for (int i = 0; i < 10000; i++) {
+        if (i % 100 == 0) cout << "i: " << i << endl;
         vector<int> inp(n);
 
         for (int j = 0; j < n; j++) {
-            inp[j] = rng() % 7;
+            inp[j] = rng() % 20;
         }
         sort(inp.begin(), inp.end());
 
-        inp = {0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 4, 4, 5, 5, 5, 5, 5, 6};
+//        inp = {0, 0, 0, 2, 2, 3, 3, 3, 3, 5, 5, 5, 5, 5, 6};
 
         int brute_solve_ret = brute_solve(inp);
         int solve_ret = solve(inp);
@@ -190,6 +191,7 @@ int main() {
         }
     }
 }
+*/
 
 int solve(vector<int>& inp) {
     vector<int> num_cakes;
@@ -202,12 +204,12 @@ int solve(vector<int>& inp) {
 
         num_cakes.back()++;
     }
+    uniq.clear();
 
     const int sz = num_cakes.size();
-    vector<vector<ll>> dp(sz + 1, vector<ll>(sz + 1, MAXX));
+    vector<vector<int>> dp(sz + 1, vector<int>(sz + 1, MAXX));
     // dp[i][j] is the min number of turns for Bob to completely eaten j cakes before the i-th turn
-    // Alice is trying to eat the (i + j)th cake right now, so Bob now has the opportunity to have eaten all of the (i + j)th cake before the i-th turn
-    // need dp[i - 1][j - 1] + num_cakes[i + j] < dp[i - 1][j] to replace
+    // these cakes were all eaten before Alice got a chance to reach them
 
     for (int i = 0; i < sz + 1; i++) {
         dp[i][0] = 0;
@@ -218,19 +220,13 @@ int solve(vector<int>& inp) {
         for (int j = 1; j < sz + 1; j++) {
             // Bob is going to have eaten j cakes now
 
-            if (dp[i - 1][j - 1] == MAXX) break;
             if (j > i) break;
             if (i + j > sz) break;
 
             dp[i][j] = dp[i - 1][j];
-
-//            if (j == i) break;
-            if (dp[i - 1][j - 1] + num_cakes[i + j - 1] > i) break;
-            DEBUG(num_cakes[i + j - 1]);
-            DEBUG(i, j);
-
-            // Alice is going to have eaten the (i + j)th cake now, new opp at (i + j - 1) to eat before
-            dp[i][j] = min(dp[i][j], dp[i - 1][j - 1] + num_cakes[i + j - 1]);
+            if (dp[i][j - 1] + num_cakes[i + j - 1] > i) continue;
+            if (dp[i][j - 1] == MAXX) continue;
+            dp[i][j] = min(dp[i][j], dp[i][j - 1] + num_cakes[i + j - 1]);
         }
     }
 
@@ -259,6 +255,7 @@ int solve(vector<int>& inp) {
             cost[i][j] = counter;
         }
     }
+    ms.clear();
 
     DEBUG(num_cakes);
     f0r(i, sz + 1) {
@@ -293,6 +290,6 @@ int solve(vector<int>& inp) {
 
     DEBUG(sz, max_j);
 
-//    cout << sz - max_j << endl;
+    cout << sz - max_j << endl;
     return sz - max_j;
 }
