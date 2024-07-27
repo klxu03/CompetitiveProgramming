@@ -24,7 +24,6 @@ using ll = long long;
 #else
 #define DEBUG(...) 6
 #endif
-#define DEBUG(...) 6
 
 template<typename T, typename S> ostream& operator << (ostream &os, const pair<T, S> &p) {return os << "(" << p.first << ", " << p.second << ")";}
 template<typename C, typename T = decay<decltype(*begin(declval<C>()))>, typename enable_if<!is_same<C, string>::value>::type* = nullptr>
@@ -80,65 +79,31 @@ mt19937_64 rng(std::chrono::steady_clock::now().time_since_epoch().count());
 
 ll q, Q, T, k, l, r, x, y, z;
 int n, m;
-ll MAXX;
 
-int solve(vector<int>& inp);
+void solve();
 
-int brute_solve(vector<int>& inp) {
-    vector<int> num_cakes;
-    set<int> uniq;
-    f0r(i, n) {
-        if (uniq.count(inp[i]) == 0) {
-            uniq.insert(inp[i]);
-            num_cakes.pb(0);
+const int MAX_PRIMES = 1415;
+vector<int> num_nodes(MAX_PRIMES + 1); // 1-index it
+const int MAX_VALUE = 3e5;
+vector<int> lp(MAX_VALUE + 1);
+vector<int> primes_map;
+
+void init_primes() {
+    for (int i = 2; i <= 3e5; i++) {
+        if (lp[i] == 0) {
+            lp[i] = i;
+            primes_map.push_back(i);
         }
 
-        num_cakes.back()++;
-    }
-
-    const int sz = num_cakes.size();
-    int ret = INT_MAX;
-    vector<int> optimal;
-    for (ll tc = 0; tc < (1 << sz); tc++) {
-        vector<int> use(sz, 0); // 1 means Bob eats this cake
-        int ind = 0;
-        for (int i = (1 << (sz - 1)); i > 0; i >>= 1) {
-            if ((tc & i) != 0) {
-                use[ind] = 1;
+        for (int j = 0; i * primes_map[j] <= MAX_VALUE; j++) {
+            lp[i * primes_map[j]] = primes_map[j];
+            if (primes_map[j] == lp[i]) {
+                break;
             }
-
-            ind++;
-        }
-
-        // check if this is allowed
-        int alice_ate = 0;
-        int bob_ate = 0;
-        bool valid = true;
-
-        for (int i = 0; i < sz; i++) {
-            if (use[i]) {
-                bob_ate += num_cakes[i];
-            } else {
-                alice_ate++;
-            }
-
-            if (bob_ate > alice_ate) {
-                valid = false;
-            }
-        }
-
-        if (!valid) continue;
-
-        if (alice_ate < ret) {
-            ret = alice_ate;
-            optimal = use;
         }
     }
 
-    DEBUG(num_cakes);
-    DEBUG(optimal);
-
-    return ret;
+    primes_map.insert(primes_map.begin(), 1);
 }
 
 // Problem URL:
@@ -147,149 +112,94 @@ int main() {
 //    usaco("f_cf");
     long long test_cases = 1;
     cin >> test_cases;
-    MAXX = INT_MAX;
+    init_primes();
+
+    for (int i = 1; i <= MAX_PRIMES; i++) {
+        if (i & 1) {
+            // odd case
+            num_nodes[i] = i * (i - 1)/2 + i + 1;
+        } else {
+            // even case
+            num_nodes[i] = i * (i - 1)/2 - (i/2 - 1) + i + 1;
+        }
+    }
 
     for (int i = 0; i < test_cases; i++) {
-        cin >> n;
-        vector<int> inp(n);
-
-        f0r(j, n) {
-            cin >> inp[j];
-        }
-        sort(inp.begin(), inp.end());
-        DEBUG(inp);
-
-        solve(inp);
+        solve();
     }
 }
 
-/*
-int main() {
-    n = 90;
-    MAXX = LLONG_MAX;
-    for (int i = 0; i < 10000; i++) {
-        if (i % 100 == 0) cout << "i: " << i << endl;
-        vector<int> inp(n);
+class Graph {
+public:
+    int nodes;
+    vector<set<int>> edges;
 
-        for (int j = 0; j < n; j++) {
-            inp[j] = rng() % 20;
-        }
-        sort(inp.begin(), inp.end());
+    Graph() {}
 
-//        inp = {0, 0, 0, 2, 2, 3, 3, 3, 3, 5, 5, 5, 5, 5, 6};
-
-        int brute_solve_ret = brute_solve(inp);
-        int solve_ret = solve(inp);
-        if (brute_solve_ret != solve_ret) {
-            cout << "FAILED: " << endl;
-            for (int j = 0; j < n; j++) {
-                cout << inp[j] << ", ";
+    void init() {
+        edges = vector<set<int>>(nodes);
+        for (int i = 0; i < nodes; i++) {
+            for (int j = 0; j < nodes; j++) {
+                edges[i].insert(j);
             }
-            cout << endl;
-            cout << "Got: " << solve_ret << " | Expected: " << brute_solve_ret << endl;
-            return -1;
-        }
-    }
-}
-*/
-
-int solve(vector<int>& inp) {
-    vector<int> num_cakes;
-    set<int> uniq;
-    f0r(i, n) {
-        if (uniq.count(inp[i]) == 0) {
-            uniq.insert(inp[i]);
-            num_cakes.pb(0);
         }
 
-        num_cakes.back()++;
-    }
-    uniq.clear();
-
-    const int sz = num_cakes.size();
-    vector<vector<int>> dp(sz + 1, vector<int>(sz + 1, MAXX));
-    // dp[i][j] is the min number of turns for Bob to completely eaten j cakes before the i-th turn
-    // these cakes were all eaten before Alice got a chance to reach them
-
-    for (int i = 0; i < sz + 1; i++) {
-        dp[i][0] = 0;
-    }
-
-    for (int i = 1; i < sz + 1; i++) {
-        // we are currently on time i
-        for (int j = 1; j < sz + 1; j++) {
-            // Bob is going to have eaten j cakes now
-
-            if (j > i) break;
-            if (i + j > sz) break;
-
-            dp[i][j] = dp[i - 1][j];
-            if (dp[i][j - 1] + num_cakes[i + j - 1] > i) continue;
-            if (dp[i][j - 1] == MAXX) continue;
-            dp[i][j] = min(dp[i][j], dp[i][j - 1] + num_cakes[i + j - 1]);
-        }
-    }
-
-    // now u gotta do the right-half to add
-    vector<vector<int>> cost(sz + 1, vector<int>(sz + 1, 0)); // cost[i][j] means that Alice is eating ith cake, j is max num cakes Bob can have
-
-    multiset<int> ms; // multiset of cake sizes
-    // Alice eating the sz-th cake, Bob can't eat any
-    for (int i = sz - 1; i >= 0; i--) {
-        ms.insert(num_cakes[i]); // Bob newly has the option to eat this cake
-
-        auto it = ms.begin();
-        int counter = 0;
-        int sum = 0;
-        // Bob can eat up to j total cakes
-        DEBUG(i, ms);
-        for (int j = 1; j < sz + 1; j++) {
-            if (it != ms.end() && sum + *it <= j) {
-                sum += *it;
-                it++;
-                counter++;
-
-                DEBUG(sum, j, counter);
-            }
-
-            cost[i][j] = counter;
-        }
-    }
-    ms.clear();
-
-    DEBUG(num_cakes);
-    f0r(i, sz + 1) {
-        DEBUG(i, dp[i]);
-    }
-    DEBUG(num_cakes);
-    f0r(i, sz + 1) {
-        DEBUG(i, cost[i]);
-    }
-
-    DEBUG(num_cakes);
-    int max_j = -1; // j that can be eaten + cost[i][j]
-    for (int i = 0; i < sz + 1; i++) {
-        for (int j = 0; j < sz + 1; j++) {
-            if (dp[i][j] < MAXX) {
-                int leftover_j = i - dp[i][j];
-
-                max_j = max(max_j, j);
-                if (max_j < j) {
-                    DEBUG("update", max_j, j);
-                }
-
-                int alice_eat = i + j;
-                if (alice_eat > sz) continue;
-                if (max_j < j + cost[alice_eat][leftover_j]) {
-                    DEBUG("update", max_j, j + cost[alice_eat][leftover_j], i, j, alice_eat, leftover_j);
-                }
-                max_j = max(max_j, j + cost[alice_eat][leftover_j]);
+        if (!(nodes & 1)) {
+            // even case, need to delete some edges
+            for (int i = 1; i < nodes - 2; i++) {
+                edges[i].erase(i + 1);
+                edges[i + 1].erase(i);
+                i++;
             }
         }
     }
 
-    DEBUG(sz, max_j);
+    vector<int> run() {
+        vector<int> ret;
+        deque<int> dq;
+        dq.pb(0);
 
-    cout << sz - max_j << endl;
-    return sz - max_j;
+        while (!dq.empty()) {
+            int curr = dq.back();
+            if (edges[curr].empty()) {
+                ret.pb(curr);
+                dq.pop_back();
+                continue;
+            }
+
+            int other = *edges[curr].begin();
+            edges[curr].erase(other);
+            edges[other].erase(curr);
+            dq.pb(other);
+        }
+
+        return ret;
+    }
+};
+
+void solve() {
+    cin >> n;
+
+    int l = 0;
+    int r = MAX_PRIMES + 1;
+
+    // find the leftmost index such that num_nodes[i] >= n
+    while (l < r) {
+        int mid = (l + r)/2;
+        if (num_nodes[mid] < n) {
+            l = mid + 1;
+        } else {
+            r = mid;
+        }
+    }
+
+    Graph g;
+    g.nodes = l;
+    g.init();
+
+    vector<int> paths = g.run();
+    for (int i = 0; i < n; i++) {
+        cout << primes_map[paths[i]] << " ";
+    }
+    cout << "\n";
 }
