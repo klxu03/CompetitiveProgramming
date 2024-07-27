@@ -82,124 +82,18 @@ int n, m;
 
 void solve();
 
-const int MAX_PRIMES = 1415;
-vector<int> num_nodes(MAX_PRIMES + 1); // 1-index it
-const int MAX_VALUE = 3e5;
-vector<int> lp(MAX_VALUE + 1);
-vector<int> primes_map;
-
-void init_primes() {
-    for (int i = 2; i <= 3e5; i++) {
-        if (lp[i] == 0) {
-            lp[i] = i;
-            primes_map.push_back(i);
-        }
-
-        for (int j = 0; i * primes_map[j] <= MAX_VALUE; j++) {
-            lp[i * primes_map[j]] = primes_map[j];
-            if (primes_map[j] == lp[i]) {
-                break;
-            }
-        }
-    }
-
-    primes_map.insert(primes_map.begin(), 1);
-}
-
 // Problem URL:
 int main() {
     io;
 //    usaco("f_cf");
     long long test_cases = 1;
     cin >> test_cases;
-    init_primes();
-
-    for (int i = 1; i <= MAX_PRIMES; i++) {
-        if (i & 1) {
-            // odd case
-            num_nodes[i] = i * (i - 1)/2 + i + 1;
-        } else {
-            // even case
-            num_nodes[i] = i * (i - 1)/2 - (i/2 - 1) + i + 1;
-        }
-    }
 
     for (int i = 0; i < test_cases; i++) {
         solve();
     }
 }
 
-class Graph {
-public:
-    int nodes;
-    vector<set<int>> edges;
-
-    Graph() {}
-
-    void init() {
-        edges = vector<set<int>>(nodes);
-        for (int i = 0; i < nodes; i++) {
-            for (int j = 0; j < nodes; j++) {
-                edges[i].insert(j);
-            }
-        }
-
-        if (!(nodes & 1)) {
-            // even case, need to delete some edges
-            for (int i = 1; i < nodes - 2; i++) {
-                edges[i].erase(i + 1);
-                edges[i + 1].erase(i);
-                i++;
-            }
-        }
-    }
-
-    vector<int> run() {
-        vector<int> ret;
-        deque<int> dq;
-        dq.pb(0);
-
-        while (!dq.empty()) {
-            int curr = dq.back();
-            if (edges[curr].empty()) {
-                ret.pb(curr);
-                dq.pop_back();
-                continue;
-            }
-
-            int other = *edges[curr].begin();
-            edges[curr].erase(other);
-            edges[other].erase(curr);
-            dq.pb(other);
-        }
-
-        return ret;
-    }
-};
-
 void solve() {
     cin >> n;
-
-    int l = 0;
-    int r = MAX_PRIMES + 1;
-
-    // find the leftmost index such that num_nodes[i] >= n
-    while (l < r) {
-        int mid = (l + r)/2;
-        if (num_nodes[mid] < n) {
-            l = mid + 1;
-        } else {
-            r = mid;
-        }
-    }
-
-    Graph g;
-    g.nodes = l;
-    g.init();
-
-    vector<int> paths = g.run();
-    for (int i = 0; i < n; i++) {
-        cout << primes_map[paths[i]] << " ";
-    }
-    cout << "\n";
 }
