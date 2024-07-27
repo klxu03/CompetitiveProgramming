@@ -94,6 +94,100 @@ int main() {
     }
 }
 
+class Graph {
+public:
+    int nodes;
+    int edges;
+    int counter;
+    vector<vector<int>> adj;
+    vector<int> in;
+    vector<int> low;
+    vector<bool> visited;
+    int dist_to_mid;
+
+    Graph() {}
+
+    void init() {
+        adj = vector<vector<int>>(nodes);
+        in = vector<int>(n, -1);
+        low = vector<int>(n, INT_MAX);
+        visited = vector<bool>(n, false);
+        counter = 0;
+        dist_to_mid = INT_MAX;
+
+        for (int i = 0; i < edges; i++) {
+            int u, v;
+            cin >> u >> v;
+            u--; v--;
+            adj[u].pb(v);
+            adj[v].pb(u);
+        }
+    }
+
+    int dfs(int node, int par = -1) {
+        visited[node] = true;
+        in[node] = low[node] = counter++;
+
+        int ret = 1;
+        for (int neigh : adj[node]) {
+            if (neigh == par) continue;
+
+            if (visited[neigh]) {
+                // this could be a back edge (could be a forward edge seen before previously too)
+                low[node] = min(low[node], in[neigh]);
+            } else {
+                // this is a new forward edge, a new possible (v, to) to consider
+                int comp_size = dfs(neigh, node);
+                ret += comp_size;
+                low[node] = min(low[node], low[neigh]);
+                if (low[neigh] > in[node]) {
+                    // this node is a bridge
+                    int mid = nodes/2;
+                    dist_to_mid = min(dist_to_mid, abs(mid - comp_size));
+
+                    if (nodes & 1) { // odd num of nodes
+                        dist_to_mid = min(dist_to_mid, abs(mid + 1 - comp_size));
+                    }
+                }
+            }
+        }
+
+        return ret;
+    }
+};
+
 void solve() {
-    cin >> n;
+    cin >> n >> m;
+
+    Graph g;
+    g.nodes = n;
+    g.edges = m;
+    g.init();
+
+    for (int i = 0; i < n; i++) {
+        if (!g.visited[i]) {
+            g.dfs(i);
+        }
+    }
+
+    if (g.dist_to_mid == INT_MAX) {
+        long long ret = n;
+        ret *= (ret - 1);
+        cout << ret/2 << "\n";
+    } else {
+        ll p1 = (n/2 - g.dist_to_mid);
+        p1 *= (p1 - 1);
+
+        if (n & 1) { // odd num nodes
+            ll p2 = (n/2 + 1 + g.dist_to_mid);
+            p2 *= (p2 - 1);
+
+            cout << (p1 + p2)/2 << "\n";
+        } else {
+            ll p2 = (n/2 + g.dist_to_mid);
+            p2 *= (p2 - 1);
+
+            cout << (p1 + p2)/2 << "\n";
+        }
+    }
 }
